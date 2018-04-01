@@ -115,9 +115,10 @@ typedef enum
  *============================================================================*/
 
 //#include "FreeRTOS.h"
-#include"string.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #if CONFIG_FLATFORM == FLATFORM_STM32_F407VG
 #include "diag/Trace.h"

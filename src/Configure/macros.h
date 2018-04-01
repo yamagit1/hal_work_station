@@ -70,6 +70,7 @@
 #define __ENTER__(func)		do{}while(0)
 #define __LEAVE__()			do{}while(0)
 
+#define _Error_Handler(__FILE__, __LINE__) do {}while(1)
 #endif
 
 #endif

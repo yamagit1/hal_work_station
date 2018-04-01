@@ -27,7 +27,7 @@ Archive member included because of file (symbol)
 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-strncpy.o)
                               ./hardware/src/newlib/_syscalls.o (strncpy)
 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-vsnprintf.o)
-                              ./hardware/src/diag/Trace.o (vsnprintf)
+                              ./src/console/console_serial_traffic.o (vsnprintf)
 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-writer.o)
                               /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-stdio.o) (_write_r)
 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-closer.o)
@@ -91,11 +91,250 @@ Allocating common symbols
 Common symbol       size              file
 
 errno               0x4               ./hardware/src/newlib/_syscalls.o
+g_HandleUART        0x40              ./src/console/console_serial_traffic.o
 uwTick              0x4               ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
 pFlash              0x20              ./hardware/src/stm32f4-hal/stm32f4xx_hal_flash.o
 
 Discarded input sections
 
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/console/console_serial_traffic.o
+ .text          0x00000000        0x0 ./src/console/console_serial_traffic.o
+ .data          0x00000000        0x0 ./src/console/console_serial_traffic.o
+ .bss           0x00000000        0x0 ./src/console/console_serial_traffic.o
+ .text.console_serial_init
+                0x00000000       0x88 ./src/console/console_serial_traffic.o
+ .text.console_serial_tx
+                0x00000000       0x28 ./src/console/console_serial_traffic.o
+ .text.console_serial_rx
+                0x00000000        0x4 ./src/console/console_serial_traffic.o
+ .text.console_serial_print_char
+                0x00000000       0x28 ./src/console/console_serial_traffic.o
+ .text.console_serial_print_string
+                0x00000000       0x18 ./src/console/console_serial_traffic.o
+ .text.console_serial_print_line
+                0x00000000       0x34 ./src/console/console_serial_traffic.o
+ .text.console_serial_print_log
+                0x00000000       0x3c ./src/console/console_serial_traffic.o
+ .text.console_serial_print_warring
+                0x00000000       0x3c ./src/console/console_serial_traffic.o
+ .text.console_serial_print_error
+                0x00000000       0x3c ./src/console/console_serial_traffic.o
+ .text.console_serial_print_infor
+                0x00000000        0x4 ./src/console/console_serial_traffic.o
+ .rodata.str1.4
+                0x00000000       0x34 ./src/console/console_serial_traffic.o
+ .debug_info    0x00000000      0xf5d ./src/console/console_serial_traffic.o
+ .debug_abbrev  0x00000000      0x228 ./src/console/console_serial_traffic.o
+ .debug_loc     0x00000000       0x5a ./src/console/console_serial_traffic.o
+ .debug_aranges
+                0x00000000       0x68 ./src/console/console_serial_traffic.o
+ .debug_ranges  0x00000000       0x58 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x54e ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x892 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x58 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x16 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x10 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x52 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x16 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x35 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0xa3 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x3a ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x52 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x16 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x19 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x7d ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x1c ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x123 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x16d ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x214 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x283 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x10 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x35 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x1f ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x1c ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x10 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x10 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x22 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0xbd ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x16 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x15c ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x16 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x16 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x23 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x52 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x16 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x495 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x289 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x31 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x28 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x3b ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x50 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0xe66 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000     0x93f9 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x43 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000     0x347f ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x57 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x964 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x9e1 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x11e ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x13e ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x27 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x287 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x5f ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x23a ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x391 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x16f ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0xf9 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x36e ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x23 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0xe6 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0xa1 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x3c ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x1f ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x1cd ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0xcd6 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x13a ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x21e ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x2e ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x543 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x88 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0xd5 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x183 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x1a7 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0xa5 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x18b ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x24 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x35 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x79 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x11e ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x7f ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x89 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x7e ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x31a ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x409 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0xe4 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x48d ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x22b ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x202 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x6d9 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x5b ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x14d ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x287 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x225 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x1b5 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x2db ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x89 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x1df ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x115 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x6e ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000      0x125 ./src/console/console_serial_traffic.o
+ .debug_macro   0x00000000       0x22 ./src/console/console_serial_traffic.o
+ .debug_line    0x00000000      0xc70 ./src/console/console_serial_traffic.o
+ .debug_str     0x00000000    0x978c6 ./src/console/console_serial_traffic.o
+ .comment       0x00000000       0x31 ./src/console/console_serial_traffic.o
+ .ARM.attributes
+                0x00000000       0x33 ./src/console/console_serial_traffic.o
+ .debug_frame   0x00000000      0x124 ./src/console/console_serial_traffic.o
+ COMMON         0x00000000       0x40 ./src/console/console_serial_traffic.o
+ .group         0x00000000        0x8 ./src/main.o
  .group         0x00000000        0x8 ./src/main.o
  .group         0x00000000        0x8 ./src/main.o
  .group         0x00000000        0x8 ./src/main.o
@@ -197,6 +436,105 @@ Discarded input sections
  .text          0x00000000        0x0 ./src/main.o
  .data          0x00000000        0x0 ./src/main.o
  .bss           0x00000000        0x0 ./src/main.o
+ .debug_macro   0x00000000      0x892 ./src/main.o
+ .debug_macro   0x00000000       0x58 ./src/main.o
+ .debug_macro   0x00000000       0x16 ./src/main.o
+ .debug_macro   0x00000000       0x10 ./src/main.o
+ .debug_macro   0x00000000       0x52 ./src/main.o
+ .debug_macro   0x00000000       0x16 ./src/main.o
+ .debug_macro   0x00000000       0x35 ./src/main.o
+ .debug_macro   0x00000000       0xa3 ./src/main.o
+ .debug_macro   0x00000000       0x3a ./src/main.o
+ .debug_macro   0x00000000       0x52 ./src/main.o
+ .debug_macro   0x00000000       0x16 ./src/main.o
+ .debug_macro   0x00000000       0x19 ./src/main.o
+ .debug_macro   0x00000000       0x7d ./src/main.o
+ .debug_macro   0x00000000       0x1c ./src/main.o
+ .debug_macro   0x00000000      0x123 ./src/main.o
+ .debug_macro   0x00000000      0x16d ./src/main.o
+ .debug_macro   0x00000000      0x214 ./src/main.o
+ .debug_macro   0x00000000      0x283 ./src/main.o
+ .debug_macro   0x00000000       0x10 ./src/main.o
+ .debug_macro   0x00000000       0x35 ./src/main.o
+ .debug_macro   0x00000000       0x1f ./src/main.o
+ .debug_macro   0x00000000       0x1c ./src/main.o
+ .debug_macro   0x00000000       0x10 ./src/main.o
+ .debug_macro   0x00000000       0x10 ./src/main.o
+ .debug_macro   0x00000000       0x22 ./src/main.o
+ .debug_macro   0x00000000       0xbd ./src/main.o
+ .debug_macro   0x00000000       0x16 ./src/main.o
+ .debug_macro   0x00000000      0x15c ./src/main.o
+ .debug_macro   0x00000000       0x16 ./src/main.o
+ .debug_macro   0x00000000       0x16 ./src/main.o
+ .debug_macro   0x00000000       0x23 ./src/main.o
+ .debug_macro   0x00000000       0x52 ./src/main.o
+ .debug_macro   0x00000000       0x16 ./src/main.o
+ .debug_macro   0x00000000      0x495 ./src/main.o
+ .debug_macro   0x00000000      0x289 ./src/main.o
+ .debug_macro   0x00000000       0x31 ./src/main.o
+ .debug_macro   0x00000000       0x28 ./src/main.o
+ .debug_macro   0x00000000       0x3b ./src/main.o
+ .debug_macro   0x00000000       0x50 ./src/main.o
+ .debug_macro   0x00000000      0xe66 ./src/main.o
+ .debug_macro   0x00000000     0x93f9 ./src/main.o
+ .debug_macro   0x00000000       0x43 ./src/main.o
+ .debug_macro   0x00000000     0x347f ./src/main.o
+ .debug_macro   0x00000000       0x57 ./src/main.o
+ .debug_macro   0x00000000      0x964 ./src/main.o
+ .debug_macro   0x00000000      0x9e1 ./src/main.o
+ .debug_macro   0x00000000      0x11e ./src/main.o
+ .debug_macro   0x00000000      0x13e ./src/main.o
+ .debug_macro   0x00000000       0x27 ./src/main.o
+ .debug_macro   0x00000000      0x287 ./src/main.o
+ .debug_macro   0x00000000       0x5f ./src/main.o
+ .debug_macro   0x00000000      0x23a ./src/main.o
+ .debug_macro   0x00000000      0x391 ./src/main.o
+ .debug_macro   0x00000000      0x16f ./src/main.o
+ .debug_macro   0x00000000       0xf9 ./src/main.o
+ .debug_macro   0x00000000      0x36e ./src/main.o
+ .debug_macro   0x00000000       0x23 ./src/main.o
+ .debug_macro   0x00000000       0xe6 ./src/main.o
+ .debug_macro   0x00000000       0xa1 ./src/main.o
+ .debug_macro   0x00000000       0x3c ./src/main.o
+ .debug_macro   0x00000000       0x1f ./src/main.o
+ .debug_macro   0x00000000      0x1cd ./src/main.o
+ .debug_macro   0x00000000      0xcd6 ./src/main.o
+ .debug_macro   0x00000000      0x13a ./src/main.o
+ .debug_macro   0x00000000      0x21e ./src/main.o
+ .debug_macro   0x00000000       0x2e ./src/main.o
+ .debug_macro   0x00000000      0x543 ./src/main.o
+ .debug_macro   0x00000000       0x88 ./src/main.o
+ .debug_macro   0x00000000       0xd5 ./src/main.o
+ .debug_macro   0x00000000      0x183 ./src/main.o
+ .debug_macro   0x00000000      0x1a7 ./src/main.o
+ .debug_macro   0x00000000       0xa5 ./src/main.o
+ .debug_macro   0x00000000      0x18b ./src/main.o
+ .debug_macro   0x00000000       0x24 ./src/main.o
+ .debug_macro   0x00000000       0x35 ./src/main.o
+ .debug_macro   0x00000000       0x79 ./src/main.o
+ .debug_macro   0x00000000      0x11e ./src/main.o
+ .debug_macro   0x00000000       0x7f ./src/main.o
+ .debug_macro   0x00000000       0x89 ./src/main.o
+ .debug_macro   0x00000000       0x7e ./src/main.o
+ .debug_macro   0x00000000      0x31a ./src/main.o
+ .debug_macro   0x00000000      0x409 ./src/main.o
+ .debug_macro   0x00000000       0xe4 ./src/main.o
+ .debug_macro   0x00000000      0x48d ./src/main.o
+ .debug_macro   0x00000000      0x22b ./src/main.o
+ .debug_macro   0x00000000      0x202 ./src/main.o
+ .debug_macro   0x00000000      0x6d9 ./src/main.o
+ .debug_macro   0x00000000       0x5b ./src/main.o
+ .debug_macro   0x00000000      0x14d ./src/main.o
+ .debug_macro   0x00000000      0x287 ./src/main.o
+ .debug_macro   0x00000000      0x225 ./src/main.o
+ .debug_macro   0x00000000      0x1b5 ./src/main.o
+ .debug_macro   0x00000000      0x2db ./src/main.o
+ .debug_macro   0x00000000       0x89 ./src/main.o
+ .debug_macro   0x00000000      0x1df ./src/main.o
+ .debug_macro   0x00000000      0x115 ./src/main.o
+ .debug_macro   0x00000000       0x6e ./src/main.o
+ .debug_macro   0x00000000      0x125 ./src/main.o
+ .debug_macro   0x00000000       0x22 ./src/main.o
  .group         0x00000000        0x8 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
  .group         0x00000000        0x8 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
  .group         0x00000000        0x8 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
@@ -286,8 +624,6 @@ Discarded input sections
  .text          0x00000000        0x0 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
  .data          0x00000000        0x0 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
  .bss           0x00000000        0x0 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
- .text.HAL_MspInit
-                0x00000000        0x4 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
  .text.HAL_MspDeInit
                 0x00000000        0x4 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
  .text.HAL_DeInit
@@ -2234,6 +2570,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xbd ./hardware/src/diag/Trace.o
  .debug_macro   0x00000000       0x16 ./hardware/src/diag/Trace.o
  .debug_macro   0x00000000      0x15c ./hardware/src/diag/Trace.o
+ .debug_macro   0x00000000       0x52 ./hardware/src/diag/Trace.o
  .debug_macro   0x00000000       0x16 ./hardware/src/diag/Trace.o
  .debug_macro   0x00000000       0x35 ./hardware/src/diag/Trace.o
  .debug_macro   0x00000000      0x495 ./hardware/src/diag/Trace.o
@@ -3362,186 +3699,20 @@ Discarded input sections
  .ARM.attributes
                 0x00000000       0x33 ./hardware/include/arm/_write.o
  .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .group         0x00000000        0x8 ./hardware/include/arm/stm32f4xx_hal_msp.o
  .text          0x00000000        0x0 ./hardware/include/arm/stm32f4xx_hal_msp.o
  .data          0x00000000        0x0 ./hardware/include/arm/stm32f4xx_hal_msp.o
  .bss           0x00000000        0x0 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .text.HAL_MspDeInit
-                0x00000000        0x4 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .text.HAL_PPP_MspInit
-                0x00000000        0x4 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .text.HAL_PPP_MspDeInit
-                0x00000000        0x4 ./hardware/include/arm/stm32f4xx_hal_msp.o
+ .debug_info    0x00000000       0x21 ./hardware/include/arm/stm32f4xx_hal_msp.o
+ .debug_abbrev  0x00000000       0x13 ./hardware/include/arm/stm32f4xx_hal_msp.o
+ .debug_aranges
+                0x00000000       0x18 ./hardware/include/arm/stm32f4xx_hal_msp.o
+ .debug_macro   0x00000000       0x11 ./hardware/include/arm/stm32f4xx_hal_msp.o
  .debug_macro   0x00000000      0x892 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x289 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x31 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x28 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x52 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x16 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x35 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0xa3 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x20e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x35 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x50 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0xe66 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000     0x93f9 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x43 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000     0x347f ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x16 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x97 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x10 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x3a ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x52 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x16 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x19 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x7d ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x1c ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x123 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x10 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0xf6 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x22 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0xbd ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x16 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x15c ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x5e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x964 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x9e1 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x11e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x13e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x27 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x287 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x5f ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x23a ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x391 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x16f ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0xf9 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x36e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x23 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0xe6 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0xa1 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x3c ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x1f ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x1cd ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0xcd6 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x13a ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x21e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x2e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x543 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x88 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0xd5 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x183 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x1a7 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0xa5 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x18b ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x24 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x35 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x79 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x11e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x7f ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x89 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x7e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x31a ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x409 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0xe4 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x48d ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x22b ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x202 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x6d9 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x5b ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x14d ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x287 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x225 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x1b5 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x2db ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x89 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x1df ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x115 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000       0x6e ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_macro   0x00000000      0x125 ./hardware/include/arm/stm32f4xx_hal_msp.o
+ .debug_line    0x00000000       0x4c ./hardware/include/arm/stm32f4xx_hal_msp.o
+ .debug_str     0x00000000     0x2498 ./hardware/include/arm/stm32f4xx_hal_msp.o
+ .comment       0x00000000       0x31 ./hardware/include/arm/stm32f4xx_hal_msp.o
+ .ARM.attributes
+                0x00000000       0x33 ./hardware/include/arm/stm32f4xx_hal_msp.o
  .text          0x00000000        0x0 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-ctype_.o)
  .bss           0x00000000        0x0 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-ctype_.o)
  .data          0x00000000        0x0 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-errno.o)
@@ -3682,6 +3853,7 @@ MEMORY_ARRAY     0x20002000         0x00000020         xrw
 
 Linker script and memory map
 
+LOAD ./src/console/console_serial_traffic.o
 LOAD ./src/main.o
 LOAD ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
 LOAD ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
@@ -3876,95 +4048,95 @@ END GROUP
  *(.text .text.*)
  .text.main     0x08000488       0x7c ./src/main.o
                 0x08000488                main
- .text.HAL_InitTick
-                0x08000504       0x30 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
-                0x08000504                HAL_InitTick
- .text.HAL_Init
-                0x08000534       0x38 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
-                0x08000534                HAL_Init
- .text.HAL_GetTick
-                0x0800056c        0xc ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
-                0x0800056c                HAL_GetTick
- .text.HAL_NVIC_SetPriorityGrouping
-                0x08000578       0x3c ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
-                0x08000578                HAL_NVIC_SetPriorityGrouping
- .text.HAL_NVIC_SetPriority
-                0x080005b4       0x90 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
-                0x080005b4                HAL_NVIC_SetPriority
- .text.HAL_SYSTICK_Config
-                0x08000644       0x30 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
-                0x08000644                HAL_SYSTICK_Config
- .text.HAL_SYSTICK_CLKSourceConfig
-                0x08000674       0x38 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
-                0x08000674                HAL_SYSTICK_CLKSourceConfig
- .text.HAL_GPIO_Init
-                0x080006ac      0x3bc ./hardware/src/stm32f4-hal/stm32f4xx_hal_gpio.o
-                0x080006ac                HAL_GPIO_Init
- .text.HAL_GPIO_WritePin
-                0x08000a68       0x3c ./hardware/src/stm32f4-hal/stm32f4xx_hal_gpio.o
-                0x08000a68                HAL_GPIO_WritePin
- .text.HAL_RCC_OscConfig
-                0x08000aa4      0x544 ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
-                0x08000aa4                HAL_RCC_OscConfig
- .text.HAL_RCC_GetSysClockFreq
-                0x08000fe8       0xa0 ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
-                0x08000fe8                HAL_RCC_GetSysClockFreq
- .text.HAL_RCC_ClockConfig
-                0x08001088      0x2e8 ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
-                0x08001088                HAL_RCC_ClockConfig
- .text.HAL_RCC_GetHCLKFreq
-                0x08001370        0xc ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
-                0x08001370                HAL_RCC_GetHCLKFreq
- .text.abort    0x0800137c       0x14 ./hardware/src/newlib/_exit.o
-                0x0800137c                abort
- .text._sbrk    0x08001390       0x5c ./hardware/src/newlib/_sbrk.o
-                0x08001390                _sbrk
- .text._exit    0x080013ec       0x24 ./hardware/src/newlib/_syscalls.o
-                0x080013ec                _exit
- .text.initialise_monitor_handles
-                0x08001410       0xdc ./hardware/src/newlib/_syscalls.o
-                0x08001410                initialise_monitor_handles
- .text.__initialize_args
-                0x080014ec      0x104 ./hardware/src/newlib/_syscalls.o
-                0x080014ec                __initialize_args
- .text.assert_failed
-                0x080015f0       0x18 ./hardware/src/newlib/assert.o
-                0x080015f0                assert_failed
- .text.trace_printf
-                0x08001608       0x3c ./hardware/src/diag/Trace.o
-                0x08001608                trace_printf
- .text.trace_puts
-                0x08001644       0x20 ./hardware/src/diag/Trace.o
-                0x08001644                trace_puts
- .text._trace_write_semihosting_debug
-                0x08001664       0x60 ./hardware/src/diag/trace_impl.o
- .text.trace_write
-                0x080016c4        0x8 ./hardware/src/diag/trace_impl.o
-                0x080016c4                trace_write
- .text.__initialize_hardware_early
-                0x080016cc       0x1c ./hardware/src/cortexm/_initialize_hardware.o
-                0x080016cc                __initialize_hardware_early
- .text.dumpExceptionStack
-                0x080016e8      0x118 ./hardware/src/cortexm/exception_handlers.o
-                0x080016e8                dumpExceptionStack
- .text.isSemihosting
-                0x08001800      0x100 ./hardware/src/cortexm/exception_handlers.o
-                0x08001800                isSemihosting
- .text.SystemInit
-                0x08001900       0x44 ./hardware/src/cmsis/system_stm32f4xx.o
-                0x08001900                SystemInit
- .text.SystemCoreClockUpdate
-                0x08001944       0xdc ./hardware/src/cmsis/system_stm32f4xx.o
-                0x08001944                SystemCoreClockUpdate
- .text.SystemClock_Config
-                0x08001a20       0xa0 ./hardware/include/arm/_initialize_hardware.o
-                0x08001a20                SystemClock_Config
- .text.__initialize_hardware
-                0x08001ac0       0x10 ./hardware/include/arm/_initialize_hardware.o
-                0x08001ac0                __initialize_hardware
  .text.HAL_MspInit
-                0x08001ad0        0x4 ./hardware/include/arm/stm32f4xx_hal_msp.o
-                0x08001ad0                HAL_MspInit
+                0x08000504        0x4 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+                0x08000504                HAL_MspInit
+ .text.HAL_InitTick
+                0x08000508       0x30 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+                0x08000508                HAL_InitTick
+ .text.HAL_Init
+                0x08000538       0x38 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+                0x08000538                HAL_Init
+ .text.HAL_GetTick
+                0x08000570        0xc ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+                0x08000570                HAL_GetTick
+ .text.HAL_NVIC_SetPriorityGrouping
+                0x0800057c       0x3c ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
+                0x0800057c                HAL_NVIC_SetPriorityGrouping
+ .text.HAL_NVIC_SetPriority
+                0x080005b8       0x90 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
+                0x080005b8                HAL_NVIC_SetPriority
+ .text.HAL_SYSTICK_Config
+                0x08000648       0x30 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
+                0x08000648                HAL_SYSTICK_Config
+ .text.HAL_SYSTICK_CLKSourceConfig
+                0x08000678       0x38 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
+                0x08000678                HAL_SYSTICK_CLKSourceConfig
+ .text.HAL_GPIO_Init
+                0x080006b0      0x3bc ./hardware/src/stm32f4-hal/stm32f4xx_hal_gpio.o
+                0x080006b0                HAL_GPIO_Init
+ .text.HAL_GPIO_WritePin
+                0x08000a6c       0x3c ./hardware/src/stm32f4-hal/stm32f4xx_hal_gpio.o
+                0x08000a6c                HAL_GPIO_WritePin
+ .text.HAL_RCC_OscConfig
+                0x08000aa8      0x544 ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
+                0x08000aa8                HAL_RCC_OscConfig
+ .text.HAL_RCC_GetSysClockFreq
+                0x08000fec       0xa0 ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
+                0x08000fec                HAL_RCC_GetSysClockFreq
+ .text.HAL_RCC_ClockConfig
+                0x0800108c      0x2e8 ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
+                0x0800108c                HAL_RCC_ClockConfig
+ .text.HAL_RCC_GetHCLKFreq
+                0x08001374        0xc ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
+                0x08001374                HAL_RCC_GetHCLKFreq
+ .text.abort    0x08001380       0x14 ./hardware/src/newlib/_exit.o
+                0x08001380                abort
+ .text._sbrk    0x08001394       0x5c ./hardware/src/newlib/_sbrk.o
+                0x08001394                _sbrk
+ .text._exit    0x080013f0       0x24 ./hardware/src/newlib/_syscalls.o
+                0x080013f0                _exit
+ .text.initialise_monitor_handles
+                0x08001414       0xdc ./hardware/src/newlib/_syscalls.o
+                0x08001414                initialise_monitor_handles
+ .text.__initialize_args
+                0x080014f0      0x104 ./hardware/src/newlib/_syscalls.o
+                0x080014f0                __initialize_args
+ .text.assert_failed
+                0x080015f4       0x18 ./hardware/src/newlib/assert.o
+                0x080015f4                assert_failed
+ .text.trace_printf
+                0x0800160c       0x3c ./hardware/src/diag/Trace.o
+                0x0800160c                trace_printf
+ .text.trace_puts
+                0x08001648       0x20 ./hardware/src/diag/Trace.o
+                0x08001648                trace_puts
+ .text._trace_write_semihosting_debug
+                0x08001668       0x60 ./hardware/src/diag/trace_impl.o
+ .text.trace_write
+                0x080016c8        0x8 ./hardware/src/diag/trace_impl.o
+                0x080016c8                trace_write
+ .text.__initialize_hardware_early
+                0x080016d0       0x1c ./hardware/src/cortexm/_initialize_hardware.o
+                0x080016d0                __initialize_hardware_early
+ .text.dumpExceptionStack
+                0x080016ec      0x118 ./hardware/src/cortexm/exception_handlers.o
+                0x080016ec                dumpExceptionStack
+ .text.isSemihosting
+                0x08001804      0x100 ./hardware/src/cortexm/exception_handlers.o
+                0x08001804                isSemihosting
+ .text.SystemInit
+                0x08001904       0x44 ./hardware/src/cmsis/system_stm32f4xx.o
+                0x08001904                SystemInit
+ .text.SystemCoreClockUpdate
+                0x08001948       0xdc ./hardware/src/cmsis/system_stm32f4xx.o
+                0x08001948                SystemCoreClockUpdate
+ .text.SystemClock_Config
+                0x08001a24       0xa0 ./hardware/include/arm/_initialize_hardware.o
+                0x08001a24                SystemClock_Config
+ .text.__initialize_hardware
+                0x08001ac4       0x10 ./hardware/include/arm/_initialize_hardware.o
+                0x08001ac4                __initialize_hardware
  .text          0x08001ad4        0xc /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-errno.o)
                 0x08001ad4                __errno
  .text          0x08001ae0      0x570 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mallocr.o)
@@ -4171,7 +4343,7 @@ END GROUP
  .v4_bx         0x00000000        0x0 linker stubs
 
 .iplt           0x080080b8        0x0
- .iplt          0x00000000        0x0 ./src/main.o
+ .iplt          0x00000000        0x0 ./src/console/console_serial_traffic.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
@@ -4186,7 +4358,7 @@ END GROUP
                 0x080080c0                __exidx_end = .
 
 .rel.dyn        0x080080c0        0x0
- .rel.iplt      0x00000000        0x0 ./src/main.o
+ .rel.iplt      0x00000000        0x0 ./src/console/console_serial_traffic.o
                 0x080080c0                . = ALIGN (0x4)
                 0x080080c0                _etext = .
                 0x080080c0                __etext = .
@@ -4224,7 +4396,7 @@ END GROUP
                 0x20000590                __data_end__ = .
 
 .igot.plt       0x20000590        0x0 load address 0x08008650
- .igot.plt      0x00000000        0x0 ./src/main.o
+ .igot.plt      0x00000000        0x0 ./src/console/console_serial_traffic.o
 
 .bss_CCMRAM     0x10000000        0x0
  *(.bss.CCMRAM .bss.CCMRAM.*)
@@ -4346,7 +4518,6 @@ END GROUP
  .comment       0x00000000       0x31 ./hardware/src/cmsis/system_stm32f4xx.o
  .comment       0x00000000       0x31 ./hardware/src/cmsis/vectors_stm32f407xx.o
  .comment       0x00000000       0x31 ./hardware/include/arm/_initialize_hardware.o
- .comment       0x00000000       0x31 ./hardware/include/arm/stm32f4xx_hal_msp.o
 
 .ARM.attributes
                 0x00000000       0x31
@@ -4385,75 +4556,73 @@ END GROUP
  .ARM.attributes
                 0x00000330       0x33 ./hardware/include/arm/_initialize_hardware.o
  .ARM.attributes
-                0x00000363       0x33 ./hardware/include/arm/stm32f4xx_hal_msp.o
+                0x00000363       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-ctype_.o)
  .ARM.attributes
-                0x00000396       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-ctype_.o)
+                0x0000038c       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-errno.o)
  .ARM.attributes
-                0x000003bf       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-errno.o)
+                0x000003b5       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-findfp.o)
  .ARM.attributes
-                0x000003e8       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-findfp.o)
+                0x000003de       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-impure.o)
  .ARM.attributes
-                0x00000411       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-impure.o)
+                0x00000407       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mallocr.o)
  .ARM.attributes
-                0x0000043a       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mallocr.o)
+                0x00000430       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memset.o)
  .ARM.attributes
-                0x00000463       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memset.o)
+                0x00000459       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mlock.o)
  .ARM.attributes
-                0x0000048c       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mlock.o)
+                0x00000482       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-sbrkr.o)
  .ARM.attributes
-                0x000004b5       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-sbrkr.o)
+                0x000004ab       0x17 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-strcmp.o)
  .ARM.attributes
-                0x000004de       0x17 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-strcmp.o)
+                0x000004c2       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-strlen.o)
  .ARM.attributes
-                0x000004f5       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-strlen.o)
+                0x000004eb       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-vsnprintf.o)
  .ARM.attributes
-                0x0000051e       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-vsnprintf.o)
+                0x00000514       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-freer.o)
  .ARM.attributes
-                0x00000547       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-freer.o)
+                0x0000053d       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-svfprintf.o)
  .ARM.attributes
-                0x00000570       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-svfprintf.o)
+                0x00000566       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-dtoa.o)
  .ARM.attributes
-                0x00000599       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-dtoa.o)
+                0x0000058f       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-locale.o)
  .ARM.attributes
-                0x000005c2       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-locale.o)
+                0x000005b8       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-malloc.o)
  .ARM.attributes
-                0x000005eb       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-malloc.o)
+                0x000005e1       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memchr-stub.o)
  .ARM.attributes
-                0x00000614       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memchr-stub.o)
+                0x0000060a       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memcpy-stub.o)
  .ARM.attributes
-                0x0000063d       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memcpy-stub.o)
+                0x00000633       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mprec.o)
  .ARM.attributes
-                0x00000666       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mprec.o)
+                0x0000065c       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-s_fpclassify.o)
  .ARM.attributes
-                0x0000068f       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-s_fpclassify.o)
+                0x00000685       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-svfiprintf.o)
  .ARM.attributes
-                0x000006b8       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-svfiprintf.o)
+                0x000006ae       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-callocr.o)
  .ARM.attributes
-                0x000006e1       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-callocr.o)
+                0x000006d7       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memmove.o)
  .ARM.attributes
-                0x0000070a       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memmove.o)
+                0x00000700       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-reallocr.o)
  .ARM.attributes
-                0x00000733       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-reallocr.o)
+                0x00000729       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_udivsi3.o)
  .ARM.attributes
-                0x0000075c       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_udivsi3.o)
+                0x00000742       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_dvmd_tls.o)
  .ARM.attributes
-                0x00000775       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_dvmd_tls.o)
+                0x0000075b       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_arm_addsubdf3.o)
  .ARM.attributes
-                0x0000078e       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_arm_addsubdf3.o)
+                0x00000774       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_arm_muldivdf3.o)
  .ARM.attributes
-                0x000007a7       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_arm_muldivdf3.o)
+                0x0000078d       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_arm_cmpdf2.o)
  .ARM.attributes
-                0x000007c0       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_arm_cmpdf2.o)
+                0x000007a6       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_arm_fixdfsi.o)
  .ARM.attributes
-                0x000007d9       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_arm_fixdfsi.o)
+                0x000007bf       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_aeabi_uldivmod.o)
  .ARM.attributes
-                0x000007f2       0x19 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_aeabi_uldivmod.o)
+                0x000007d8       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(bpabi.o)
  .ARM.attributes
-                0x0000080b       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(bpabi.o)
+                0x00000801       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_divdi3.o)
  .ARM.attributes
-                0x00000834       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_divdi3.o)
- .ARM.attributes
-                0x0000085d       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_udivdi3.o)
+                0x0000082a       0x29 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_udivdi3.o)
 
 .debug
  *(.debug)
@@ -4467,7 +4636,7 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x5f0
+.debug_aranges  0x00000000      0x5b8
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x20 ./src/main.o
@@ -4503,13 +4672,11 @@ END GROUP
                 0x00000570       0x20 ./hardware/src/cmsis/vectors_stm32f407xx.o
  .debug_aranges
                 0x00000590       0x28 ./hardware/include/arm/_initialize_hardware.o
- .debug_aranges
-                0x000005b8       0x38 ./hardware/include/arm/stm32f4xx_hal_msp.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x7af4
+.debug_info     0x00000000     0x7a0f
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x419 ./src/main.o
  .debug_info    0x00000419      0x907 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
@@ -4528,9 +4695,8 @@ END GROUP
  .debug_info    0x00006f69      0x48f ./hardware/src/cmsis/system_stm32f4xx.o
  .debug_info    0x000073f8       0xd1 ./hardware/src/cmsis/vectors_stm32f407xx.o
  .debug_info    0x000074c9      0x546 ./hardware/include/arm/_initialize_hardware.o
- .debug_info    0x00007a0f       0xe5 ./hardware/include/arm/stm32f4xx_hal_msp.o
 
-.debug_abbrev   0x00000000     0x1e71
+.debug_abbrev   0x00000000     0x1e07
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x16d ./src/main.o
  .debug_abbrev  0x0000016d      0x25b ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
@@ -4549,9 +4715,8 @@ END GROUP
  .debug_abbrev  0x00001ab7      0x104 ./hardware/src/cmsis/system_stm32f4xx.o
  .debug_abbrev  0x00001bbb       0x9d ./hardware/src/cmsis/vectors_stm32f407xx.o
  .debug_abbrev  0x00001c58      0x1af ./hardware/include/arm/_initialize_hardware.o
- .debug_abbrev  0x00001e07       0x6a ./hardware/include/arm/stm32f4xx_hal_msp.o
 
-.debug_line     0x00000000     0x9678
+.debug_line     0x00000000     0x8c2a
  *(.debug_line)
  .debug_line    0x00000000      0xb75 ./src/main.o
  .debug_line    0x00000b75      0xba1 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
@@ -4570,9 +4735,8 @@ END GROUP
  .debug_line    0x00007586      0xa45 ./hardware/src/cmsis/system_stm32f4xx.o
  .debug_line    0x00007fcb      0x211 ./hardware/src/cmsis/vectors_stm32f407xx.o
  .debug_line    0x000081dc      0xa4e ./hardware/include/arm/_initialize_hardware.o
- .debug_line    0x00008c2a      0xa4e ./hardware/include/arm/stm32f4xx_hal_msp.o
 
-.debug_frame    0x00000000     0x162c
+.debug_frame    0x00000000     0x15dc
  *(.debug_frame)
  .debug_frame   0x00000000       0x28 ./src/main.o
  .debug_frame   0x00000028      0x184 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
@@ -4591,72 +4755,69 @@ END GROUP
  .debug_frame   0x00000c70       0x30 ./hardware/src/cmsis/system_stm32f4xx.o
  .debug_frame   0x00000ca0       0x20 ./hardware/src/cmsis/vectors_stm32f407xx.o
  .debug_frame   0x00000cc0       0x44 ./hardware/include/arm/_initialize_hardware.o
- .debug_frame   0x00000d04       0x50 ./hardware/include/arm/stm32f4xx_hal_msp.o
- .debug_frame   0x00000d54       0x20 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-errno.o)
- .debug_frame   0x00000d74      0x110 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-findfp.o)
- .debug_frame   0x00000e84       0x38 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mallocr.o)
- .debug_frame   0x00000ebc       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memset.o)
- .debug_frame   0x00000ee8       0x30 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mlock.o)
- .debug_frame   0x00000f18       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-sbrkr.o)
- .debug_frame   0x00000f44       0x20 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-strlen.o)
- .debug_frame   0x00000f64       0x54 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-vsnprintf.o)
- .debug_frame   0x00000fb8       0x50 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-freer.o)
- .debug_frame   0x00001008       0x3c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-svfprintf.o)
- .debug_frame   0x00001044       0x64 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-dtoa.o)
- .debug_frame   0x000010a8       0x98 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-locale.o)
- .debug_frame   0x00001140       0x30 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-malloc.o)
- .debug_frame   0x00001170       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memchr-stub.o)
- .debug_frame   0x0000119c       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memcpy-stub.o)
- .debug_frame   0x000011c8      0x244 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mprec.o)
- .debug_frame   0x0000140c       0x20 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-s_fpclassify.o)
- .debug_frame   0x0000142c       0x64 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-svfiprintf.o)
- .debug_frame   0x00001490       0x28 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-callocr.o)
- .debug_frame   0x000014b8       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memmove.o)
- .debug_frame   0x000014e4       0x38 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-reallocr.o)
- .debug_frame   0x0000151c       0x20 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_udivsi3.o)
- .debug_frame   0x0000153c       0x28 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_aeabi_uldivmod.o)
- .debug_frame   0x00001564       0x58 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(bpabi.o)
- .debug_frame   0x000015bc       0x38 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_divdi3.o)
- .debug_frame   0x000015f4       0x38 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_udivdi3.o)
+ .debug_frame   0x00000d04       0x20 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-errno.o)
+ .debug_frame   0x00000d24      0x110 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-findfp.o)
+ .debug_frame   0x00000e34       0x38 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mallocr.o)
+ .debug_frame   0x00000e6c       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memset.o)
+ .debug_frame   0x00000e98       0x30 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mlock.o)
+ .debug_frame   0x00000ec8       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-sbrkr.o)
+ .debug_frame   0x00000ef4       0x20 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-strlen.o)
+ .debug_frame   0x00000f14       0x54 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-vsnprintf.o)
+ .debug_frame   0x00000f68       0x50 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-freer.o)
+ .debug_frame   0x00000fb8       0x3c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-svfprintf.o)
+ .debug_frame   0x00000ff4       0x64 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-dtoa.o)
+ .debug_frame   0x00001058       0x98 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-locale.o)
+ .debug_frame   0x000010f0       0x30 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-malloc.o)
+ .debug_frame   0x00001120       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memchr-stub.o)
+ .debug_frame   0x0000114c       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memcpy-stub.o)
+ .debug_frame   0x00001178      0x244 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-mprec.o)
+ .debug_frame   0x000013bc       0x20 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-s_fpclassify.o)
+ .debug_frame   0x000013dc       0x64 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-svfiprintf.o)
+ .debug_frame   0x00001440       0x28 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-callocr.o)
+ .debug_frame   0x00001468       0x2c /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-memmove.o)
+ .debug_frame   0x00001494       0x38 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2/libc.a(lib_a-reallocr.o)
+ .debug_frame   0x000014cc       0x20 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_udivsi3.o)
+ .debug_frame   0x000014ec       0x28 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_aeabi_uldivmod.o)
+ .debug_frame   0x00001514       0x58 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(bpabi.o)
+ .debug_frame   0x0000156c       0x38 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_divdi3.o)
+ .debug_frame   0x000015a4       0x38 /home/yama/GCCToolchain/arm-2013.11/bin/../lib/gcc/arm-none-eabi/4.8.1/thumb2/libgcc.a(_udivdi3.o)
 
-.debug_str      0x00000000    0x9a762
+.debug_str      0x00000000    0x9a744
  *(.debug_str)
- .debug_str     0x00000000    0x96b12 ./src/main.o
-                              0x96d82 (size before relaxing)
- .debug_str     0x00096b12      0x9fa ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+ .debug_str     0x00000000    0x96c22 ./src/main.o
+                              0x96ec0 (size before relaxing)
+ .debug_str     0x00096c22      0x9fa ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
                               0x9571e (size before relaxing)
- .debug_str     0x0009750c      0x385 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
+ .debug_str     0x0009761c      0x385 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
                               0x95580 (size before relaxing)
- .debug_str     0x00097891      0x23d ./hardware/src/stm32f4-hal/stm32f4xx_hal_gpio.o
+ .debug_str     0x000979a1      0x23d ./hardware/src/stm32f4-hal/stm32f4xx_hal_gpio.o
                               0x94f91 (size before relaxing)
- .debug_str     0x00097ace      0x395 ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
+ .debug_str     0x00097bde      0x395 ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
                               0x9512f (size before relaxing)
- .debug_str     0x00097e63       0x36 ./hardware/src/newlib/_exit.o
+ .debug_str     0x00097f73       0x36 ./hardware/src/newlib/_exit.o
                                0x5509 (size before relaxing)
- .debug_str     0x00097e99      0x4e0 ./hardware/src/newlib/_sbrk.o
+ .debug_str     0x00097fa9      0x4e0 ./hardware/src/newlib/_sbrk.o
                                0x4ac6 (size before relaxing)
- .debug_str     0x00098379      0x2c3 ./hardware/src/newlib/_startup.o
+ .debug_str     0x00098489      0x2c3 ./hardware/src/newlib/_startup.o
                                0x3e63 (size before relaxing)
- .debug_str     0x0009863c     0x1b61 ./hardware/src/newlib/_syscalls.o
+ .debug_str     0x0009874c     0x1b61 ./hardware/src/newlib/_syscalls.o
                                0x92c5 (size before relaxing)
- .debug_str     0x0009a19d       0x46 ./hardware/src/newlib/assert.o
+ .debug_str     0x0009a2ad       0x46 ./hardware/src/newlib/assert.o
                                0x5d38 (size before relaxing)
- .debug_str     0x0009a1e3      0x173 ./hardware/src/diag/Trace.o
+ .debug_str     0x0009a2f3       0x93 ./hardware/src/diag/Trace.o
                                0x73ac (size before relaxing)
- .debug_str     0x0009a356       0x9b ./hardware/src/diag/trace_impl.o
+ .debug_str     0x0009a386       0x9b ./hardware/src/diag/trace_impl.o
                               0x95ca4 (size before relaxing)
- .debug_str     0x0009a3f1       0x60 ./hardware/src/cortexm/_initialize_hardware.o
+ .debug_str     0x0009a421       0x60 ./hardware/src/cortexm/_initialize_hardware.o
                               0x94c40 (size before relaxing)
- .debug_str     0x0009a451      0x1de ./hardware/src/cortexm/exception_handlers.o
+ .debug_str     0x0009a481      0x1de ./hardware/src/cortexm/exception_handlers.o
                               0x96cf6 (size before relaxing)
- .debug_str     0x0009a62f       0x48 ./hardware/src/cmsis/system_stm32f4xx.o
+ .debug_str     0x0009a65f       0x48 ./hardware/src/cmsis/system_stm32f4xx.o
                               0x94d1f (size before relaxing)
- .debug_str     0x0009a677       0x5b ./hardware/src/cmsis/vectors_stm32f407xx.o
+ .debug_str     0x0009a6a7       0x5b ./hardware/src/cmsis/vectors_stm32f407xx.o
                                0x322b (size before relaxing)
- .debug_str     0x0009a6d2       0x42 ./hardware/include/arm/_initialize_hardware.o
+ .debug_str     0x0009a702       0x42 ./hardware/include/arm/_initialize_hardware.o
                               0x94e6c (size before relaxing)
- .debug_str     0x0009a714       0x4e ./hardware/include/arm/stm32f4xx_hal_msp.o
-                              0x94b8e (size before relaxing)
 
 .debug_loc      0x00000000     0x2a51
  *(.debug_loc)
@@ -4690,7 +4851,7 @@ END GROUP
  *(.debug_varnames)
 OUTPUT(HAL_WorkStation.elf elf32-littlearm)
 
-.debug_ranges   0x00000000      0x518
+.debug_ranges   0x00000000      0x4f0
  .debug_ranges  0x00000000       0x10 ./src/main.o
  .debug_ranges  0x00000010       0xb0 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
  .debug_ranges  0x000000c0       0x88 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
@@ -4708,152 +4869,51 @@ OUTPUT(HAL_WorkStation.elf elf32-littlearm)
  .debug_ranges  0x000004b0       0x18 ./hardware/src/cmsis/system_stm32f4xx.o
  .debug_ranges  0x000004c8       0x10 ./hardware/src/cmsis/vectors_stm32f407xx.o
  .debug_ranges  0x000004d8       0x18 ./hardware/include/arm/_initialize_hardware.o
- .debug_ranges  0x000004f0       0x28 ./hardware/include/arm/stm32f4xx_hal_msp.o
 
-.debug_macro    0x00000000    0x1ba73
- .debug_macro   0x00000000      0x546 ./src/main.o
- .debug_macro   0x00000546      0x892 ./src/main.o
- .debug_macro   0x00000dd8       0x58 ./src/main.o
- .debug_macro   0x00000e30       0x16 ./src/main.o
- .debug_macro   0x00000e46       0x10 ./src/main.o
- .debug_macro   0x00000e56       0x52 ./src/main.o
- .debug_macro   0x00000ea8       0x16 ./src/main.o
- .debug_macro   0x00000ebe       0x35 ./src/main.o
- .debug_macro   0x00000ef3       0xa3 ./src/main.o
- .debug_macro   0x00000f96       0x3a ./src/main.o
- .debug_macro   0x00000fd0       0x52 ./src/main.o
- .debug_macro   0x00001022       0x16 ./src/main.o
- .debug_macro   0x00001038       0x19 ./src/main.o
- .debug_macro   0x00001051       0x7d ./src/main.o
- .debug_macro   0x000010ce       0x1c ./src/main.o
- .debug_macro   0x000010ea      0x123 ./src/main.o
- .debug_macro   0x0000120d      0x16d ./src/main.o
- .debug_macro   0x0000137a      0x214 ./src/main.o
- .debug_macro   0x0000158e      0x283 ./src/main.o
- .debug_macro   0x00001811       0x10 ./src/main.o
- .debug_macro   0x00001821       0x35 ./src/main.o
- .debug_macro   0x00001856       0x1f ./src/main.o
- .debug_macro   0x00001875       0x1c ./src/main.o
- .debug_macro   0x00001891       0x10 ./src/main.o
- .debug_macro   0x000018a1       0x10 ./src/main.o
- .debug_macro   0x000018b1       0x22 ./src/main.o
- .debug_macro   0x000018d3       0xbd ./src/main.o
- .debug_macro   0x00001990       0x16 ./src/main.o
- .debug_macro   0x000019a6      0x15c ./src/main.o
- .debug_macro   0x00001b02       0x16 ./src/main.o
- .debug_macro   0x00001b18       0x16 ./src/main.o
- .debug_macro   0x00001b2e       0x23 ./src/main.o
- .debug_macro   0x00001b51       0x16 ./src/main.o
- .debug_macro   0x00001b67      0x495 ./src/main.o
- .debug_macro   0x00001ffc      0x289 ./src/main.o
- .debug_macro   0x00002285       0x31 ./src/main.o
- .debug_macro   0x000022b6       0x28 ./src/main.o
- .debug_macro   0x000022de       0x3b ./src/main.o
- .debug_macro   0x00002319       0x50 ./src/main.o
- .debug_macro   0x00002369      0xe66 ./src/main.o
- .debug_macro   0x000031cf     0x93f9 ./src/main.o
- .debug_macro   0x0000c5c8       0x43 ./src/main.o
- .debug_macro   0x0000c60b     0x347f ./src/main.o
- .debug_macro   0x0000fa8a       0x57 ./src/main.o
- .debug_macro   0x0000fae1      0x964 ./src/main.o
- .debug_macro   0x00010445      0x9e1 ./src/main.o
- .debug_macro   0x00010e26      0x11e ./src/main.o
- .debug_macro   0x00010f44      0x13e ./src/main.o
- .debug_macro   0x00011082       0x27 ./src/main.o
- .debug_macro   0x000110a9      0x287 ./src/main.o
- .debug_macro   0x00011330       0x5f ./src/main.o
- .debug_macro   0x0001138f      0x23a ./src/main.o
- .debug_macro   0x000115c9      0x391 ./src/main.o
- .debug_macro   0x0001195a      0x16f ./src/main.o
- .debug_macro   0x00011ac9       0xf9 ./src/main.o
- .debug_macro   0x00011bc2      0x36e ./src/main.o
- .debug_macro   0x00011f30       0x23 ./src/main.o
- .debug_macro   0x00011f53       0xe6 ./src/main.o
- .debug_macro   0x00012039       0xa1 ./src/main.o
- .debug_macro   0x000120da       0x3c ./src/main.o
- .debug_macro   0x00012116       0x1f ./src/main.o
- .debug_macro   0x00012135      0x1cd ./src/main.o
- .debug_macro   0x00012302      0xcd6 ./src/main.o
- .debug_macro   0x00012fd8      0x13a ./src/main.o
- .debug_macro   0x00013112      0x21e ./src/main.o
- .debug_macro   0x00013330       0x2e ./src/main.o
- .debug_macro   0x0001335e      0x543 ./src/main.o
- .debug_macro   0x000138a1       0x88 ./src/main.o
- .debug_macro   0x00013929       0xd5 ./src/main.o
- .debug_macro   0x000139fe      0x183 ./src/main.o
- .debug_macro   0x00013b81      0x1a7 ./src/main.o
- .debug_macro   0x00013d28       0xa5 ./src/main.o
- .debug_macro   0x00013dcd      0x18b ./src/main.o
- .debug_macro   0x00013f58       0x24 ./src/main.o
- .debug_macro   0x00013f7c       0x35 ./src/main.o
- .debug_macro   0x00013fb1       0x79 ./src/main.o
- .debug_macro   0x0001402a      0x11e ./src/main.o
- .debug_macro   0x00014148       0x7f ./src/main.o
- .debug_macro   0x000141c7       0x89 ./src/main.o
- .debug_macro   0x00014250       0x7e ./src/main.o
- .debug_macro   0x000142ce      0x31a ./src/main.o
- .debug_macro   0x000145e8      0x409 ./src/main.o
- .debug_macro   0x000149f1       0xe4 ./src/main.o
- .debug_macro   0x00014ad5      0x48d ./src/main.o
- .debug_macro   0x00014f62      0x22b ./src/main.o
- .debug_macro   0x0001518d      0x202 ./src/main.o
- .debug_macro   0x0001538f      0x6d9 ./src/main.o
- .debug_macro   0x00015a68       0x5b ./src/main.o
- .debug_macro   0x00015ac3      0x14d ./src/main.o
- .debug_macro   0x00015c10      0x287 ./src/main.o
- .debug_macro   0x00015e97      0x225 ./src/main.o
- .debug_macro   0x000160bc      0x1b5 ./src/main.o
- .debug_macro   0x00016271      0x2db ./src/main.o
- .debug_macro   0x0001654c       0x89 ./src/main.o
- .debug_macro   0x000165d5      0x1df ./src/main.o
- .debug_macro   0x000167b4      0x115 ./src/main.o
- .debug_macro   0x000168c9       0x6e ./src/main.o
- .debug_macro   0x00016937      0x125 ./src/main.o
- .debug_macro   0x00016a5c       0x1c ./src/main.o
- .debug_macro   0x00016a78      0x4be ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
- .debug_macro   0x00016f36      0x20e ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
- .debug_macro   0x00017144       0x35 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
- .debug_macro   0x00017179       0x16 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
- .debug_macro   0x0001718f       0x97 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
- .debug_macro   0x00017226       0xf6 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
- .debug_macro   0x0001731c       0x5e ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
- .debug_macro   0x0001737a      0x470 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
- .debug_macro   0x000177ea      0x4a8 ./hardware/src/stm32f4-hal/stm32f4xx_hal_gpio.o
- .debug_macro   0x00017c92      0x49a ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
- .debug_macro   0x0001812c      0x126 ./hardware/src/newlib/_exit.o
- .debug_macro   0x00018252      0x10e ./hardware/src/newlib/_exit.o
- .debug_macro   0x00018360       0x86 ./hardware/src/newlib/_exit.o
- .debug_macro   0x000183e6       0x10 ./hardware/src/newlib/_exit.o
- .debug_macro   0x000183f6       0xda ./hardware/src/newlib/_sbrk.o
- .debug_macro   0x000184d0       0x10 ./hardware/src/newlib/_sbrk.o
- .debug_macro   0x000184e0       0x83 ./hardware/src/newlib/_sbrk.o
- .debug_macro   0x00018563      0x23f ./hardware/src/newlib/_sbrk.o
- .debug_macro   0x000187a2       0xe1 ./hardware/src/newlib/_startup.o
- .debug_macro   0x00018883      0x898 ./hardware/src/newlib/_startup.o
- .debug_macro   0x0001911b      0x240 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x0001935b       0x10 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x0001936b       0x10 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x0001937b       0x10 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x0001938b       0x35 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x000193c0      0x120 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x000194e0      0x18e ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x0001966e       0x10 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x0001967e       0x22 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x000196a0      0x245 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x000198e5       0x16 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x000198fb       0x3a ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x00019935       0xae ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x000199e3      0x13a ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x00019b1d       0x16 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x00019b33       0x22 ./hardware/src/newlib/_syscalls.o
- .debug_macro   0x00019b55      0x142 ./hardware/src/newlib/assert.o
- .debug_macro   0x00019c97       0x16 ./hardware/src/newlib/assert.o
- .debug_macro   0x00019cad      0x178 ./hardware/src/diag/Trace.o
- .debug_macro   0x00019e25       0x52 ./hardware/src/diag/Trace.o
- .debug_macro   0x00019e77      0x4b6 ./hardware/src/diag/trace_impl.o
- .debug_macro   0x0001a32d      0x47a ./hardware/src/cortexm/_initialize_hardware.o
- .debug_macro   0x0001a7a7      0x502 ./hardware/src/cortexm/exception_handlers.o
- .debug_macro   0x0001aca9      0x476 ./hardware/src/cmsis/system_stm32f4xx.o
- .debug_macro   0x0001b11f       0x74 ./hardware/src/cmsis/vectors_stm32f407xx.o
- .debug_macro   0x0001b193      0x470 ./hardware/include/arm/_initialize_hardware.o
- .debug_macro   0x0001b603      0x470 ./hardware/include/arm/stm32f4xx_hal_msp.o
+.debug_macro    0x00000000     0x5089
+ .debug_macro   0x00000000      0x550 ./src/main.o
+ .debug_macro   0x00000550      0x4be ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+ .debug_macro   0x00000a0e      0x20e ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+ .debug_macro   0x00000c1c       0x35 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+ .debug_macro   0x00000c51       0x16 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+ .debug_macro   0x00000c67       0x97 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+ .debug_macro   0x00000cfe       0xf6 ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+ .debug_macro   0x00000df4       0x5e ./hardware/src/stm32f4-hal/stm32f4xx_hal.o
+ .debug_macro   0x00000e52      0x470 ./hardware/src/stm32f4-hal/stm32f4xx_hal_cortex.o
+ .debug_macro   0x000012c2      0x4a8 ./hardware/src/stm32f4-hal/stm32f4xx_hal_gpio.o
+ .debug_macro   0x0000176a      0x49a ./hardware/src/stm32f4-hal/stm32f4xx_hal_rcc.o
+ .debug_macro   0x00001c04      0x126 ./hardware/src/newlib/_exit.o
+ .debug_macro   0x00001d2a      0x10e ./hardware/src/newlib/_exit.o
+ .debug_macro   0x00001e38       0x86 ./hardware/src/newlib/_exit.o
+ .debug_macro   0x00001ebe       0x10 ./hardware/src/newlib/_exit.o
+ .debug_macro   0x00001ece       0xda ./hardware/src/newlib/_sbrk.o
+ .debug_macro   0x00001fa8       0x10 ./hardware/src/newlib/_sbrk.o
+ .debug_macro   0x00001fb8       0x83 ./hardware/src/newlib/_sbrk.o
+ .debug_macro   0x0000203b      0x23f ./hardware/src/newlib/_sbrk.o
+ .debug_macro   0x0000227a       0xe1 ./hardware/src/newlib/_startup.o
+ .debug_macro   0x0000235b      0x898 ./hardware/src/newlib/_startup.o
+ .debug_macro   0x00002bf3      0x240 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x00002e33       0x10 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x00002e43       0x10 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x00002e53       0x10 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x00002e63       0x35 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x00002e98      0x120 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x00002fb8      0x18e ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x00003146       0x10 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x00003156       0x22 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x00003178      0x245 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x000033bd       0x16 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x000033d3       0x3a ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x0000340d       0xae ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x000034bb      0x13a ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x000035f5       0x16 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x0000360b       0x22 ./hardware/src/newlib/_syscalls.o
+ .debug_macro   0x0000362d      0x142 ./hardware/src/newlib/assert.o
+ .debug_macro   0x0000376f       0x16 ./hardware/src/newlib/assert.o
+ .debug_macro   0x00003785      0x178 ./hardware/src/diag/Trace.o
+ .debug_macro   0x000038fd      0x4b6 ./hardware/src/diag/trace_impl.o
+ .debug_macro   0x00003db3      0x47a ./hardware/src/cortexm/_initialize_hardware.o
+ .debug_macro   0x0000422d      0x502 ./hardware/src/cortexm/exception_handlers.o
+ .debug_macro   0x0000472f      0x476 ./hardware/src/cmsis/system_stm32f4xx.o
+ .debug_macro   0x00004ba5       0x74 ./hardware/src/cmsis/vectors_stm32f407xx.o
+ .debug_macro   0x00004c19      0x470 ./hardware/include/arm/_initialize_hardware.o

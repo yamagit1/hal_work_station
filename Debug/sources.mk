@@ -33,5 +33,6 @@ hardware/src/cortexm \
 hardware/src/diag \
 hardware/src/newlib \
 hardware/src/stm32f4-hal \
+src/console \
 src \
 
