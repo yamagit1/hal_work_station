@@ -39,14 +39,14 @@ void console_serial_init()
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
 
 	// USART1 init
-	g_HandleUART.Instance 		= USART1;
-	g_HandleUART.Init.BaudRate 	= 115200;
-	g_HandleUART.Init.WordLength = UART_WORDLENGTH_8B;
-	g_HandleUART.Init.StopBits 	= UART_STOPBITS_1;
-	g_HandleUART.Init.Parity 	= UART_PARITY_NONE;
-	g_HandleUART.Init.Mode 		= UART_MODE_TX_RX;
+	g_HandleUART.Instance 			= USART1;
+	g_HandleUART.Init.BaudRate 		= 115200;
+	g_HandleUART.Init.WordLength 	= UART_WORDLENGTH_8B;
+	g_HandleUART.Init.StopBits 		= UART_STOPBITS_1;
+	g_HandleUART.Init.Parity 		= UART_PARITY_NONE;
+	g_HandleUART.Init.Mode 			= UART_MODE_TX_RX;
 	g_HandleUART.Init.HwFlowCtl 	= UART_HWCONTROL_NONE;
-	g_HandleUART.Init.OverSampling = UART_OVERSAMPLING_16;
+	g_HandleUART.Init.OverSampling 	= UART_OVERSAMPLING_16;
 
 	if (HAL_UART_Init(&g_HandleUART) != HAL_OK)
 	{
@@ -58,7 +58,7 @@ void console_serial_init()
 
 void console_serial_tx(char *p_str)
 {
-	// wait for ready
+	// wait for ready transmission
 	while(HAL_UART_GetState(&g_HandleUART) != HAL_UART_STATE_BUSY_TX );
 
 	// transmission data
@@ -73,21 +73,16 @@ void console_serial_rx()
 }
 
 
-void console_serial_print_char(char *p_ch)
+void console_serial_print_char(char p_ch)
 {
-	while(HAL_UART_GetState(&g_HandleUART) != HAL_UART_STATE_BUSY_TX );
-	HAL_UART_Transmit(&g_HandleUART, (uint8_t*)p_ch, 1, UART_TIME_OUT);
+	console_serial_tx(&p_ch);
 }
 
 
 void console_serial_print_string(char *p_str)
 {
 
-	while(*p_str)
-	{
-		console_serial_print_char(p_str);
-		p_str++;
-	}
+	console_serial_tx(p_str);
 }
 
 
@@ -96,12 +91,13 @@ void console_serial_print_line(const char* p_format, ...)
 	char buffer[BUFF_SIZE_MEDIUM];
 	va_list vaArgs;
 
-	// get list arg with format
+	// start get list arg with format
 	va_start (vaArgs, p_format);
 
 	// Print to the local buffer
 	vsnprintf (buffer, sizeof(buffer), p_format, vaArgs);
 
+	// end get list arg
 	va_end (vaArgs);
 
 	// transmission data
@@ -115,16 +111,14 @@ void console_serial_print_log(const char* p_format, ...)
 	char buffer[BUFF_SIZE_MEDIUM];
 	va_list vaArgs;
 
-	// get list arg with format
+	// start get list arg with format
 	va_start (vaArgs, p_format);
 
 	// Print to the local buffer
 	vsnprintf (buffer, sizeof(buffer), p_format, vaArgs);
 
+	// end get list arg
 	va_end (vaArgs);
-
-	// transmission data
-	console_serial_tx(buffer);
 
 	// print with format : [__log__]:...
 	console_serial_print_string("[___LOG___]: ");
@@ -137,16 +131,14 @@ void console_serial_print_warring(const char* p_format, ...)
 	char buffer[BUFF_SIZE_MEDIUM];
 	va_list vaArgs;
 
-	// get list arg with format
-	va_start(vaArgs, p_format);
+	// start get list arg with format
+	va_start (vaArgs, p_format);
 
 	// Print to the local buffer
-	vsnprintf(buffer, sizeof(buffer), p_format, vaArgs);
+	vsnprintf (buffer, sizeof(buffer), p_format, vaArgs);
 
-	va_end(vaArgs);
-
-	// transmission data
-	console_serial_tx(buffer);
+	// end get list arg
+	va_end (vaArgs);
 
 	// print with format : [_WARRING_]:...
 	console_serial_print_string("[_WARRING_]: ");
@@ -159,16 +151,14 @@ void console_serial_print_error(const char* p_format, ...)
 	char buffer[BUFF_SIZE_MEDIUM];
 	va_list vaArgs;
 
-	// get list arg with format
+	// start get list arg with format
 	va_start (vaArgs, p_format);
 
 	// Print to the local buffer
 	vsnprintf (buffer, sizeof(buffer), p_format, vaArgs);
 
-	va_end(vaArgs);
-
-	// transmission data
-	console_serial_tx(buffer);
+	// end get list arg
+	va_end (vaArgs);
 
 	// print with format : [__ERROR__]:...
 	console_serial_print_string("[__ERROR__]: ");

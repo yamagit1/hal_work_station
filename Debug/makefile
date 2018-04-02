@@ -63,7 +63,7 @@ all: HAL_WorkStation.elf secondary-outputs
 HAL_WorkStation.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross ARM GNU C++ Linker'
-	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=soft -Og -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-move-loop-invariants -Wall -Wextra  -g3 -T "/home/yama/Desktop/workspace/HAL_WorkStation/ldscripts/libs.ld" -T "/home/yama/Desktop/workspace/HAL_WorkStation/ldscripts/mem.ld" -T "/home/yama/Desktop/workspace/HAL_WorkStation/ldscripts/sections.ld" -nostartfiles -Xlinker --gc-sections -L"../ldscripts" -Wl,-Map,"HAL_WorkStation.map" -o "HAL_WorkStation.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=soft -Og -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-move-loop-invariants -Wall -Wextra  -g3 -T "/home/yama/Desktop/WS/HAL_WorkStation/ldscripts/libs.ld" -T "/home/yama/Desktop/WS/HAL_WorkStation/ldscripts/mem.ld" -T "/home/yama/Desktop/WS/HAL_WorkStation/ldscripts/sections.ld" -nostartfiles -Xlinker --gc-sections -L"../ldscripts" -Wl,-Map,"HAL_WorkStation.map" -o "HAL_WorkStation.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
