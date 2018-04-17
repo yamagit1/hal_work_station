@@ -8,29 +8,36 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include src/phy/device/stm32f4xx/subdir.mk
+-include src/phy/device/start_up/subdir.mk
+-include src/phy/device/hal_driver/subdir.mk
+-include src/phy/console/subdir.mk
+-include src/phy/LCD1202/subdir.mk
+-include src/phy/subdir.mk
+-include src/os_kernel/FreeRTOS/Source/portable/MemMang/subdir.mk
+-include src/os_kernel/FreeRTOS/Source/portable/GCC/ARM_CM4F/subdir.mk
+-include src/os_kernel/FreeRTOS/Source/CMSIS_RTOS/subdir.mk
+-include src/os_kernel/FreeRTOS/Source/subdir.mk
+-include src/os_kernel/FreeRTOS/subdir.mk
+-include src/midleware/lwip/system/OS/subdir.mk
+-include src/midleware/lwip/src/netif/ppp/subdir.mk
+-include src/midleware/lwip/src/netif/subdir.mk
+-include src/midleware/lwip/src/core/ipv6/subdir.mk
+-include src/midleware/lwip/src/core/ipv4/subdir.mk
+-include src/midleware/lwip/src/core/subdir.mk
+-include src/midleware/lwip/src/apps/mqtt/subdir.mk
+-include src/midleware/lwip/src/api/subdir.mk
+-include src/midleware/lwip/subdir.mk
+-include src/midleware/LibJPEG/source/subdir.mk
+-include src/midleware/LibJPEG/subdir.mk
+-include src/midleware/FatFs/src/option/subdir.mk
+-include src/midleware/FatFs/src/subdir.mk
+-include src/midleware/FatFs/subdir.mk
 -include src/subdir.mk
--include hardware/src/stm32f4-hal/subdir.mk
--include hardware/src/newlib/subdir.mk
--include hardware/src/diag/subdir.mk
--include hardware/src/cortexm/subdir.mk
--include hardware/src/cmsis/subdir.mk
--include hardware/include/arm/subdir.mk
 -include subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(strip $(CC_DEPS)),)
--include $(CC_DEPS)
-endif
-ifneq ($(strip $(C++_DEPS)),)
--include $(C++_DEPS)
-endif
-ifneq ($(strip $(C_UPPER_DEPS)),)
--include $(C_UPPER_DEPS)
-endif
-ifneq ($(strip $(CXX_DEPS)),)
--include $(CXX_DEPS)
-endif
 ifneq ($(strip $(ASM_DEPS)),)
 -include $(ASM_DEPS)
 endif
@@ -40,47 +47,44 @@ endif
 ifneq ($(strip $(C_DEPS)),)
 -include $(C_DEPS)
 endif
-ifneq ($(strip $(CPP_DEPS)),)
--include $(CPP_DEPS)
-endif
 endif
 
 -include ../makefile.defs
 
 # Add inputs and outputs from these tool invocations to the build variables 
 SECONDARY_FLASH += \
-HAL_WorkStation.bin \
+hal_work_station.bin \
 
 SECONDARY_SIZE += \
-HAL_WorkStation.siz \
+hal_work_station.siz \
 
 
 # All Target
-all: HAL_WorkStation.elf secondary-outputs
+all: hal_work_station.elf secondary-outputs
 
 # Tool invocations
-HAL_WorkStation.elf: $(OBJS) $(USER_OBJS)
+hal_work_station.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: Cross ARM GNU C++ Linker'
-	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=soft -Og -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-move-loop-invariants -Wall -Wextra  -g3 -T "/home/yama/eclipse-workspace/HAL_WorkStation/ldscripts/libs.ld" -T "/home/yama/eclipse-workspace/HAL_WorkStation/ldscripts/mem.ld" -T "/home/yama/eclipse-workspace/HAL_WorkStation/ldscripts/sections.ld" -nostartfiles -Xlinker --gc-sections -L"../ldscripts" -Wl,-Map,"HAL_WorkStation.map" -o "HAL_WorkStation.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Invoking: GNU ARM Cross C Linker'
+	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -T "/home/yama/eclipse-workspace/hal_work_station/linkscript/STM32F407VGTx_FLASH.ld" -Xlinker --gc-sections -Wl,-Map,"hal_work_station.map" --specs=rdimon.specs -Wl,--start-group -lgcc -lc -lc -lm -lrdimon -Wl,--end-group -o "hal_work_station.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-HAL_WorkStation.bin: HAL_WorkStation.elf
-	@echo 'Invoking: Cross ARM GNU Create Flash Image'
-	arm-none-eabi-objcopy -O binary "HAL_WorkStation.elf"  "HAL_WorkStation.bin"
+hal_work_station.bin: hal_work_station.elf
+	@echo 'Invoking: GNU ARM Cross Create Flash Image'
+	arm-none-eabi-objcopy -O binary "hal_work_station.elf"  "hal_work_station.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-HAL_WorkStation.siz: HAL_WorkStation.elf
-	@echo 'Invoking: Cross ARM GNU Print Size'
-	arm-none-eabi-size --format=berkeley "HAL_WorkStation.elf"
+hal_work_station.siz: hal_work_station.elf
+	@echo 'Invoking: GNU ARM Cross Print Size'
+	arm-none-eabi-size --format=berkeley "hal_work_station.elf"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(CC_DEPS)$(C++_DEPS)$(OBJS)$(C_UPPER_DEPS)$(CXX_DEPS)$(SECONDARY_FLASH)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_UPPER_DEPS)$(C_DEPS)$(CPP_DEPS) HAL_WorkStation.elf
+	-$(RM) $(OBJS)$(SECONDARY_FLASH)$(SECONDARY_SIZE)$(ASM_DEPS)$(S_UPPER_DEPS)$(C_DEPS) hal_work_station.elf
 	-@echo ' '
 
 secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_SIZE)
