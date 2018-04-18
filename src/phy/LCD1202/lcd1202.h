@@ -15,8 +15,6 @@
 #define __LCD1202_H__
 
 #include <header.h>
-//#include"Font.h"
-
 
 /*==================================================================
  * command
@@ -125,21 +123,33 @@
  * setup Pin | 3-line 9-bit seri interface
  *==================================================================*/
 
-
 #if CONFIG_FLATFORM == FLATFORM_STM32_F407VG
 
-#define LCD_1202_COM		GPIOE
+// pin select for interface
 
-#define LCD_1202_VCC		GPIO_PIN_7
-#define LCD_1202_RST 		GPIO_PIN_8
-#define LCD_1202_CS			GPIO_PIN_9
-#define LCD_1202_GND		GPIO_PIN_10
-#define LCD_1202_SDA		GPIO_PIN_11
-#define LCD_1202_SCL		GPIO_PIN_12
-#define LCD_1202_LIG1		GPIO_PIN_13
-#define LCD_1202_LIG2		GPIO_PIN_14
+#define LCD_1202_PIN_VCC		GPIO_PIN_7
+#define LCD_1202_PIN_RST 		GPIO_PIN_8
+#define LCD_1202_PIN_CS			GPIO_PIN_9
+#define LCD_1202_PIN_GND		GPIO_PIN_10
+#define LCD_1202_PIN_SDA		GPIO_PIN_11
+#define LCD_1202_PIN_SCL		GPIO_PIN_12
+#define LCD_1202_PIN_LIG1		GPIO_PIN_13
+#define LCD_1202_PIN_LIG2		GPIO_PIN_14
 
-#endif
+// port select for interface
+
+#define LCD_1202_COM_VCC		GPIOE
+#define LCD_1202_COM_RST		GPIOE
+#define LCD_1202_COM_CS			GPIOE
+#define LCD_1202_COM_GND		GPIOE
+#define LCD_1202_COM_SDA		GPIOE
+#define LCD_1202_COM_SCL		GPIOE
+#define LCD_1202_COM_LIG1		GPIOE
+#define LCD_1202_COM_LIG2		GPIOE
+
+#endif // CONFIG_FLATFORM == FLATFORM_STM32_F407VG
+
+// address for new line (height 8 pixel)
 
 #define LCD_1202_TOTAL_LINE_TEXT				8		// line 9 has view half text
 #define LCD_1202_ADDRESS_LINE_TEXT_0			0
@@ -153,11 +163,14 @@
 #define LCD_1202_ADDRESS_LINE_TEXT_8			768
 
 /*==================================================================
- * define cache ram fo LCD
+ * define cache ram for LCD
  *==================================================================*/
-
+// The buffer use to transmission to LCD
 extern __uint8 gLcd1202Ram[LCD_1202_BUFFER_SIZE];
+
+// the current offset written to LCD buffer
 extern __uint32 gLcd1202CurrentOffset;
+
 
 typedef enum
 {
@@ -169,28 +182,26 @@ typedef enum
 /*==================================================================
  * function
  *==================================================================*/
-void LCD1202_delay(volatile __uint32 timeCount);
-void LCD1202_configurePin(GPIO_InitTypeDef *p_pinConfig, __uint32 pinNumber);
-void LCD1202_hightPowerPin(__uint32 pinSetup);
-void LCD1202_lowerPowerPin(__uint32 pinSetup);
-void LCD1202_settingPinConnection(void);
-void LCD1202_transficData(__E_Lcd_Mode_Send modeSend, __uint8 data);
-void LCD1202_sendData(__uint8 data);
-void LCD1202_sendCommand(__uint8 command);
-void LCD1202_initialize(void);
-void LCD1202_clearScreen(void);
-void LCD1202_viewImageBitmap(__uint8 *p_img);
-void LCD1202_flush(void);
-void LCD1202_turnOffLedBackground(__int32 status);
+void lcd_1202_delay(volatile __uint32 timeCount);
+void lcd_1202_init_pin(__uint32 pinNumber);
+void lcd_1202_hight_power_pin(__uint32 pinNumber);
+void lcd_1202_low_power_pin(__uint32 pinNumber);
+void lcd_1202_transmission(__E_Lcd_Mode_Send modeSend, __uint8 data);
+void lcd_1202_send_data(__uint8 data);
+void lcd_1202_send_command(__uint8 command);
+void lcd_1202_initialize(void);
+void lcd_1202_clear_screen(void);
+void lcd_1202_view_image_bitmap(__uint8 *p_img);
+void lcd_1202_flush(void);
+void lcd_1202_setting_led_background(__int32 status);
 
 
 /*==================================================================
  * Pint text, value in LCD
  *==================================================================*/
 
-void LCD1202_printText(const char *str, __uint32 *p_position);
-void LCD1202_printNumberInterger(__int64 numberPrint,__uint32  *p_position);
-void LCD1202_endLine(void);
+void lcd_1202_print(const char *str, __uint32 *p_position);
+void lcd_1202_endLine(void);
 
 
 

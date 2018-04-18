@@ -37,10 +37,13 @@ src/os_kernel/FreeRTOS/Source \
 src/os_kernel/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 src/os_kernel/FreeRTOS/Source/portable/MemMang \
 src/os_kernel/FreeRTOS \
+src/phy/DriveLed \
+src/phy/EthernetENC28J60 \
 src/phy/LCD1202 \
 src/phy \
 src/phy/console \
 src/phy/device/hal_driver \
 src/phy/device/start_up \
 src/phy/device/stm32f4xx \
+src/phy/peripheral_init \
 

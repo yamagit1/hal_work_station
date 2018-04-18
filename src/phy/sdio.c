@@ -50,7 +50,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "sdio.h"
 
-#include "gpio.h"
+//#include "gpio.h"
 
 /* USER CODE BEGIN 0 */
 

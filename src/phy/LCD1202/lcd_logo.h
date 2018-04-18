@@ -8,6 +8,8 @@
 #ifndef __LCD_LOGO_H__
 #define __LCD_LOGO_H__
 
+#include <header.h>
+
 extern __uint8 gLogo[];
 
 #endif /* __LCD_LOGO_H__ */
