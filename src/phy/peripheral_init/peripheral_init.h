@@ -14,6 +14,7 @@
  extern "C" {
 #endif
 //
+void SystemClock_Config(void);
 void MX_GPIO_Init(void);
 void MX_DMA_Init(void);
 

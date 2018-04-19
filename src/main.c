@@ -12,7 +12,6 @@
 #include "peripheral_init.h"
 #include "enc28j60.h"
 
-void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 
 
@@ -31,19 +30,30 @@ int main(void)
 	MX_DMA_Init();
 	MX_SDIO_SD_Init();
 
-	/* Call init function for freertos objects (in freertos.c) */
-	//  MX_FREERTOS_Init();
+	/* Call initialize function for freertos objects (in freertos.c) */
+//	  MX_FREERTOS_Init();
+
+	// console trace initialize
+	console_serial_init();
+
+	console_serial_print_log("Initialize console trace ..... complete");
+
+	//initialize lcd1202
+	lcd_1202_initialize();
+	console_serial_print_log("Initialize lcd1202 .....complete");
+
+	//initialize led
+	dled_initialize();
+	console_serial_print_log("Initialize driver led .....complete");
+
+	//initialize lwip
+	MX_LWIP_Init();
+	console_serial_print_log("Initialize lwip .....complete");
 
 	/* Start scheduler */
-	//  osKernelStart();
+	console_serial_print_log("Start scheduler");
+//	osKernelStart();
 
-	console_serial_init();
-	lcd_1202_initialize();
-	dled_initialize();
-
-	enc28j60_init(macaddr);
-
-	enc28j60_write_phy(PHLCON, 0x0AB0);
 	int i = 0;
 
 	while (1)
