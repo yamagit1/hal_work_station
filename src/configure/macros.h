@@ -15,6 +15,8 @@
 #define __MACROS_H__
 
 #include <header.h>
+//#include "console_serial_trace.h"
+
 //#include "ConsoleLog.h"
 
 #if BUILD_TARGET == BUILD_TARGET_DEBUG

@@ -9,8 +9,13 @@
 #define __CONSOLE_SERIAL_TRAFFIC_H__
 
 #include "header.h"
+#include "cmsis_os.h"
+
+
+#define CONSOLE_WAIT_TIME 200
 
 extern UART_HandleTypeDef huart1;
+extern osSemaphoreId consoleSemaphoreID;
 
 
 void console_serial_init();
@@ -24,7 +29,7 @@ void console_serial_print_line(const char* p_format, ...);
 void console_serial_print_log(const char* p_format, ...);
 void console_serial_print_warring(const char* p_format, ...);
 void console_serial_print_error(const char* p_format, ...);
-void console_serial_print_infor();
+void console_serial_print_infor(const char* p_format, ...);
 void console_serial_print_enter(const char* p_format, ...);
 void console_serial_print_leave(const char* p_format, ...);
 

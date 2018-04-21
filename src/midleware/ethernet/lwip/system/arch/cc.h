@@ -36,6 +36,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "console_serial_trace.h"
+
 typedef int sys_prot_t;
 
 #define LWIP_PROVIDE_ERRNO
