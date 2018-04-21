@@ -1,69 +1,113 @@
-/*
- * This file is part of the µOS++ distribution.
- *   (https://github.com/micro-os-plus)
- * Copyright (c) 2014 Liviu Ionescu.
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
 
-// ----------------------------------------------------------------------------
+#include "main.h"
+#include "cmsis_os.h"
+#include "fatfs.h"
+#include "libjpeg.h"
+#include "lwip.h"
+#include "sdio.h"
 
-#include "header.h"
+#include "console_serial_trace.h"
+#include "lcd1202.h"
+#include "driver_led.h"
+#include "peripheral_init.h"
+#include "enc28j60.h"
 
-// Keep the LED on for 2/3 of a second.
-#define BLINK_ON_TICKS  (TIMER_FREQUENCY_HZ * 3 / 4)
-#define BLINK_OFF_TICKS (TIMER_FREQUENCY_HZ - BLINK_ON_TICKS)
+#include "ethernetif.h"
 
-#define BLINK_PORT_NUMBER               (3)
-#define BLINK_PIN_NUMBER                (15)
+//void MX_FREERTOS_Init(void);
 
-#define BLINK_GPIOx(_N)                 ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(_N)))
-#define BLINK_PIN_MASK(_N)              (1 << (_N))
-#define BLINK_RCC_MASKx(_N)             (RCC_AHB1ENR_GPIOAEN << (_N))
 
-int
-main()
+__uint8 macaddr[]={0x01,0x02,0x03,0x04,0x05,0x06};
+
+int main(void)
 {
-	int i = 1680000;
-	RCC->AHB1ENR |= BLINK_RCC_MASKx(BLINK_PORT_NUMBER);
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-	GPIO_InitTypeDef GPIO_InitStructure;
+	/* Configure the system clock */
+	SystemClock_Config();
 
-	// Configure pin in output push/pull mode
-	GPIO_InitStructure.Pin = BLINK_PIN_MASK(BLINK_PIN_NUMBER);
-	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
-	GPIO_InitStructure.Pull = GPIO_PULLUP;
-	HAL_GPIO_Init(BLINK_GPIOx(BLINK_PORT_NUMBER), &GPIO_InitStructure);
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_DMA_Init();
+	MX_SDIO_SD_Init();
 
-	while(1)
+	/* Call initialize function for freertos objects (in freertos.c) */
+	//	  MX_FREERTOS_Init();
+
+	// console trace initialize
+	console_serial_init();
+
+	console_serial_print_log("Initialize console trace ..... complete");
+
+	//initialize lcd1202
+	lcd_1202_initialize();
+	console_serial_print_log("Initialize lcd1202 .....complete");
+
+	//initialize led
+	dled_initialize();
+	console_serial_print_log("Initialize driver led .....complete");
+
+	//initialize lwip
+	//	MX_LWIP_Init();
+	console_serial_print_log("Initialize lwip .....");
+	low_level_init(&gnetif);
+
+	/* Start scheduler */
+	console_serial_print_log("Start scheduler");
+	//	osKernelStart();
+
+	int i = 0;
+	__uint8 net_buf[ENC28J60_MAXFRAME];
+	__uint32 len = 0;
+	__uint8 net_send[100] = \
+					{
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA
+					};
+
+	while (1)
 	{
-		HAL_GPIO_WritePin(BLINK_GPIOx(BLINK_PORT_NUMBER), BLINK_PIN_MASK(BLINK_PIN_NUMBER), GPIO_PIN_SET);
-		while(i--);
-		i = 1680000;
+		console_serial_print_log("on here");
 
-		HAL_GPIO_WritePin(BLINK_GPIOx(BLINK_PORT_NUMBER), BLINK_PIN_MASK(BLINK_PIN_NUMBER), GPIO_PIN_RESET);
-		while(i--);
-		i = 1680000;
+		dled_setting_led_status(LED_RED, TURN_ON);
+		HAL_Delay(200);
+		dled_setting_led_status(LED_BLUE, TURN_ON);
+		HAL_Delay(200);
+		dled_setting_led_status(LED_YELLOW, TURN_ON);
+		HAL_Delay(200);
+		dled_setting_led_status(LED_GREEN, TURN_ON);
+		HAL_Delay(200);
+
+		dled_setting_led_status(LED_RED, TURN_OFF);
+		HAL_Delay(200);
+		dled_setting_led_status(LED_BLUE, TURN_OFF);
+		HAL_Delay(200);
+		dled_setting_led_status(LED_YELLOW, TURN_OFF);
+		HAL_Delay(200);
+		dled_setting_led_status(LED_GREEN, TURN_OFF);
+		HAL_Delay(200);
+
+		console_serial_print_log("test :%d", i++);
+		HAL_Delay(200);
+
+
+		if ((len=enc28j60_packetReceive(net_buf,sizeof(net_buf)))>0)
+		{
+			console_serial_print_log("network reciever data len : %d", len);
+			enc28j60_packetSend(net_send, 100);
+		}
+
 	}
+
+
 }
-// ----------------------------------------------------------------------------
+
