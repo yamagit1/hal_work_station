@@ -48,7 +48,6 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
 #include "lwip/opt.h"
 
 #include "lwip/timeouts.h"
@@ -64,6 +63,7 @@
 
 /* Within 'USER CODE' section, code will be kept by default at each generation */
 /* USER CODE BEGIN 0 */
+__uint8 net_buffer[ENC28J60_MAXFRAME];
 
 /* USER CODE END 0 */
 
@@ -136,61 +136,59 @@ ETH_HandleTypeDef heth;
  */
 extern __uint8 macaddr[];
 
-static void low_level_init(struct netif *netif)
+//static
+void low_level_init(struct netif *netif)
 { 
+	__ENTER__
+
 	uint32_t regvalue = 0;
 	HAL_StatusTypeDef hal_eth_init_status;
 
 
 	/* Init ETH */
-	console_serial_print_log("\t>Initialize enc28j60");
+	console_serial_print_log("\t> Initialize enc28j60");
 	enc28j60_init(macaddr);
 
 	enc28j60_write_phy(PHLCON, 0x0BA0);
 
-	#if LWIP_ARP || LWIP_ETHERNET
+#if LWIP_ARP || LWIP_ETHERNET
 
-	  /* set MAC hardware address length */
-	  netif->hwaddr_len = ETH_HWADDR_LEN;
+	/* set MAC hardware address length */
+	netif->hwaddr_len = ETH_HWADDR_LEN;
 
-	  /* set MAC hardware address */
-	  netif->hwaddr[0] =  macaddr[0];
-	  netif->hwaddr[1] =  macaddr[1];
-	  netif->hwaddr[2] =  macaddr[2];
-	  netif->hwaddr[3] =  macaddr[3];
-	  netif->hwaddr[4] =  macaddr[4];
-	  netif->hwaddr[5] =  macaddr[5];
+	/* set MAC hardware address */
+	netif->hwaddr[0] =  macaddr[0];
+	netif->hwaddr[1] =  macaddr[1];
+	netif->hwaddr[2] =  macaddr[2];
+	netif->hwaddr[3] =  macaddr[3];
+	netif->hwaddr[4] =  macaddr[4];
+	netif->hwaddr[5] =  macaddr[5];
 
-	  /* maximum transfer unit */
-	  netif->mtu = ENC28J60_MAXFRAME;
+	/* maximum transfer unit */
+	netif->mtu = ENC28J60_MAXFRAME;
 
-	  /* Accept broadcast address and ARP traffic */
-	  /* don't set NETIF_FLAG_ETHARP if this device is not an ethernet one */
-	  #if LWIP_ARP
-	    netif->flags |= NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
-	  #else
-	    netif->flags |= NETIF_FLAG_BROADCAST;
-	  #endif /* LWIP_ARP */
+	/* Accept broadcast address and ARP traffic */
+	/* don't set NETIF_FLAG_ETHARP if this device is not an ethernet one */
+#if LWIP_ARP
+	netif->flags |= NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
+#else
+	netif->flags |= NETIF_FLAG_BROADCAST;
+#endif /* LWIP_ARP */
 
 	/* create a binary semaphore used for informing ethernetif of frame reception */
-		console_serial_print_log("\t>Create a binary semaphore used for informing ethernetif of frame reception");
-	  osSemaphoreDef(SEM);
-	  s_xSemaphore = osSemaphoreCreate(osSemaphore(SEM) , 1 );
+	console_serial_print_log("\t> TODO____Create a binary semaphore used for informing ethernetif of frame reception");
+	//	osSemaphoreDef(SEM);
+	//	s_xSemaphore = osSemaphoreCreate(osSemaphore(SEM) , 1 );
+	//	osSemaphoreRelease (s_xSemaphore);
 
 	/* create the task that handles the ETH_MAC */
-		console_serial_print_log("\t>create the task that handles the ETH_MAC");
-	  osThreadDef(EthIf, ethernetif_input, osPriorityRealtime, 0, INTERFACE_THREAD_STACK_SIZE);
-	  osThreadCreate (osThread(EthIf), netif);
+	console_serial_print_log("\t> TODO____create the task that handles the ETH_MAC");
+	//	osThreadDef(EthIf, ethernetif_input, osPriorityRealtime, 0, INTERFACE_THREAD_STACK_SIZE);
+	//	osThreadCreate (osThread(EthIf), netif);
 
-	  //================================================
-	  //	in here
-	  //================================================
+#endif /* LWIP_ARP || LWIP_ETHERNET */
 
-	  console_serial_print_log("\t\t>================================================");
-	  console_serial_print_log("\t\t\t>in here");
-	  console_serial_print_log("\t\t>================================================");
-	  #endif /* LWIP_ARP || LWIP_ETHERNET */
-
+	__LEAVE__
 }
 
 /**
@@ -212,76 +210,16 @@ static void low_level_init(struct netif *netif)
 static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
 	err_t errval;
-	//  struct pbuf *q;
-	//  uint8_t *buffer = (uint8_t *)(heth.TxDesc->Buffer1Addr);
-	//  __IO ETH_DMADescTypeDef *DmaTxDesc;
-	//  uint32_t framelength = 0;
-	//  uint32_t bufferoffset = 0;
-	//  uint32_t byteslefttocopy = 0;
-	//  uint32_t payloadoffset = 0;
-	//  DmaTxDesc = heth.TxDesc;
-	//  bufferoffset = 0;
-	//
-	//  /* copy frame from pbufs to driver buffers */
-	//  for(q = p; q != NULL; q = q->next)
-	//    {
-	//      /* Is this buffer available? If not, goto error */
-	//      if((DmaTxDesc->Status & ETH_DMATXDESC_OWN) != (uint32_t)RESET)
-	//      {
-	//        errval = ERR_USE;
-	//        goto error;
-	//      }
-	//
-	//      /* Get bytes in current lwIP buffer */
-	//      byteslefttocopy = q->len;
-	//      payloadoffset = 0;
-	//
-	//      /* Check if the length of data to copy is bigger than Tx buffer size*/
-	//      while( (byteslefttocopy + bufferoffset) > ETH_TX_BUF_SIZE )
-	//      {
-	//        /* Copy data to Tx buffer*/
-	//        memcpy( (uint8_t*)((uint8_t*)buffer + bufferoffset), (uint8_t*)((uint8_t*)q->payload + payloadoffset), (ETH_TX_BUF_SIZE - bufferoffset) );
-	//
-	//        /* Point to next descriptor */
-	//        DmaTxDesc = (ETH_DMADescTypeDef *)(DmaTxDesc->Buffer2NextDescAddr);
-	//
-	//        /* Check if the buffer is available */
-	//        if((DmaTxDesc->Status & ETH_DMATXDESC_OWN) != (uint32_t)RESET)
-	//        {
-	//          errval = ERR_USE;
-	//          goto error;
-	//        }
-	//
-	//        buffer = (uint8_t *)(DmaTxDesc->Buffer1Addr);
-	//
-	//        byteslefttocopy = byteslefttocopy - (ETH_TX_BUF_SIZE - bufferoffset);
-	//        payloadoffset = payloadoffset + (ETH_TX_BUF_SIZE - bufferoffset);
-	//        framelength = framelength + (ETH_TX_BUF_SIZE - bufferoffset);
-	//        bufferoffset = 0;
-	//      }
-	//
-	//      /* Copy the remaining bytes */
-	//      memcpy( (uint8_t*)((uint8_t*)buffer + bufferoffset), (uint8_t*)((uint8_t*)q->payload + payloadoffset), byteslefttocopy );
-	//      bufferoffset = bufferoffset + byteslefttocopy;
-	//      framelength = framelength + byteslefttocopy;
-	//    }
-	//
-	//  /* Prepare transmit descriptors to give to DMA */
-	//  HAL_ETH_TransmitFrame(&heth, framelength);
-	//
-	//  errval = ERR_OK;
-	//
-	//error:
-	//
-	//  /* When Transmit Underflow flag is set, clear it and issue a Transmit Poll Demand to resume transmission */
-	//  if ((heth.Instance->DMASR & ETH_DMASR_TUS) != (uint32_t)RESET)
-	//  {
-	//    /* Clear TUS ETHERNET DMA flag */
-	//    heth.Instance->DMASR = ETH_DMASR_TUS;
-	//
-	//    /* Resume DMA transmission*/
-	//    heth.Instance->DMATPDR = 0;
-	//  }
+	__uint16 sendCount = 0;
+
+	while (sendCount < p->tot_len)
+	{
+		enc28j60_packetSend(p->payload, p->len);
+		sendCount += p->len;
+	}
+
+	errval = ERR_OK;
+
 	return errval;
 }
 
@@ -296,80 +234,17 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 static struct pbuf * low_level_input(struct netif *netif)
 {
 	struct pbuf *p = NULL;
-	struct pbuf *q = NULL;
-	//  uint16_t len = 0;
-	//  uint8_t *buffer;
-	//  __IO ETH_DMADescTypeDef *dmarxdesc;
-	//  uint32_t bufferoffset = 0;
-	//  uint32_t payloadoffset = 0;
-	//  uint32_t byteslefttocopy = 0;
-	//  uint32_t i=0;
-	//
-	//
-	//  /* get received frame */
-	//  if (HAL_ETH_GetReceivedFrame_IT(&heth) != HAL_OK)
-	//    return NULL;
-	//
-	//  /* Obtain the size of the packet and put it into the "len" variable. */
-	//  len = heth.RxFrameInfos.length;
-	//  buffer = (uint8_t *)heth.RxFrameInfos.buffer;
-	//
-	//  if (len > 0)
-	//  {
-	//    /* We allocate a pbuf chain of pbufs from the Lwip buffer pool */
-	//    p = pbuf_alloc(PBUF_RAW, len, PBUF_POOL);
-	//  }
-	//
-	//  if (p != NULL)
-	//  {
-	//    dmarxdesc = heth.RxFrameInfos.FSRxDesc;
-	//    bufferoffset = 0;
-	//    for(q = p; q != NULL; q = q->next)
-	//    {
-	//      byteslefttocopy = q->len;
-	//      payloadoffset = 0;
-	//
-	//      /* Check if the length of bytes to copy in current pbuf is bigger than Rx buffer size*/
-	//      while( (byteslefttocopy + bufferoffset) > ETH_RX_BUF_SIZE )
-	//      {
-	//        /* Copy data to pbuf */
-	//        memcpy( (uint8_t*)((uint8_t*)q->payload + payloadoffset), (uint8_t*)((uint8_t*)buffer + bufferoffset), (ETH_RX_BUF_SIZE - bufferoffset));
-	//
-	//        /* Point to next descriptor */
-	//        dmarxdesc = (ETH_DMADescTypeDef *)(dmarxdesc->Buffer2NextDescAddr);
-	//        buffer = (uint8_t *)(dmarxdesc->Buffer1Addr);
-	//
-	//        byteslefttocopy = byteslefttocopy - (ETH_RX_BUF_SIZE - bufferoffset);
-	//        payloadoffset = payloadoffset + (ETH_RX_BUF_SIZE - bufferoffset);
-	//        bufferoffset = 0;
-	//      }
-	//      /* Copy remaining data in pbuf */
-	//      memcpy( (uint8_t*)((uint8_t*)q->payload + payloadoffset), (uint8_t*)((uint8_t*)buffer + bufferoffset), byteslefttocopy);
-	//      bufferoffset = bufferoffset + byteslefttocopy;
-	//    }
-	//  }
-	//
-	//    /* Release descriptors to DMA */
-	//    /* Point to first descriptor */
-	//    dmarxdesc = heth.RxFrameInfos.FSRxDesc;
-	//    /* Set Own bit in Rx descriptors: gives the buffers back to DMA */
-	//    for (i=0; i< heth.RxFrameInfos.SegCount; i++)
-	//    {
-	//      dmarxdesc->Status |= ETH_DMARXDESC_OWN;
-	//      dmarxdesc = (ETH_DMADescTypeDef *)(dmarxdesc->Buffer2NextDescAddr);
-	//    }
-	//
-	//    /* Clear Segment_Count */
-	//    heth.RxFrameInfos.SegCount =0;
-	//
-	//  /* When Rx Buffer unavailable flag is set: clear it and resume reception */
-	//  if ((heth.Instance->DMASR & ETH_DMASR_RBUS) != (uint32_t)RESET)
-	//  {
-	//    /* Clear RBUS ETHERNET DMA flag */
-	//    heth.Instance->DMASR = ETH_DMASR_RBUS;
-	//    /* Resume DMA reception */
-	//    heth.Instance->DMARPDR = 0;
-	//  }
+	__uint8 net_buf[ENC28J60_MAXFRAME];
+	uint16_t revCount = 0;
+
+	if ((revCount = enc28j60_packetReceive(net_buf,sizeof(net_buf)))>0)
+	{
+		p = pbuf_alloc(PBUF_RAW, revCount, PBUF_RAM);
+		p->len = revCount;
+		p->tot_len = revCount;
+		p->payload = net_buf;
+		p->next = NULL;
+	}
 	return p;
 }
 
@@ -384,27 +259,31 @@ static struct pbuf * low_level_input(struct netif *netif)
  */
 void ethernetif_input( void const * argument ) 
 {
-//	console_serial_print_log("\t\t\t\t>ethernetif_input");
-//	  struct pbuf *p;
-//	  struct netif *netif = (struct netif *) argument;
-//
-//	  for( ;; )
-//	  {
-//	    if (osSemaphoreWait( s_xSemaphore, TIME_WAITING_FOR_INPUT) == osOK)
-//	    {
-//	      do
-//	      {
-//	        p = low_level_input( netif );
-//	        if   (p != NULL)
-//	        {
-//	          if (netif->input( p, netif) != ERR_OK )
-//	          {
-//	            pbuf_free(p);
-//	          }
-//	        }
-//	      } while(p!=NULL);
-//	    }
-//	  }
+	__ENTER__
+
+	console_serial_print_log("\t>ethernetif_input********************");
+	struct pbuf *p;
+	struct netif *netif = (struct netif *) argument;
+
+	for( ;; )
+	{
+		if (osSemaphoreWait( s_xSemaphore, TIME_WAITING_FOR_INPUT) == osOK)
+		{
+			do
+			{
+				p = low_level_input( netif );
+				if   (p != NULL)
+				{
+					if (netif->input( p, netif) != ERR_OK )
+					{
+						pbuf_free(p);
+					}
+				}
+			} while(p!=NULL);
+		}
+	}
+
+	__LEAVE__
 }
 
 #if !LWIP_ARP
@@ -442,6 +321,8 @@ static err_t low_level_output_arp_off(struct netif *netif, struct pbuf *q, const
  */
 err_t ethernetif_init(struct netif *netif)
 {
+	__ENTER__
+
 	LWIP_ASSERT("netif != NULL", (netif != NULL));
 
 #if LWIP_NETIF_HOSTNAME
@@ -449,7 +330,7 @@ err_t ethernetif_init(struct netif *netif)
 	netif->hostname = "lwip";
 #endif /* LWIP_NETIF_HOSTNAME */
 
-	console_serial_print_log("Name network interface : %s%s", IFNAME0, IFNAME1);
+	console_serial_print_log("\t\t>Name network interface : %c%c", IFNAME0, IFNAME1);
 	netif->name[0] = IFNAME0;
 	netif->name[1] = IFNAME1;
 	/* We directly use etharp_output() here to save a function call.
@@ -461,7 +342,7 @@ err_t ethernetif_init(struct netif *netif)
 #if LWIP_ARP || LWIP_ETHERNET
 #if LWIP_ARP
 
-	console_serial_print_log("Setup IP output function for lwip");
+	console_serial_print_log("\t\t>Setup IP output function for lwip");
 	netif->output = etharp_output;
 #else
 	/* The user should write ist own code in low_level_output_arp_off function */
@@ -474,12 +355,14 @@ err_t ethernetif_init(struct netif *netif)
 	netif->output_ip6 = ethip6_output;
 #endif /* LWIP_IPV6 */
 
-	console_serial_print_log("Setup linkoutput function for lwip");
+	console_serial_print_log("\t\t>Setup linkoutput function for lwip");
 	netif->linkoutput = low_level_output;
 
 	/* initialize the hardware */
-	console_serial_print_log("Initialize the hardware network");
+	console_serial_print_log("\t\t>Initialize the hardware network");
 	low_level_init(netif);
+
+	__LEAVE__
 
 	return ERR_OK;
 }

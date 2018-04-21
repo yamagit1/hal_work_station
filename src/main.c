@@ -12,7 +12,9 @@
 #include "peripheral_init.h"
 #include "enc28j60.h"
 
-void MX_FREERTOS_Init(void);
+#include "ethernetif.h"
+
+//void MX_FREERTOS_Init(void);
 
 
 __uint8 macaddr[]={0x01,0x02,0x03,0x04,0x05,0x06};
@@ -31,7 +33,7 @@ int main(void)
 	MX_SDIO_SD_Init();
 
 	/* Call initialize function for freertos objects (in freertos.c) */
-//	  MX_FREERTOS_Init();
+	//	  MX_FREERTOS_Init();
 
 	// console trace initialize
 	console_serial_init();
@@ -47,17 +49,35 @@ int main(void)
 	console_serial_print_log("Initialize driver led .....complete");
 
 	//initialize lwip
-	MX_LWIP_Init();
-	console_serial_print_log("Initialize lwip .....complete");
+	//	MX_LWIP_Init();
+	console_serial_print_log("Initialize lwip .....");
+	low_level_init(&gnetif);
 
 	/* Start scheduler */
 	console_serial_print_log("Start scheduler");
-//	osKernelStart();
+	//	osKernelStart();
 
 	int i = 0;
+	__uint8 net_buf[ENC28J60_MAXFRAME];
+	__uint32 len = 0;
+	__uint8 net_send[100] = \
+					{
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+		0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA
+					};
 
 	while (1)
 	{
+		console_serial_print_log("on here");
+
 		dled_setting_led_status(LED_RED, TURN_ON);
 		HAL_Delay(200);
 		dled_setting_led_status(LED_BLUE, TURN_ON);
@@ -76,8 +96,15 @@ int main(void)
 		dled_setting_led_status(LED_GREEN, TURN_OFF);
 		HAL_Delay(200);
 
-		console_serial_print_line("test :%d", i++);
+		console_serial_print_log("test :%d", i++);
 		HAL_Delay(200);
+
+
+		if ((len=enc28j60_packetReceive(net_buf,sizeof(net_buf)))>0)
+		{
+			console_serial_print_log("network reciever data len : %d", len);
+			enc28j60_packetSend(net_send, 100);
+		}
 
 	}
 

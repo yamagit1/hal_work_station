@@ -153,6 +153,46 @@ void console_serial_print_infor()
 }
 
 
+void console_serial_print_enter(const char* p_format, ...)
+{
+	char buffer[BUFF_SIZE_MEDIUM];
+	va_list vaArgs;
+
+	// start get list arg with format
+	va_start (vaArgs, p_format);
+
+	// Print to the local buffer
+	vsnprintf (buffer, sizeof(buffer), p_format, vaArgs);
+
+	// end get list arg
+	va_end (vaArgs);
+
+	// print with format : [__ENTER__]:...
+	console_serial_print_string("[__ENTER__]: ");
+	console_serial_print_line(buffer);
+}
+
+
+void console_serial_print_leave(const char* p_format, ...)
+{
+	char buffer[BUFF_SIZE_MEDIUM];
+	va_list vaArgs;
+
+	// start get list arg with format
+	va_start (vaArgs, p_format);
+
+	// Print to the local buffer
+	vsnprintf (buffer, sizeof(buffer), p_format, vaArgs);
+
+	// end get list arg
+	va_end (vaArgs);
+
+	// print with format : [__LEAVE__]:...
+	console_serial_print_string("[__LEAVE__]: ");
+	console_serial_print_line(buffer);
+}
+
+
 void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 {
 

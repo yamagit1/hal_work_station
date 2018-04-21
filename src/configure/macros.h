@@ -21,9 +21,9 @@
 
 #define PRINT_LOG(tofile, lvLog, content) do{} while(0)
 
-#define __ENTER__	do{}while(0);
+#define __ENTER__	do { console_serial_print_enter("%s%50s ", __FUNCTION__, __FILE__); } while (0);
 
-#define __LEAVE__	do{}while(0);
+#define __LEAVE__	do { console_serial_print_leave("%s%50s ", __FUNCTION__, __FILE__); } while (0);
 
 #else
 

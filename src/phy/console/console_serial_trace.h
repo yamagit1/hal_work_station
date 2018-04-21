@@ -25,5 +25,8 @@ void console_serial_print_log(const char* p_format, ...);
 void console_serial_print_warring(const char* p_format, ...);
 void console_serial_print_error(const char* p_format, ...);
 void console_serial_print_infor();
+void console_serial_print_enter(const char* p_format, ...);
+void console_serial_print_leave(const char* p_format, ...);
+
 
 #endif /* __CONSOLE_SERIAL_TRAFFIC_H__ */

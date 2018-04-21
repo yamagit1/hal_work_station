@@ -190,12 +190,12 @@ void enc28j60_init(__uint8 *macadr)
 	__ENTER__
 
 	__uint32 i;
-	console_serial_print_log("Initialize module SPI2 ");
+	console_serial_print_log("\t> Initialize module SPI2 ");
 	ENC28J60_SPI_Init();
 
 	enc28j60_Disable();
 
-	console_serial_print_log("Wait module SPI2  reset");
+	console_serial_print_log("\t> Wait module SPI2  reset");
 	for (i = 0; i < 720000; i++)
 	{
 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14,GPIO_PIN_RESET);
@@ -204,11 +204,11 @@ void enc28j60_init(__uint8 *macadr)
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
 
 	// Reset ENC28J60
-	console_serial_print_log("Reset ENC28J60");
+	console_serial_print_log("\t> Reset ENC28J60");
 	enc28j60_soft_reset();
 
 	// Setup Rx/Tx buffer
-	console_serial_print_log("Setup Rx/Tx buffer");
+	console_serial_print_log("\t> Setup Rx/Tx buffer");
 	enc28j60_wcr16(ERXST, ENC28J60_RXSTART);
 	enc28j60_rcr16(ERXST);
 	enc28j60_wcr16(ERXRDPT, ENC28J60_RXSTART);
@@ -216,8 +216,13 @@ void enc28j60_init(__uint8 *macadr)
 	enc28j60_rxrdpt = ENC28J60_RXSTART;
 
 	// Setup MAC
-	console_serial_print_log("Setup MAC");
-	console_serial_print_log("MAC address : %d", macadr);
+	console_serial_print_log("\t>Setup MAC");
+	console_serial_print_log("\t>MAC address : %d:%d:%d:%d:%d:%d", macadr[0],\
+																			macadr[1],\
+																			macadr[2],\
+																			macadr[3],\
+																			macadr[4],\
+																			macadr[5]);
 	enc28j60_wcr(MACON1, MACON1_TXPAUS| // Enable flow control
 			MACON1_RXPAUS|MACON1_MARXEN); // Enable MAC Rx
 	enc28j60_wcr(MACON2, 0); // Clear reset
@@ -235,7 +240,7 @@ void enc28j60_init(__uint8 *macadr)
 	enc28j60_wcr(MAADR0, macadr[5]);
 
 	// Setup PHY
-	console_serial_print_log("Setup PHY");
+	console_serial_print_log("\t>Setup PHY");
 	enc28j60_write_phy(PHCON1, PHCON1_PDPXMD); // Force full-duplex mode
 	enc28j60_write_phy(PHCON2, PHCON2_HDLDIS); // Disable loopback
 	enc28j60_write_phy(PHLCON, PHLCON_LACFG2| // Configure LED ctrl
@@ -243,7 +248,7 @@ void enc28j60_init(__uint8 *macadr)
 			PHLCON_LFRQ0|PHLCON_STRCH);
 
 	// Enable Rx packets
-	console_serial_print_log("Enable Rx packets");
+	console_serial_print_log("\t>Enable Rx packets");
 	enc28j60_bfs(ECON1, ECON1_RXEN);
 
 	__LEAVE__

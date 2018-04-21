@@ -62,7 +62,7 @@
 #include "lwip/dhcp.h"
 #include "lwip/netif.h"
 #include "lwip/timeouts.h"
-#include "ethernetif.h"
+//#include "ethernetif.h"
 
 /* Includes for RTOS ---------------------------------------------------------*/
 #if WITH_RTOS
@@ -75,6 +75,7 @@
 
 /* Global Variables ----------------------------------------------------------*/
 extern ETH_HandleTypeDef heth;
+extern struct netif gnetif;
 
 /* LWIP init function */	
 void MX_LWIP_Init(void);
