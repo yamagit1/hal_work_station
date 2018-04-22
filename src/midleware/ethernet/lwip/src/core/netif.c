@@ -323,17 +323,18 @@ netif_add(struct netif *netif,
   }
 #endif /* LWIP_IGMP */
 
-  LWIP_DEBUGF(NETIF_DEBUG, ("netif: added interface %c%c IP",
-    netif->name[0], netif->name[1]));
+  console_serial_print_log("netif: added interface %c%c IP", netif->name[0], netif->name[1]);
 #if LWIP_IPV4
-  LWIP_DEBUGF(NETIF_DEBUG, (" addr "));
+  console_serial_print_log(" \t> addr ");
   ip4_addr_debug_print(NETIF_DEBUG, ipaddr);
-  LWIP_DEBUGF(NETIF_DEBUG, (" netmask "));
+
+  console_serial_print_log(" \t> netmask ");
   ip4_addr_debug_print(NETIF_DEBUG, netmask);
-  LWIP_DEBUGF(NETIF_DEBUG, (" gw "));
+
+  console_serial_print_log("\t> gw ");
   ip4_addr_debug_print(NETIF_DEBUG, gw);
 #endif /* LWIP_IPV4 */
-  LWIP_DEBUGF(NETIF_DEBUG, ("\n"));
+
   return netif;
 }
 

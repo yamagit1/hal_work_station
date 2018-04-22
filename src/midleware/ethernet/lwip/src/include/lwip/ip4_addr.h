@@ -181,7 +181,7 @@ u8_t ip4_addr_netmask_valid(u32_t netmask);
 #define ip4_addr_islinklocal(addr1) (((addr1)->addr & PP_HTONL(0xffff0000UL)) == PP_HTONL(0xa9fe0000UL))
 
 #define ip4_addr_debug_print_parts(debug, a, b, c, d) \
-  LWIP_DEBUGF(debug, ("%" U16_F ".%" U16_F ".%" U16_F ".%" U16_F, a, b, c, d))
+		console_serial_print_log("%" U16_F ".%" U16_F ".%" U16_F ".%" U16_F, a, b, c, d)
 #define ip4_addr_debug_print(debug, ipaddr) \
   ip4_addr_debug_print_parts(debug, \
                       (u16_t)((ipaddr) != NULL ? ip4_addr1_16(ipaddr) : 0),       \

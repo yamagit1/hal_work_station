@@ -68,65 +68,41 @@ __uint8 net_buffer[ENC28J60_MAXFRAME];
 /* USER CODE END 0 */
 
 /* Private define ------------------------------------------------------------*/
+
 /* The time to block waiting for input. */
 #define TIME_WAITING_FOR_INPUT ( portMAX_DELAY )
+
 /* Stack size of the interface thread */
 #define INTERFACE_THREAD_STACK_SIZE ( 350 )
+
 /* Network interface name */
 #define IFNAME0 'w'
 #define IFNAME1 's'
 
-/* USER CODE BEGIN 1 */
+__uint8 macaddr[]={0x01,0x02,0x03,0x04,0x05,0x06};
 
-/* USER CODE END 1 */
 
 /* Private variables ---------------------------------------------------------*/
-#if defined ( __ICCARM__ ) /*!< IAR Compiler */
-#pragma data_alignment=4
-#endif
-__ALIGN_BEGIN ETH_DMADescTypeDef  DMARxDscrTab[ETH_RXBUFNB] __ALIGN_END;/* Ethernet Rx MA Descriptor */
+//__ALIGN_BEGIN ETH_DMADescTypeDef  DMARxDscrTab[ETH_RXBUFNB] __ALIGN_END;/* Ethernet Rx MA Descriptor */
+//__ALIGN_BEGIN ETH_DMADescTypeDef  DMATxDscrTab[ETH_TXBUFNB] __ALIGN_END;/* Ethernet Tx DMA Descriptor */
 
-#if defined ( __ICCARM__ ) /*!< IAR Compiler */
-#pragma data_alignment=4
-#endif
-__ALIGN_BEGIN ETH_DMADescTypeDef  DMATxDscrTab[ETH_TXBUFNB] __ALIGN_END;/* Ethernet Tx DMA Descriptor */
+// Ethernet Receive Buffer
+__ALIGN_BEGIN uint8_t gRx_Buff[ENC28J60_MAXFRAME] __ALIGN_END;
 
-#if defined ( __ICCARM__ ) /*!< IAR Compiler */
-#pragma data_alignment=4
-#endif
-__ALIGN_BEGIN uint8_t Rx_Buff[ETH_RXBUFNB][ETH_RX_BUF_SIZE] __ALIGN_END; /* Ethernet Receive Buffer */
+// Ethernet Transmit Buffer
+__ALIGN_BEGIN uint8_t Tx_Buff[4][ENC28J60_MAXFRAME] __ALIGN_END;
 
-#if defined ( __ICCARM__ ) /*!< IAR Compiler */
-#pragma data_alignment=4
-#endif
-__ALIGN_BEGIN uint8_t Tx_Buff[ETH_TXBUFNB][ETH_TX_BUF_SIZE] __ALIGN_END; /* Ethernet Transmit Buffer */
-
-/* USER CODE BEGIN 2 */
-
-/* USER CODE END 2 */
-
-/* Semaphore to signal incoming packets */
+// Semaphore to signal incoming packets
 osSemaphoreId s_xSemaphore = NULL;
-/* Global Ethernet handle */
-ETH_HandleTypeDef heth;
 
-/* USER CODE BEGIN 3 */
-
-/* USER CODE END 3 */
-
-/* Private functions ---------------------------------------------------------*/
-
-
-
-
-
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
 
 /*******************************************************************************
-                       LL Driver Interface ( LwIP stack --> ETH) 
+                       LL Driver Interface ( LwIP stack --> ENC28J60)
  *******************************************************************************/
+
+// Forward declarations
+//static void  ethernetif_input(struct netif *netif);
+
 /**
  * In this function, the hardware should be initialized.
  * Called from ethernetif_init().
@@ -134,7 +110,6 @@ ETH_HandleTypeDef heth;
  * @param netif the already initialized lwip network interface structure
  *        for this ethernetif
  */
-extern __uint8 macaddr[];
 
 //static
 void low_level_init(struct netif *netif)
@@ -149,6 +124,7 @@ void low_level_init(struct netif *netif)
 	console_serial_print_log("\t> Initialize enc28j60");
 	enc28j60_init(macaddr);
 
+	// test bink led enc28j60
 	enc28j60_write_phy(PHLCON, 0x0BA0);
 
 #if LWIP_ARP || LWIP_ETHERNET
@@ -177,14 +153,14 @@ void low_level_init(struct netif *netif)
 
 	/* create a binary semaphore used for informing ethernetif of frame reception */
 	console_serial_print_log("\t> TODO____Create a binary semaphore used for informing ethernetif of frame reception");
-	//	osSemaphoreDef(SEM);
-	//	s_xSemaphore = osSemaphoreCreate(osSemaphore(SEM) , 1 );
-	//	osSemaphoreRelease (s_xSemaphore);
+	osSemaphoreDef(SEM);
+	s_xSemaphore = osSemaphoreCreate(osSemaphore(SEM) , 1 );
+	osSemaphoreRelease (s_xSemaphore);
 
 	/* create the task that handles the ETH_MAC */
 	console_serial_print_log("\t> TODO____create the task that handles the ETH_MAC");
-	//	osThreadDef(EthIf, ethernetif_input, osPriorityRealtime, 0, INTERFACE_THREAD_STACK_SIZE);
-	//	osThreadCreate (osThread(EthIf), netif);
+	osThreadDef(EthIf, ethernetif_input, 1, 0, INTERFACE_THREAD_STACK_SIZE);
+	osThreadCreate (osThread(EthIf), netif);
 
 #endif /* LWIP_ARP || LWIP_ETHERNET */
 
@@ -209,16 +185,31 @@ void low_level_init(struct netif *netif)
 
 static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
+
+	__ENTER__
+
 	err_t errval;
 	__uint16 sendCount = 0;
+	struct pbuf *qHead;
 
-	while (sendCount < p->tot_len)
+	if (p != NULL)
 	{
-		enc28j60_packetSend(p->payload, p->len);
-		sendCount += p->len;
+		for(qHead = p; qHead != NULL; qHead = qHead->next)
+		{
+			console_serial_print_infor("low_level_output send packet length : %s ", qHead->len);
+			enc28j60_packetSend(qHead->payload, qHead->len);
+		}
+	}
+	else
+	{
+		console_serial_print_infor("low_level_output send packet NULL");
+
+		//		errval = ERR_BUF;
 	}
 
 	errval = ERR_OK;
+
+	__LEAVE__
 
 	return errval;
 }
@@ -231,21 +222,35 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
  * @return a pbuf filled with the received packet (including MAC header)
  *         NULL on memory error
  */
-static struct pbuf * low_level_input(struct netif *netif)
+//static
+struct pbuf * low_level_input(struct netif *netif)
 {
-	struct pbuf *p = NULL;
-	__uint8 net_buf[ENC28J60_MAXFRAME];
-	uint16_t revCount = 0;
+	struct pbuf *pbufRev = NULL;
+	__uint16 revLen = 0;
 
-	if ((revCount = enc28j60_packetReceive(net_buf,sizeof(net_buf)))>0)
+	if ((revLen = enc28j60_packetReceive(gRx_Buff, sizeof(gRx_Buff))) > 0)
 	{
-		p = pbuf_alloc(PBUF_RAW, revCount, PBUF_RAM);
-		p->len = revCount;
-		p->tot_len = revCount;
-		p->payload = net_buf;
-		p->next = NULL;
+		console_serial_print_infor("\t\t> low_level_input receive packet length : %d", revLen);
+		/* We allocate a pbuf chain of pbufs from the pool. */
+		pbufRev = pbuf_alloc(PBUF_RAW, revLen, PBUF_POOL);
+
+		if (pbufRev != NULL)
+		{
+			console_serial_print_log("\t\t> low_level_input  allocate a pbuf chain of pbufs from the pool :");
+			console_serial_print_infor(" \t\t\t\t> Current : %d, total %d", pbufRev->len, pbufRev->tot_len);
+			pbufRev->len = (u16_t)revLen;
+			pbufRev->tot_len = (u16_t)revLen;
+			/* Copy data to pbuf */
+			memcpy( (uint8_t*)pbufRev->payload, (uint8_t*) gRx_Buff, revLen);
+		}
+
 	}
-	return p;
+	else
+	{
+		return NULL;
+	}
+
+	return pbufRev;
 }
 
 /**
@@ -261,26 +266,118 @@ void ethernetif_input( void const * argument )
 {
 	__ENTER__
 
-	console_serial_print_log("\t>ethernetif_input********************");
-	struct pbuf *p;
-	struct netif *netif = (struct netif *) argument;
+	int currentLop = 0;
+	struct netif *pnetif = (struct netif *) argument;
+	struct pbuf *pbufRev = NULL;
+	struct eth_hdr *ethhdr;
 
 	for( ;; )
 	{
+
 		if (osSemaphoreWait( s_xSemaphore, TIME_WAITING_FOR_INPUT) == osOK)
 		{
+			console_serial_print_log("\t> net poll input.... %d", currentLop++);
+
 			do
 			{
-				p = low_level_input( netif );
-				if   (p != NULL)
+				pbufRev = low_level_input( pnetif );
+
+				if (pbufRev != NULL)
 				{
-					if (netif->input( p, netif) != ERR_OK )
+					console_serial_print_infor("\t> ethernetif_input receive packet.... %d", pbufRev->len);
+
+					ethhdr = pbufRev->payload;
+
+					switch (htons(ethhdr->type))
 					{
-						pbuf_free(p);
+					case ETHTYPE_IP:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_IP ");
+						break;
+
+					case ETHTYPE_ARP:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_ARP");
+						break;
+
+					case ETHTYPE_WOL:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_WOL");
+						break;
+
+					case ETHTYPE_RARP:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_RARP");
+						break;
+
+					case ETHTYPE_VLAN:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_VLAN");
+						break;
+
+					case ETHTYPE_IPV6:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_IPV6");
+						break;
+
+					case ETHTYPE_PPPOEDISC:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_PPPOEDISC");
+						break;
+
+					case ETHTYPE_PPPOE:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_PPPOE");
+						break;
+
+					case ETHTYPE_JUMBO:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_JUMBO");
+						break;
+
+					case ETHTYPE_PROFINET:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_PROFINET");
+						break;
+
+					case ETHTYPE_ETHERCAT:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_ETHERCAT");
+						break;
+
+					case ETHTYPE_LLDP:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_LLDP");
+						break;
+
+					case ETHTYPE_SERCOS:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_SERCOS");
+						break;
+
+					case ETHTYPE_MRP:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_MRP");
+						break;
+
+					case ETHTYPE_PTP:
+						console_serial_print_infor("\t\t\t> Receive packet type : ETHTYPE_PTP");
+						break;
+
+					default:
+						console_serial_print_infor("\t\t\t> Receive packet type : NONE");
+						break;
 					}
+
+					if (pnetif->input(pbufRev, pnetif) != ERR_OK )
+					{
+						console_serial_print_infor("\t\t> Cannot decode packet------------");
+						pbuf_free(pbufRev);
+					}
+					else
+					{
+						console_serial_print_infor("\t\t> Decode packet successfully ------------");
+					}
+
+					//					pbuf_free(pbufRev);
 				}
-			} while(p!=NULL);
+
+			} while(pbufRev!=NULL);
+
+			while (osSemaphoreRelease (s_xSemaphore) == osOK);
 		}
+		else
+		{
+			console_serial_print_log("\t> Cannot handle device.... %d", currentLop++);
+		}
+
+		osDelay(100);
 	}
 
 	__LEAVE__
@@ -330,7 +427,7 @@ err_t ethernetif_init(struct netif *netif)
 	netif->hostname = "lwip";
 #endif /* LWIP_NETIF_HOSTNAME */
 
-	console_serial_print_log("\t\t>Name network interface : %c%c", IFNAME0, IFNAME1);
+	console_serial_print_log("\t>Name network interface : %c%c", IFNAME0, IFNAME1);
 	netif->name[0] = IFNAME0;
 	netif->name[1] = IFNAME1;
 	/* We directly use etharp_output() here to save a function call.
@@ -342,7 +439,7 @@ err_t ethernetif_init(struct netif *netif)
 #if LWIP_ARP || LWIP_ETHERNET
 #if LWIP_ARP
 
-	console_serial_print_log("\t\t>Setup IP output function for lwip");
+	console_serial_print_log("\t>Setup output function for lwip");
 	netif->output = etharp_output;
 #else
 	/* The user should write ist own code in low_level_output_arp_off function */
@@ -355,11 +452,11 @@ err_t ethernetif_init(struct netif *netif)
 	netif->output_ip6 = ethip6_output;
 #endif /* LWIP_IPV6 */
 
-	console_serial_print_log("\t\t>Setup linkoutput function for lwip");
+	console_serial_print_log("\t>Setup linkoutput function for lwip");
 	netif->linkoutput = low_level_output;
 
 	/* initialize the hardware */
-	console_serial_print_log("\t\t>Initialize the hardware network");
+	console_serial_print_log("\t>Initialize the hardware network");
 	low_level_init(netif);
 
 	__LEAVE__

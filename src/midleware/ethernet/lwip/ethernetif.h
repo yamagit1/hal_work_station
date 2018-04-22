@@ -58,9 +58,8 @@
 #include "cmsis_os.h"
 
 /* Within 'USER CODE' section, code will be kept by default at each generation */
-/* USER CODE BEGIN 0 */
 
-/* USER CODE END 0 */
+extern __uint8 macaddr[];
 
 /* Exported functions ------------------------------------------------------- */
 err_t ethernetif_init(struct netif *netif);
