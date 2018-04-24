@@ -21,8 +21,6 @@ src \
 src/midleware/FatFs \
 src/midleware/FatFs/src \
 src/midleware/FatFs/src/option \
-src/midleware/LibJPEG \
-src/midleware/LibJPEG/source \
 src/midleware/ethernet/lwip \
 src/midleware/ethernet/lwip/src/api \
 src/midleware/ethernet/lwip/src/apps/mqtt \
@@ -41,7 +39,6 @@ src/os_kernel/FreeRTOS \
 src/phy/DriveLed \
 src/phy/EthernetENC28J60 \
 src/phy/LCD1202 \
-src/phy \
 src/phy/console \
 src/phy/device/hal_driver \
 src/phy/device/start_up \

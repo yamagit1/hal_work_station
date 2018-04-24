@@ -16,7 +16,6 @@ RM := rm -rf
 -include src/phy/LCD1202/subdir.mk
 -include src/phy/EthernetENC28J60/subdir.mk
 -include src/phy/DriveLed/subdir.mk
--include src/phy/subdir.mk
 -include src/os_kernel/FreeRTOS/Source/portable/MemMang/subdir.mk
 -include src/os_kernel/FreeRTOS/Source/portable/GCC/ARM_CM4F/subdir.mk
 -include src/os_kernel/FreeRTOS/Source/CMSIS_RTOS/subdir.mk
@@ -32,8 +31,6 @@ RM := rm -rf
 -include src/midleware/ethernet/lwip/src/api/subdir.mk
 -include src/midleware/ethernet/lwip/subdir.mk
 -include src/midleware/ethernet/subdir.mk
--include src/midleware/LibJPEG/source/subdir.mk
--include src/midleware/LibJPEG/subdir.mk
 -include src/midleware/FatFs/src/option/subdir.mk
 -include src/midleware/FatFs/src/subdir.mk
 -include src/midleware/FatFs/subdir.mk

@@ -193,7 +193,7 @@ void SDIO_IRQHandler(void)
   /* USER CODE BEGIN SDIO_IRQn 0 */
 
   /* USER CODE END SDIO_IRQn 0 */
-  HAL_SD_IRQHandler(&hsd);
+//  HAL_SD_IRQHandler(&hsd);
   /* USER CODE BEGIN SDIO_IRQn 1 */
 
   /* USER CODE END SDIO_IRQn 1 */

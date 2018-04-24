@@ -1,8 +1,8 @@
 /**
  ******************************************************************************
-  * File Name          : jdata_conf.c
-  * Description        : This file implements LibJPEG file based read/write functions.
-  *
+  * @file    user_diskio.h
+  * @brief   This file contains the common defines and functions prototypes for  
+  *          the user_diskio driver.
   ******************************************************************************
   * This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -10,7 +10,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2018 STMicroelectronics International N.V. 
+  * Copyright (c) 2017 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -46,31 +46,29 @@
   *
   ******************************************************************************
   */
+  
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __USER_DISKIO_H
+#define __USER_DISKIO_H
+
+#ifdef __cplusplus
+ extern "C" {
+#endif 
+
+/* USER CODE BEGIN 0 */
 
 /* Includes ------------------------------------------------------------------*/
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------- */
+extern Diskio_drvTypeDef  USER_Driver;
 
-/*FatFS is chosen for File storage*/
-#include "jdata_conf.h"
-
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
-
-size_t read_file (FIL  *file, uint8_t *buf, uint32_t sizeofbuf)
-{
-static size_t BytesReadfile ;  
-f_read (file, buf , sizeofbuf, &BytesReadfile); 
-return BytesReadfile;    
+/* USER CODE END 0 */
+   
+#ifdef __cplusplus
 }
+#endif
 
-size_t write_file (FIL  *file, uint8_t *buf, uint32_t sizeofbuf)
-{
-static size_t BytesWritefile;  
-f_write (file, buf , sizeofbuf, &BytesWritefile); 
-return BytesWritefile; 
-}
+#endif /* __USER_DISKIO_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

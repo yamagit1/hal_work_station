@@ -9,27 +9,27 @@
 
 void MX_GPIO_Init(void)
 {
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
+	/* GPIO Ports Clock Enable */
+	__HAL_RCC_GPIOE_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
 
 }
 
 void MX_DMA_Init(void)
 {
-  /* DMA controller clock enable */
-  __HAL_RCC_DMA2_CLK_ENABLE();
+	/* DMA controller clock enable */
+	__HAL_RCC_DMA2_CLK_ENABLE();
 
-  /* DMA interrupt init */
-  /* DMA2_Stream2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
-  /* DMA2_Stream7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
+	/* DMA interrupt init */
+	/* DMA2_Stream2_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+	/* DMA2_Stream7_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
 
 }
 
@@ -98,12 +98,9 @@ void SystemClock_Config(void)
  */
 void _Error_Handler(char *file, int line)
 {
-	/* USER CODE BEGIN Error_Handler_Debug */
-	/* User can add his own implementation to report the HAL error return state */
 	while(1)
 	{
 	}
-	/* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -116,9 +113,97 @@ void _Error_Handler(char *file, int line)
  */
 void assert_failed(uint8_t* file, uint32_t line)
 {
-	/* USER CODE BEGIN 6 */
-	/* User can add his own implementation to report the file name and line number,
-     tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-	/* USER CODE END 6 */
+
 }
 #endif /* USE_FULL_ASSERT */
+
+
+void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
+{
+	GPIO_InitTypeDef GPIO_InitStruct;
+
+	if (spiHandle->Instance == SPI2)
+	{
+		/* SPI2 clock enable */
+		__HAL_RCC_SPI2_CLK_ENABLE();
+
+		/**SPI2 GPIO Configuration
+    PB12     ------> SPI2_CS
+    PB13     ------> SPI2_SCK
+    PB14     ------> SPI2_MISO
+    PB15     ------> SPI2_MOSI
+		 */
+		GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
+
+		// init PB13, PB14, PB15
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		// PB12     ------> SPI2_CS
+		GPIO_InitStruct.Pin = GPIO_PIN_12;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+
+		//    // init PB12
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	}
+	else if (spiHandle->Instance == SPI1)
+	{
+		/* SPI1 clock enable */
+		__HAL_RCC_SPI1_CLK_ENABLE();
+
+		/**SPI1 GPIO Configuration
+	    PA5     ------> SPI1_SCK
+	    PA6     ------> SPI1_MISO
+	    PA7     ------> SPI1_MOSI
+		 */
+		GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+		// PA4     ------> SPI2_CS
+		GPIO_InitStruct.Pin = GPIO_PIN_2;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+
+		//    // init PA4
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+
+	}
+}
+
+void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
+{
+
+	if(spiHandle->Instance==SPI2)
+	{
+		/* Peripheral clock disable */
+		__HAL_RCC_SPI2_CLK_DISABLE();
+
+		/**SPI2 GPIO Configuration
+    PB10     ------> SPI2_SCK
+    PB14     ------> SPI2_MISO
+    PB15     ------> SPI2_MOSI
+		 */
+		HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10|GPIO_PIN_14|GPIO_PIN_15);
+	}
+	else if(spiHandle->Instance==SPI1)
+	{
+		/* Peripheral clock disable */
+		__HAL_RCC_SPI1_CLK_DISABLE();
+
+		/**SPI1 GPIO Configuration
+	    PA5     ------> SPI1_SCK
+	    PA6     ------> SPI1_MISO
+	    PA7     ------> SPI1_MOSI
+		 */
+		HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7);
+	}
+}
