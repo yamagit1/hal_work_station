@@ -60,8 +60,6 @@ uint8_t SPI_wait_ready(void)
 //-----------------------------------------------
 static uint8_t SD_cmd (uint8_t cmd, uint32_t arg)
 {
-	__ENTER__
-
 	uint8_t n, res, timeoutAttempts, valTest;
 
 	// ACMD<n> is the command sequense of CMD55-CMD<n>
@@ -79,12 +77,10 @@ static uint8_t SD_cmd (uint8_t cmd, uint32_t arg)
 
 	// Select the card
 	SS_SD_DESELECT();
-	valTest = SPI_ReceiveByte();
-	console_serial_print_log("Value test : %d", valTest);
+	SPI_ReceiveByte();
 
 	SS_SD_SELECT();
-	valTest = SPI_ReceiveByte();
-	console_serial_print_log("Value test : %d", valTest);
+	SPI_ReceiveByte();
 
 	// Send a command packet
 	SPI_SendByte(cmd); // Start + Command index
@@ -112,13 +108,11 @@ static uint8_t SD_cmd (uint8_t cmd, uint32_t arg)
 
 	timeoutAttempts = 10; // Wait for a valid response in timeout of 10 attempts
 
-	do {
+	do
+	{
 		res = SPI_ReceiveByte();
-		console_serial_print_log("Value test : %d", res);
-
 	} while ((res & 0x80) && --timeoutAttempts);
 
-	__LEAVE__
 
 	return res;
 }
@@ -263,6 +257,9 @@ uint8_t sd_ini(void)
 		return 1;
 	}
 	console_serial_print_log("Type SD: 0x%02X",sdinfo.type);
+
+	__LEAVE__
+
 	return 0;
 }
 //-----------------------------------------------

@@ -127,6 +127,8 @@ typedef enum
 #include"string.h"
 #include "stdio.h"
 #include "stdarg.h"
+#include <stdlib.h>
+
 
 #if CONFIG_FLATFORM == FLATFORM_STM32_F407VG
 #include "stm32f4xx_hal.h"

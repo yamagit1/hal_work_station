@@ -120,10 +120,12 @@ void assert_failed(uint8_t* file, uint32_t line)
 
 void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
 {
+	__ENTER__
 	GPIO_InitTypeDef GPIO_InitStruct;
 
 	if (spiHandle->Instance == SPI2)
 	{
+
 		/* SPI2 clock enable */
 		__HAL_RCC_SPI2_CLK_ENABLE();
 
@@ -152,6 +154,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
 	}
 	else if (spiHandle->Instance == SPI1)
 	{
+		console_serial_print_log("SPI1 configure");
 		/* SPI1 clock enable */
 		__HAL_RCC_SPI1_CLK_ENABLE();
 
@@ -160,23 +163,25 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
 	    PA6     ------> SPI1_MISO
 	    PA7     ------> SPI1_MOSI
 		 */
-		GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
+		GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 		GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
-		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 		// PA4     ------> SPI2_CS
-		GPIO_InitStruct.Pin = GPIO_PIN_2;
+		GPIO_InitStruct.Pin = GPIO_PIN_6;
 		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 
 		//    // init PA4
-		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+		HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 
 	}
+
+	__LEAVE__
 }
 
 void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)

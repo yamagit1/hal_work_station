@@ -144,8 +144,9 @@ DSTATUS USER_status (BYTE pdrv)
  */
 DRESULT USER_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
 {
+	__ENTER__
 
-	console_serial_print_log("USER_read sector: %lu; count: %d ",sector, count);
+	console_serial_print_log("\t> USER_read sector: %lu; count: %d ",sector, count);
 
 	if (pdrv || !count)
 	{
@@ -164,6 +165,8 @@ DRESULT USER_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
 
 	if (count == 1) /* Single block read */
 	{
+		console_serial_print_log("\t> USER_readSingle block");
+
 		SD_Read_Block(buff,sector); //������� ���� � �����
 
 		count = 0;
@@ -176,7 +179,7 @@ DRESULT USER_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
 
 	__LEAVE__
 
-	return count ? RES_ERROR : RES_OK;
+	return (count ? RES_ERROR : RES_OK);
 }
 
 /**

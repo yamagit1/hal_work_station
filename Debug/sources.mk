@@ -17,20 +17,11 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+src/app/webserver \
 src \
 src/midleware/FatFs \
 src/midleware/FatFs/src \
 src/midleware/FatFs/src/option \
-src/midleware/ethernet/lwip \
-src/midleware/ethernet/lwip/src/api \
-src/midleware/ethernet/lwip/src/apps/mqtt \
-src/midleware/ethernet/lwip/src/core \
-src/midleware/ethernet/lwip/src/core/ipv4 \
-src/midleware/ethernet/lwip/src/core/ipv6 \
-src/midleware/ethernet/lwip/src/netif \
-src/midleware/ethernet/lwip/src/netif/ppp \
-src/midleware/ethernet/lwip/system/OS \
-src/midleware/ethernet \
 src/os_kernel/FreeRTOS/Source/CMSIS_RTOS \
 src/os_kernel/FreeRTOS/Source \
 src/os_kernel/FreeRTOS/Source/portable/GCC/ARM_CM4F \

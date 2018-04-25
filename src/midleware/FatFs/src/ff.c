@@ -3604,6 +3604,9 @@ FRESULT f_write (
 	UINT* bw			/* Pointer to number of bytes written */
 )
 {
+
+	__ENTER__
+
 	FRESULT res;
 	FATFS *fs;
 	DWORD clst, sect;
@@ -3707,6 +3710,8 @@ FRESULT f_write (
 	}
 
 	fp->flag |= FA_MODIFIED;				/* Set file change flag */
+
+	__LEAVE__
 
 	LEAVE_FF(fs, FR_OK);
 }

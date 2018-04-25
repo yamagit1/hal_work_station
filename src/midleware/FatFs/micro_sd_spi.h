@@ -12,8 +12,8 @@
 
 extern SPI_HandleTypeDef hspi1;
 
-#define SS_SD_SELECT() 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET)
-#define SS_SD_DESELECT() 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET)
+#define SS_SD_SELECT() 			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_RESET)
+#define SS_SD_DESELECT() 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_6, GPIO_PIN_SET)
 
 __uint8 microSD_Send_And_Receive_Byte(__uint8 data);
 void microSD_SPI_Init(void);
