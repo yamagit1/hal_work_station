@@ -17,6 +17,8 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+src/app/fptserver \
+src/app/httpserver \
 src \
 src/midleware/Monitor \
 src/midleware/PM \

@@ -1,7 +1,7 @@
 #include "net.h"
 #include "enc28j60.h"
 #include "console_serial_trace.h"
-
+#include "perform_manage.h"
 //-----------------------------------------------
 __uint8 net_buf[ENC28J60_MAXFRAME];
 
@@ -21,37 +21,7 @@ __uint8 macaddr[]={0x01,0x02,0x03,0x04,0x05,0x06};
 
 osSemaphoreId networkSemaphoreID;
 
-//-----------------------------------------------
-void net_ini(void)
-{
-	__ENTER__
 
-	usartprop.usart_buf[0]=0;
-	usartprop.usart_cnt=0;
-	usartprop.is_ip=0;
-
-	console_serial_print_log("\t> mac addr : %d:%d:%d:%d:%d:%d", \
-			macaddr[0], macaddr[1], macaddr[2], macaddr[3], macaddr[4], macaddr[5]);
-
-	// Init hardware device enc28j60
-	console_serial_print_log("\t> Init hardware device enc28j60");
-	enc28j60_init(macaddr);
-
-	//
-	ntpprop.set=0;
-	ntpprop.ntp_cnt=0;
-	ntpprop.ntp_timer=0;
-
-	// init semaphore for network device
-	console_serial_print_log("\t> init semaphore for network device");
-	osSemaphoreDef(network_device);
-	networkSemaphoreID = osSemaphoreCreate(osSemaphore(network_device) , 1 );
-
-	// Release network device
-	console_serial_print_log("\t> Release network device");
-	osSemaphoreRelease(networkSemaphoreID);
-	__LEAVE__
-}
 //-----------------------------------------------
 __uint16 checksum(__uint8 *ptr, int16_t len, __uint8 type)
 {
@@ -276,7 +246,7 @@ void eth_read(__S_Enc28j60_Frame_Pkt *frame, __uint16 len)
 		else if(frame->type==ETH_IP)
 		{
 			console_serial_print_infor("\t> Receiver packet type : ETH_IP  length : %d", len);
-			ip_read(frame, len - sizeof(__S_Ip_Pkt));
+			ip_read(frame, len - sizeof(__S_Enc28j60_Frame_Pkt));
 		}
 		else
 		{
@@ -426,3 +396,50 @@ void TIM_PeriodElapsedCallback(void)
 	}
 }
 //-----------------------------------------------
+
+void net_task_polling(void * argument)
+{
+
+	for(;;)
+	{
+		net_poll();
+	}
+}
+
+
+void net_ini(void)
+{
+	__ENTER__
+
+	usartprop.usart_buf[0]=0;
+	usartprop.usart_cnt=0;
+	usartprop.is_ip=0;
+
+	console_serial_print_log("\t> mac addr : %d:%d:%d:%d:%d:%d", \
+			macaddr[0], macaddr[1], macaddr[2], macaddr[3], macaddr[4], macaddr[5]);
+
+	// Init hardware device enc28j60
+	console_serial_print_log("\t> Init hardware device enc28j60");
+	enc28j60_init(macaddr);
+
+	//
+	ntpprop.set=0;
+	ntpprop.ntp_cnt=0;
+	ntpprop.ntp_timer=0;
+
+	// create task net pooling
+	console_serial_print_log("Create task net poolling");
+	osThreadDef(network_pool, net_task_polling, osPriorityNormal, 0, 500);
+
+	gListPID[INDEX_NETWORK] = osThreadCreate(osThread(network_pool), NULL);
+
+	// init semaphore for network device
+	console_serial_print_log("\t> init semaphore for network device");
+	osSemaphoreDef(network_device);
+	networkSemaphoreID = osSemaphoreCreate(osSemaphore(network_device) , 1 );
+
+	// Release network device
+	console_serial_print_log("\t> Release network device");
+	osSemaphoreRelease(networkSemaphoreID);
+	__LEAVE__
+}

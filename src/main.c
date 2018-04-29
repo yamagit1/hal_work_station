@@ -21,6 +21,7 @@
 #include "net.h"
 #include "monitor.h"
 #include "perform_manage.h"
+#include "httpd.h"
 
 FATFS SDFatFs;
 FIL MyFile;
@@ -78,29 +79,36 @@ osThreadId idTask1, idTask2, idTask3;
 
 void handle_task_3(void * argument)
 {
-	int currCount = 0;
-
-
-
 	for (;;)
 	{
-		console_serial_print_log(">>handle_task_3 count : %d", currCount++);
-		osSignalSet(idTask2, SIG_TEST_2);
-		osDelay(1000);
+		//		console_serial_print_log(">>handle_task_3-------pool");
+		net_poll();
 	}
 }
 
 void handle_task_1(void * argument)
 {
-	int currCount = 0;
-
-
+	int i = 0;
 
 	for (;;)
 	{
-		console_serial_print_log(">>handle_task_1 count : %d", currCount++);
-		osSignalSet(idTask2, SIG_TEST);
-		osDelay(1000);
+		dled_setting_led_status(LED_RED, TURN_ON);
+		osDelay(200);
+		dled_setting_led_status(LED_BLUE, TURN_ON);
+		osDelay(200);
+		dled_setting_led_status(LED_YELLOW, TURN_ON);
+		osDelay(200);
+		dled_setting_led_status(LED_GREEN, TURN_ON);
+		osDelay(200);
+
+		dled_setting_led_status(LED_RED, TURN_OFF);
+		osDelay(200);
+		dled_setting_led_status(LED_BLUE, TURN_OFF);
+		osDelay(200);
+		dled_setting_led_status(LED_YELLOW, TURN_OFF);
+		osDelay(200);
+		dled_setting_led_status(LED_GREEN, TURN_OFF);
+		osDelay(200);
 	}
 }
 
@@ -175,83 +183,38 @@ int main(void)
 
 	console_serial_print_log("Initialize microSD card");
 	FS_FATFS_Init();
+
+
+	dled_initialize();
+	console_serial_print_log("Initialize driver led .....complete");
 	//------------------Initialize os system -----------------------------
 	//------------------Initialize os system -----------------------------
 
-	//============================================================================================
-	//
-	//		console_serial_print_log("Initialize spi 2");
-	//		//	ENC28J60_SPI_Init();
-	//		microSD_SPI_Init();
-	//
-	//		if(f_mount(&SDFatFs,(TCHAR const*)USERPath,0)!=FR_OK)
-	//		{
-	//			console_serial_print_log("> mount fail");
-	//
-	//		}
-	//		else
-	//		{
-	//			console_serial_print_log("> mount successfully ");
-	//
-	//			if(f_open(&MyFile,"homepage.html",  FA_READ) != FR_OK)
-	//			{
-	//				console_serial_print_log("> open fail");		}
-	//			else
-	//			{
-	//				console_serial_print_log("> open successfully ");
-	//
-	//
-	//	//			f_write(&MyFile, wtext, sizeof(wtext), (void*)&byteswritten);
-	//
-	//				ReadLongFile();
-	//				//			for (i = 0; i< 5; i++)
-	//				//			{
-	//				//				console_serial_print_log("%c", f_gets(buff,1, &MyFile ));
-	//				//			}
-	//
-	//
-	//
-	//				console_serial_print_log("\t> My file infor :cltbl:%d clust:%d dir_sect:%d err:%d flag:%d fptr:%d sect:%d", MyFile.cltbl, MyFile.clust, MyFile.dir_sect, MyFile.err, MyFile.flag, MyFile.fptr, MyFile.sect);
-	//				console_serial_print_log("\t> My obj  file infor :attr:%d id:%d lockid:%d objsize:%d sclust:%d stat:%d", MyFile.obj.attr, MyFile.obj.id, MyFile.obj.lockid, MyFile.obj.objsize, MyFile.obj.sclust, MyFile.obj.stat);
-	//
-	//				f_close(&MyFile);
-	//			}
-	//		}
 
 	//=========================================================================
 
 	// init task 1
-	//	console_serial_print_log("Create task 1\n\t\t>name : %s,\n\t\t>priority : %d,\n\t\t>stacksz : %d,", "task_1", 1, 128);
-	//	osThreadDef(task_1_mos, handle_task_1, osPriorityNormal, 0, 1000);
-	//	idTask1 = osThreadCreate(osThread(task_1_mos), NULL);
-	//	//
-	//	// init task 2
-	//	console_serial_print_log("Create task 2\n\t\t>name : %s,%d,\n\t\t>priority : %d,\n\t\t>stacksz : %d,", "task_2", 1, 128);
-	//	osThreadDef(task_2, handle_task_2, osPriorityNormal, 0, 1000);
-	//	idTask2 = osThreadCreate(osThread(task_2), NULL);
-	//
-	//	console_serial_print_log("Create task 3\n\t\t>name : %s,%d,\n\t\t>priority : %d,\n\t\t>stacksz : %d,", "task_2", 1, 128);
-	//	osThreadDef(task_3, handle_task_3, osPriorityNormal, 0, 1000);
-	//	idTask3 = osThreadCreate(osThread(task_3), NULL);
+	console_serial_print_log("Create task 1\n\t\t>name : %s,\n\t\t>priority : %d,\n\t\t>stacksz : %d,", "task_1", 1, 1000);
+	osThreadDef(task_1_mos, handle_task_1, osPriorityNormal, 0, 500);
+	idTask1 = osThreadCreate(osThread(task_1_mos), NULL);
 
-	//	xTaskCreate(handle_task_1, "task_1_mos", 1000, NULL, 2, &task_1_Handle);
-	//	TaskHandle_t task_2_Handle;
-	//	xTaskCreate(PM_task_update_html, "task_2test", 1000, NULL, 2, &task_2_Handle);
-
-
-	/* Start scheduler */
-	//	console_serial_print_log("Start scheduler");
-	//		osKernelStart();
-	//	net_ini();
-	//	MNT_initialize();
 	MNT_Render();
 	//===================================================================
+
 	net_ini();
-	PM_update_home_page_html();
+	httpd_init();
+	PM_init();
+
+//	console_serial_print_log("Create task 3\n\t\t>name : %s,%d,\n\t\t>priority : %d,\n\t\t>stacksz : %d,", "task_2", 1, 1);
+//	osThreadDef(task_3, handle_task_3, osPriorityNormal, 0, 500);
+//	idTask3 = osThreadCreate(osThread(task_3), NULL);
+
+	console_serial_print_log("Start scheduler");
+	osKernelStart();
+	//	PM_update_home_page_html();
 
 	while (1)
 	{
-				net_poll();
 	}
 
 

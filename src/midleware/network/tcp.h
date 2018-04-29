@@ -19,7 +19,7 @@ typedef struct tcp_pkt {
 	uint16_t cs;			//header checksum
 	uint16_t urg_ptr;		//pointer to urgent data
 	uint8_t data[];			//data
-} tcp_pkt_ptr;
+} __S_Tcp_Pkt;
 //--------------------------------------------------
 typedef struct tcp_prop {
 	uint8_t macaddr_dst[6];					//MAC address Destination

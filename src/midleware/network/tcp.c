@@ -1,6 +1,7 @@
 #include "tcp.h"
 #include "console_serial_trace.h"
-
+#include "httpd.h"
+#include "perform_manage.h"
 //--------------------------------------------------
 //-----------------------------------------------
 extern __uint8 net_buf[ENC28J60_MAXFRAME];
@@ -189,7 +190,7 @@ const __uint8 e404_htm[] = {
 		0x68,0x74,0x6d,0x6c,0x3e};
 //-----------------------------------------------
 //���������� ��������� TCP-������
-void tcp_header_prepare(tcp_pkt_ptr *tcp_pkt, __uint16 port, __uint8 fl, __uint16 len, __uint16 len_cs)
+void tcp_header_prepare(__S_Tcp_Pkt *tcp_pkt, __uint16 port, __uint8 fl, __uint16 len, __uint16 len_cs)
 {
 	tcp_pkt->port_dst = be16toword(port);
 	tcp_pkt->port_src = be16toword(LOCAL_PORT_TCP);
@@ -225,14 +226,14 @@ __uint8 tcp_send_synack(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint1
 	__uint8 res=0;
 	__uint16 len=0;
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
-	tcp_pkt_ptr *tcp_pkt = (void*)(ip_pkt->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
 	tcpprop.seq_num = rand();
 	tcpprop.ack_num = be32todword(be32todword(tcp_pkt->bt_num_seg) + 1);
 	tcp_pkt->data[0]=2;//Maximum Segment Size (2)
 	tcp_pkt->data[1]=4;//Length
 	tcp_pkt->data[2]=(__uint8) (tcp_mss>>8);//MSS = 458
 	tcp_pkt->data[3]=(__uint8) tcp_mss;
-	len = sizeof(tcp_pkt_ptr)+4;
+	len = sizeof(__S_Tcp_Pkt)+4;
 	tcp_header_prepare(tcp_pkt, port, TCP_SYN|TCP_ACK, len, len);
 	len+=sizeof(__S_Ip_Pkt);
 	ip_header_prepare(ip_pkt, ip_addr, IP_TCP, len);
@@ -248,25 +249,38 @@ __uint8 tcp_send_finack(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint1
 {
 	__uint8 res=0;
 	__uint16 len=0;
+
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
-	tcp_pkt_ptr *tcp_pkt = (void*)(ip_pkt->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
+
 	tcpprop.seq_num = tcp_pkt->num_ask;
 	tcpprop.ack_num = be32todword(be32todword(tcp_pkt->bt_num_seg) + 1);
-	len = sizeof(tcp_pkt_ptr);
+
+	len = sizeof(__S_Tcp_Pkt);
+
 	tcp_header_prepare(tcp_pkt, port, TCP_ACK, len, len);
+
 	len+=sizeof(__S_Ip_Pkt);
+
 	ip_header_prepare(ip_pkt, ip_addr, IP_TCP, len);
+
 	//�������� ��������� Ethernet
 	memcpy(frame->addr_dest,frame->addr_src,6);
+
 	eth_send(frame,ETH_IP,len);
+
 	if(tcp_stat == TCP_DISCONNECTED) return 0;
+
 	tcp_pkt->fl = TCP_FIN|TCP_ACK;
-	len = sizeof(tcp_pkt_ptr);
+	len = sizeof(__S_Tcp_Pkt);
 	tcp_pkt->cs = 0;
 	tcp_pkt->cs=checksum((__uint8*)tcp_pkt-8, len+8, 2);
 	len+=sizeof(__S_Ip_Pkt);
+
 	eth_send(frame,ETH_IP,len);
+
 	tcp_stat = TCP_DISCONNECTED;	
+
 	return res;
 }
 //--------------------------------------------------
@@ -278,11 +292,11 @@ __uint8 tcp_send_data(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 
 	__uint16 sz_data=0;
 	tcp_stat = TCP_CONNECTED;
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
-	tcp_pkt_ptr *tcp_pkt = (void*)(ip_pkt->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
 	sz_data = be16toword(ip_pkt->len)-20-(tcp_pkt->len_hdr>>2);
 	tcpprop.seq_num = tcp_pkt->num_ask;
 	tcpprop.ack_num = be32todword(be32todword(tcp_pkt->bt_num_seg) + sz_data);
-	len = sizeof(tcp_pkt_ptr);
+	len = sizeof(__S_Tcp_Pkt);
 	//�������� ������������� �� ����� ������
 	tcp_header_prepare(tcp_pkt, port, TCP_ACK, len, len);
 	len+=sizeof(__S_Ip_Pkt);
@@ -295,7 +309,7 @@ __uint8 tcp_send_data(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 
 	{
 		strcpy((char*)tcp_pkt->data,"Hello to TCP Client!!!\r\n");
 		tcp_pkt->fl = TCP_ACK|TCP_PSH;
-		len = sizeof(tcp_pkt_ptr);
+		len = sizeof(__S_Tcp_Pkt);
 		len+=strlen((char*)tcp_pkt->data);
 		tcp_pkt->cs = 0;
 		tcp_pkt->cs=checksum((__uint8*)tcp_pkt-8, len+8, 2);
@@ -319,14 +333,14 @@ __uint8 tcp_send_http_one(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uin
 	__uint16 sz_data=0;
 
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
-	tcp_pkt_ptr *tcp_pkt = (void*)(ip_pkt->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
 
 	sz_data = be16toword(ip_pkt->len)-20-(tcp_pkt->len_hdr>>2);
 
 	tcpprop.seq_num = tcp_pkt->num_ask;
 	tcpprop.ack_num = be32todword(be32todword(tcp_pkt->bt_num_seg) + sz_data);
 
-	len = sizeof(tcp_pkt_ptr);
+	len = sizeof(__S_Tcp_Pkt);
 
 	tcp_header_prepare(tcp_pkt, port, TCP_ACK, len, len);
 
@@ -368,7 +382,7 @@ __uint8 tcp_send_http_one(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uin
 		memcpy((void*)(tcp_pkt->data+strlen(error_header)),(void*)e404_htm,sizeof(e404_htm));
 	}
 
-	len = sizeof(tcp_pkt_ptr);
+	len = sizeof(__S_Tcp_Pkt);
 	len+=tcpprop.data_size;
 
 	tcp_pkt->fl 	= TCP_PSH|TCP_ACK;
@@ -399,13 +413,13 @@ __uint8 tcp_send_http_first(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __u
 	__uint16 len=0;
 	__uint16 sz_data=0;
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
-	tcp_pkt_ptr *tcp_pkt = (void*)(ip_pkt->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
 
 	sz_data = be16toword(ip_pkt->len)-20-(tcp_pkt->len_hdr>>2);
 	tcpprop.seq_num = tcp_pkt->num_ask;
 	tcpprop.ack_num = be32todword(be32todword(tcp_pkt->bt_num_seg) + sz_data);
 
-	len = sizeof(tcp_pkt_ptr);
+	len = sizeof(__S_Tcp_Pkt);
 	tcp_header_prepare(tcp_pkt, port, TCP_ACK, len, len);
 
 	len+=sizeof(__S_Ip_Pkt);
@@ -441,7 +455,7 @@ __uint8 tcp_send_http_first(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __u
 		memcpy((void*)(tcp_pkt->data+strlen(error_header)),(void*)e404_htm,tcp_mss-strlen(error_header));
 	}
 	tcp_pkt->fl = TCP_ACK;
-	len = sizeof(tcp_pkt_ptr);
+	len = sizeof(__S_Tcp_Pkt);
 	len+=tcp_mss;
 	tcp_pkt->cs = 0;
 	tcp_pkt->cs=checksum((__uint8*)tcp_pkt-8, len+8, 2);
@@ -473,10 +487,10 @@ __uint8 tcp_send_http_middle(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __
 	__uint8 res=0;
 	__uint16 len_tcp=0, len=0;
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
-	tcp_pkt_ptr *tcp_pkt = (void*)(ip_pkt->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
 
 	tcpprop.seq_num = be32todword(be32todword(tcpprop.seq_num)+tcp_mss);
-	len_tcp = sizeof(tcp_pkt_ptr);
+	len_tcp = sizeof(__S_Tcp_Pkt);
 
 	if ((tcpprop.http_doc==EXISTING_HTML)||(tcpprop.http_doc==EXISTING_JPG))
 	{
@@ -532,10 +546,10 @@ __uint8 tcp_send_http_last(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __ui
 	__uint8 res=0;
 	__uint16 len_tcp=0, len=0;
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
-	tcp_pkt_ptr *tcp_pkt = (void*)(ip_pkt->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
 
 	tcpprop.seq_num = be32todword(be32todword(tcpprop.seq_num)+tcp_mss);
-	len_tcp = sizeof(tcp_pkt_ptr);
+	len_tcp = sizeof(__S_Tcp_Pkt);
 	if ((tcpprop.http_doc==EXISTING_HTML)||(tcpprop.http_doc==EXISTING_JPG))
 	{
 		if (tcpprop.http_doc==EXISTING_HTML)
@@ -573,10 +587,10 @@ __uint8 tcp_send_http_dataend(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, _
 	__uint8 res=0;
 	__uint16 len=0;
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
-	tcp_pkt_ptr *tcp_pkt = (void*)(ip_pkt->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
 	tcpprop.seq_num = tcpprop.seq_num_tmp;
 	tcpprop.ack_num = tcp_pkt->bt_num_seg;
-	len = sizeof(tcp_pkt_ptr);
+	len = sizeof(__S_Tcp_Pkt);
 	tcp_header_prepare(tcp_pkt, port, TCP_FIN|TCP_ACK, len, len);
 	len+=sizeof(__S_Ip_Pkt);
 	ip_header_prepare(ip_pkt, ip_addr, IP_TCP, len);
@@ -593,171 +607,47 @@ __uint8 tcp_read(__S_Enc28j60_Frame_Pkt *frame, __uint16 len)
 {
 	__uint8 res = 0;
 	__uint16 len_data = 0;
-	__uint16 i = 0
-			;
+	__uint16 i = 0;
+
+	__uint32 lenEnc28j60Frame = 0;
+
 	char *ss1;
 	int ch1=' ';
 	int ch2='.';
 
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
-	tcp_pkt_ptr *tcp_pkt = (void*)(ip_pkt->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
 
-	memcpy(tcpprop.macaddr_dst,frame->addr_src,6);
-	memcpy(tcpprop.ipaddr_dst,ip_pkt->ipaddr_src,4);
-
-	tcpprop.port_dst = be16toword(tcp_pkt->port_src);
-
-	len_data = be16toword(ip_pkt->len)-20-(tcp_pkt->len_hdr>>2);
-
-	console_serial_print_log("\t> Packet : %d.%d.%d.%d-%d.%d.%d.%d %d tcp",
-			ip_pkt->ipaddr_src[0],ip_pkt->ipaddr_src[1],ip_pkt->ipaddr_src[2],ip_pkt->ipaddr_src[3],
-			ip_pkt->ipaddr_dst[0],ip_pkt->ipaddr_dst[1],ip_pkt->ipaddr_dst[2],ip_pkt->ipaddr_dst[3], len_data);
-
-	if (len_data)
+	//===============================================================
+	if (be16toword(tcp_pkt->port_dst) == HTTPD_TCP_PORT)
 	{
-		// view comtent packet
-		console_serial_print_infor("TCP packet content :\n%s", tcp_pkt->data);
+		lenEnc28j60Frame = len + sizeof(__S_Ip_Pkt) + sizeof(__S_Enc28j60_Frame_Pkt);
 
-		// packet ip is ACK
-		if (tcp_pkt->fl & TCP_ACK)
+		// wait for httpd buff ready to access
+		if (osSemaphoreWait(httpBuffSemaphoreID, TIME_WAIT_SHORT) == osOK )
 		{
-			// console_serial_print_log
-			// packet "GET /", for protocol HTTP
-			if (strncmp((char*)tcp_pkt->data, "GET /", 5) == 0)
-			{
-				tcpprop.cnt_size_wnd = 0;
+			// copy packet receiver to httpd
+			memcpy(gHttpFrame, frame, lenEnc28j60Frame);
+			console_serial_print_log("\t> copy packet receiver to httpd size : %d ", lenEnc28j60Frame);
 
-
-				if((char)tcp_pkt->data[5]==' ')
-				{
-					// HTTP/GET no  target file
-					console_serial_print_log("\t> HTTP/GET no  target file");
-
-					strcpy(tcpprop.fname,"index.html");
-					tcpprop.http_doc = EXISTING_HTML;
-				}
-				else
-				{
-					// HTTP/GET contain target file
-					console_serial_print_log("\t> HTTP/GET contain target file");
-
-					memcpy((void*)tcpprop.fname, (void*)(tcp_pkt->data + 5), 20);
-					ss1 = strchr(tcpprop.fname, ch1);
-					ss1[0] = 0;
-				}
-
-				console_serial_print_log("\t>%s : %d", (__uint8*)tcpprop.fname, strlen(tcpprop.fname));
-
-				// open sd card and prepare file for send
-				result = f_mount(&SDFatFs, (TCHAR const*)gDrivePath, 0);
-				console_serial_print_log("f_mount: %d",result);
-
-				result = f_open(&MyFile,tcpprop.fname,FA_READ);
-
-				console_serial_print_log("f_open: %d  f_size: %lu",result, MyFile.obj.objsize);
-
-				if (result == FR_OK)
-				{
-					ss1 = strchr(tcpprop.fname,ch2);
-					ss1++;
-
-					if (strncmp(ss1,"jpg", 3) == 0)
-					{
-						tcpprop.http_doc = EXISTING_JPG;
-
-						tcpprop.data_size = strlen(jpg_header);
-					}
-					else
-					{
-						tcpprop.http_doc = EXISTING_HTML;
-
-						tcpprop.data_size = strlen(http_header);
-					}
-
-					tcpprop.data_size += MyFile.obj.objsize;
-				}
-				else
-				{
-					tcpprop.http_doc = E404_HTML;
-
-					tcpprop.data_size = strlen(error_header);
-
-					tcpprop.data_size += sizeof(e404_htm);
-				}
-
-				tcpprop.cnt_rem_data_part = tcpprop.data_size / tcp_mss + 1;
-				tcpprop.last_data_part_size = tcpprop.data_size % tcp_mss;
-
-				if(tcpprop.last_data_part_size == 0)
-				{
-					tcpprop.last_data_part_size = tcp_mss;
-					tcpprop.cnt_rem_data_part--;
-				}
-
-				tcpprop.cnt_data_part = tcpprop.cnt_rem_data_part;
-
-				console_serial_print_log("data size:%lu; cnt data part:%u; last_data_part_size:%u; port dst:%u",
-						(unsigned long)tcpprop.data_size, tcpprop.cnt_rem_data_part, tcpprop.last_data_part_size,tcpprop.port_dst);
-
-				if (tcpprop.cnt_rem_data_part == 1)
-				{
-					tcpprop.data_stat = DATA_ONE;
-				}
-				else if (tcpprop.cnt_rem_data_part > 1)
-				{
-					tcpprop.data_stat = DATA_FIRST;
-				}
-
-				if(tcpprop.data_stat == DATA_ONE)
-				{
-					tcp_send_http_one(frame, ip_pkt->ipaddr_src, tcpprop.port_dst);
-				}
-				else if(tcpprop.data_stat == DATA_FIRST)
-				{
-					console_serial_print_log("-------------START-----------");
-					tcp_send_http_first(frame, ip_pkt->ipaddr_src, tcpprop.port_dst);
-				}
-			}
-			else
-			{
-				tcp_send_data(frame, ip_pkt->ipaddr_src, tcpprop.port_dst);
-			}
+			// Release httpd buff
+			osSemaphoreRelease(httpBuffSemaphoreID);
 		}
+		else
+		{
+			console_serial_print_error("\t> tcp_readcopy wait for httpd buff ready to access fail");
+
+		}
+		osSignalSet(gListPID[INDEX_HTTPD_SERVER], SIG_HTTPD_REV);
+		console_serial_print_log("\t> Packet send to HTTPD : send signal to HTTPD");
+
+		return 0;
 	}
-
-
-	if (tcp_pkt->fl == TCP_SYN)
+	else
 	{
-		tcp_send_synack(frame, ip_pkt->ipaddr_src, tcpprop.port_dst);
+		console_serial_print_log("\t> Packet send to FPT : %d ----->%d" , be16toword(tcp_pkt->port_src), be16toword(tcp_pkt->port_dst));
 	}
-	else if (tcp_pkt->fl == (TCP_FIN|TCP_ACK))
-	{
-		tcp_send_finack(frame, ip_pkt->ipaddr_src, tcpprop.port_dst);
-	}
-	else if (tcp_pkt->fl == (TCP_PSH|TCP_ACK))
-	{
-		if(!len_data)
-		{
-			tcp_send_finack(frame, ip_pkt->ipaddr_src, tcpprop.port_dst);
-		}
-	}
-	else if (tcp_pkt->fl == TCP_ACK)
-	{
-		if (tcpprop.data_stat == DATA_END)
-		{
-			tcp_send_http_dataend(frame, ip_pkt->ipaddr_src, tcpprop.port_dst);
-		}
-		else if (tcpprop.data_stat == DATA_MIDDLE)
-		{
-			tcp_send_http_middle(frame, tcpprop.ipaddr_dst, tcpprop.port_dst);
-		}
-		else if (tcpprop.data_stat == DATA_LAST)
-		{
-			console_serial_print_log("-------------LAST-----------");
-			tcpprop.data_stat = DATA_COMPLETED;
-			tcp_send_http_last(frame, tcpprop.ipaddr_dst, tcpprop.port_dst);
-		}
-	}
+	//===============================================================
 
 	return res;
 }

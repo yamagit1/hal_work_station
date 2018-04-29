@@ -28,6 +28,8 @@ RM := rm -rf
 -include src/midleware/network/subdir.mk
 -include src/midleware/PM/subdir.mk
 -include src/midleware/Monitor/subdir.mk
+-include src/app/httpserver/subdir.mk
+-include src/app/fptserver/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
 -include objects.mk

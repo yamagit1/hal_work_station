@@ -15,7 +15,7 @@
 #include "driver_led.h"
 #include "sd.h"
 
-TaskHandle_t gListPID[MAX_SIZE_LIST_PID];
+osThreadId gListPID[MAX_SIZE_LIST_PID];
 __S_TIME gTimeCount;
 
 
@@ -447,12 +447,24 @@ void PM_task_update_html(void * argument)
 	{
 		if (osSemaphoreWait(microSDSemaphoreID, TIME_WAIT_MEDIUM) == osOK)
 		{
-			console_serial_print_infor("---------update homepage.html-----------");
+			console_serial_print_infor("-----------------------update homepage.html-------------------------");
+
 			PM_update_home_page_html();
+			console_serial_print_infor("-----------------------update finish-------------------------");
 
 			osSemaphoreRelease(microSDSemaphoreID);
 		}
 
-		osDelay(20000);
+		osDelay(60000);
 	}
+}
+
+
+void PM_init()
+{
+	// create task httpd
+		console_serial_print_log("Create task html update");
+		osThreadDef(html_update, PM_task_update_html, osPriorityNormal, 0, 1000);
+
+		gListPID[INDEX_PM] = osThreadCreate(osThread(html_update), NULL);
 }
