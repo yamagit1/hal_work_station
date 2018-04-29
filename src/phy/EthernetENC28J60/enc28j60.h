@@ -1,3 +1,13 @@
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: enc28j60.h
+ * in this file :
+ *============================================================================*/
+
 #ifndef __ENC28J60_H__
 #define __ENC28J60_H__
 

@@ -1,15 +1,14 @@
 /*==============================================================================
- *  Author  : YAMA team
- *  email   : yamateamhaui@gmail.com
- *  address : Ha Noi University
- *  ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)
+ *  Author  : YAMA															   *
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: header.h
+ * in this file :
+ * 		- define some macro usually use
  *============================================================================*/
 
-/*==================================================================
- * In this file:
- * 		- define some macro usually use
- * 		- define macro print log to LCD
- *==================================================================*/
 
 #ifndef __MACROS_H__
 #define __MACROS_H__

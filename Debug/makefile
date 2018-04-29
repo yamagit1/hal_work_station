@@ -9,6 +9,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/phy/peripheral_init/subdir.mk
+-include src/phy/microSD/subdir.mk
 -include src/phy/device/stm32f4xx/subdir.mk
 -include src/phy/device/start_up/subdir.mk
 -include src/phy/device/hal_driver/subdir.mk
@@ -21,10 +22,12 @@ RM := rm -rf
 -include src/os_kernel/FreeRTOS/Source/CMSIS_RTOS/subdir.mk
 -include src/os_kernel/FreeRTOS/Source/subdir.mk
 -include src/os_kernel/FreeRTOS/subdir.mk
--include src/midleware/FatFs/src/option/subdir.mk
--include src/midleware/FatFs/src/subdir.mk
--include src/midleware/FatFs/subdir.mk
--include src/app/webserver/subdir.mk
+-include src/os_kernel/FatFs/src/option/subdir.mk
+-include src/os_kernel/FatFs/src/subdir.mk
+-include src/os_kernel/FatFs/subdir.mk
+-include src/midleware/network/subdir.mk
+-include src/midleware/PM/subdir.mk
+-include src/midleware/Monitor/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
 -include objects.mk

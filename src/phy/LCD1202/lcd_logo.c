@@ -1,3 +1,12 @@
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: lcd_logo.c
+ * in this file :
+ *============================================================================*/
 
 #include "lcd_logo.h"
 

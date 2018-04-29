@@ -5,8 +5,8 @@
 #include "enc28j60.h"
 #include "cmsis_os.h"
 //--------------------------------------------------
-#define IP_ADDR {10,2,9,195}
-#define IP_GATE {10,2,9,1}
+#define IP_ADDR {192,168,9,195}
+#define IP_GATE {192,168,9,1}
 #define IP_MASK {255,255,255,0}
 #define MAC_BROADCAST {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF}
 #define MAC_NULL {0x00,0x00,0x00,0x00,0x00,0x00} 

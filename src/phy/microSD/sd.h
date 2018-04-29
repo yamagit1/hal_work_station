@@ -1,8 +1,19 @@
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: sd.h
+ * in this file :
+ *============================================================================*/
+
 #ifndef SD_H_
 #define SD_H_
 //--------------------------------------------------
 #include "header.h"
 #include "enc28j60_spi.h"
+#include "cmsis_os.h"
 
 //--------------------------------------------------
 
@@ -21,6 +32,10 @@ typedef struct sd_info {
   volatile uint8_t type;//��� �����
 } sd_info_ptr;
 //--------------------------------------------------
+
+extern osSemaphoreId microSDSemaphoreID;
+
+
 void SD_PowerOn(void);
 uint8_t sd_ini(void);
 void SPI_Release(void);

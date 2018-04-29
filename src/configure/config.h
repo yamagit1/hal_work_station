@@ -1,14 +1,14 @@
-/*==================================================================
- *  Author  : YAMA team
- *  email   : yamateamhaui@gmail.com
- *  address : Ha Noi University
- *  ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)
- *==================================================================*/
+/*==============================================================================
+ *  Author  : YAMA															   *
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file		: config.h
+ * in this file :
+ * 			+config device is use
+ *============================================================================*/
 
-/*==================================================================
- * In this file:
- * 		- config device is use
- *==================================================================*/
 
 #ifndef __CONFIG_H__
 #define __CONFIG_H__

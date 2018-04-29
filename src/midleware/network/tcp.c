@@ -6,8 +6,8 @@
 extern __uint8 net_buf[ENC28J60_MAXFRAME];
 extern __uint8 macaddr[6];
 extern __uint8 ipaddr[4];
-FATFS SDFatFs;//��������� �� ������
-extern char USERPath[4]; /* logical drive path */
+FATFS SDFatFs;//Flie system object
+extern char gDrivePath[4]; /* logical drive path */
 FIL MyFile;
 FRESULT result; //��������� ����������
 uint32_t bytesread;
@@ -340,7 +340,7 @@ __uint8 tcp_send_http_one(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uin
 	if ((tcpprop.http_doc==EXISTING_HTML)||(tcpprop.http_doc==EXISTING_JPG))
 	{
 		// mount sdcard
-		result = f_mount(&SDFatFs, (TCHAR const*)USERPath, 0);
+		result = f_mount(&SDFatFs, (TCHAR const*)gDrivePath, 0);
 		console_serial_print_log("\t> f_mount: %d",result);
 
 		result=f_open(&MyFile,tcpprop.fname,FA_READ);
@@ -420,7 +420,7 @@ __uint8 tcp_send_http_first(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __u
 	{
 		strcpy((char*)tcp_pkt->data, http_header);
 
-		result=f_mount(&SDFatFs,(TCHAR const*)USERPath,0);
+		result=f_mount(&SDFatFs, (TCHAR const*)gDrivePath, 0);
 		result=f_open(&MyFile,tcpprop.fname,FA_READ);
 		result=f_lseek(&MyFile,0);
 
@@ -649,7 +649,7 @@ __uint8 tcp_read(__S_Enc28j60_Frame_Pkt *frame, __uint16 len)
 				console_serial_print_log("\t>%s : %d", (__uint8*)tcpprop.fname, strlen(tcpprop.fname));
 
 				// open sd card and prepare file for send
-				result = f_mount(&SDFatFs,(TCHAR const*)USERPath,0);
+				result = f_mount(&SDFatFs, (TCHAR const*)gDrivePath, 0);
 				console_serial_print_log("f_mount: %d",result);
 
 				result = f_open(&MyFile,tcpprop.fname,FA_READ);

@@ -1,8 +1,11 @@
 /*==============================================================================
- *  Author  : YAMA team
- *  email   : yamateamhaui@gmail.com
- *  address : Ha Noi University
- *  ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)
+ *  Author  : YAMA
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: console_serial_trace.c
+ * in this file :
  *============================================================================*/
 
 #include "console_serial_trace.h"

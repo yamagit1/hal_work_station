@@ -1,11 +1,15 @@
-/*
- * peripheral_init.c
- *
- *  Created on: Apr 18, 2018
- *      Author: yama
- */
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: peripheral_init.c
+ * in this file :
+ *============================================================================*/
 
 #include "peripheral_init.h"
+#include "console_serial_trace.h"
 
 void MX_GPIO_Init(void)
 {

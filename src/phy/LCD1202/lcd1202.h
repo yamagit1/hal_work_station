@@ -1,20 +1,20 @@
-/*==================================================================
- *  Author  : YAMA team
- *  email   : yamateamhaui@gmail.com
- *  address : Ha Noi University
- *  ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)
- *==================================================================*/
-
-/*==================================================================
- * In this file:
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: lcd1202.c
+ * in this file :
  * 		- define pin connect
  * 		- use 864 byte ram to make cache LCD
- *==================================================================*/
+ *============================================================================*/
 
 #ifndef __LCD1202_H__
 #define __LCD1202_H__
 
 #include <header.h>
+#include "cmsis_os.h"
 
 /*==================================================================
  * command
@@ -167,9 +167,9 @@
  *==================================================================*/
 // The buffer use to transmission to LCD
 extern __uint8 gLcd1202Ram[LCD_1202_BUFFER_SIZE];
-
+//extern osSemaphoreId lcd1202SemaphoreID;
 // the current offset written to LCD buffer
-extern __uint32 gLcd1202CurrentOffset;
+//extern __uint32 gLcd1202CurrentOffset;
 
 
 typedef enum
@@ -199,8 +199,8 @@ void lcd_1202_setting_led_background(__int32 status);
 /*==================================================================
  * Pint text, value in LCD
  *==================================================================*/
-
-void lcd_1202_print(const char *str, __uint32 *p_position);
+void lcd_1202_set_position(__uint32 position);
+void lcd_1202_print_line(const char* p_format, ...);
 void lcd_1202_endLine(void);
 
 

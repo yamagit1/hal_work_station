@@ -1,8 +1,11 @@
 /*==============================================================================
- *  Author  : YAMA team
- *  email   : yamateamhaui@gmail.com
- *  address : Ha Noi University
- *  ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)
+ *  Author  : YAMA
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: driver_led.c
+ * in this file :
  *============================================================================*/
 
 #include <driver_led.h>

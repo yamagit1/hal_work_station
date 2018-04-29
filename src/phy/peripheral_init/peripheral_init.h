@@ -1,9 +1,12 @@
-/*
- * peripheral_init.h
- *
- *  Created on: Apr 18, 2018
- *      Author: yama
- */
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: peripheral_init.h
+ * in this file :
+ *============================================================================*/
 
 #ifndef __PERIPHERAL_INIT_H__
 #define __PERIPHERAL_INIT_H__

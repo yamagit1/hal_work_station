@@ -17,11 +17,13 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-src/app/webserver \
 src \
-src/midleware/FatFs \
-src/midleware/FatFs/src \
-src/midleware/FatFs/src/option \
+src/midleware/Monitor \
+src/midleware/PM \
+src/midleware/network \
+src/os_kernel/FatFs \
+src/os_kernel/FatFs/src \
+src/os_kernel/FatFs/src/option \
 src/os_kernel/FreeRTOS/Source/CMSIS_RTOS \
 src/os_kernel/FreeRTOS/Source \
 src/os_kernel/FreeRTOS/Source/portable/GCC/ARM_CM4F \
@@ -34,5 +36,6 @@ src/phy/console \
 src/phy/device/hal_driver \
 src/phy/device/start_up \
 src/phy/device/stm32f4xx \
+src/phy/microSD \
 src/phy/peripheral_init \
 

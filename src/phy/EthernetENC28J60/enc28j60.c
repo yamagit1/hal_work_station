@@ -1,9 +1,21 @@
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: enc28j60.c
+ * in this file :
+ *============================================================================*/
+
 #include "enc28j60.h"
 #include "enc28j60_spi.h"
 #include "console_serial_trace.h"
+#include "cmsis_os.h"
 
 volatile __uint8 enc28j60_current_bank = 0;
 volatile __uint16 enc28j60_rxrdpt = 0;
+osSemaphoreId encSemaphoreID;
 
 // Generic SPI read command
 __uint8 enc28j60_read_op(__uint8 optionCmd, __uint8 addr)
@@ -218,11 +230,11 @@ void enc28j60_init(__uint8 *macadr)
 	// Setup MAC
 	console_serial_print_log("\t>Setup MAC");
 	console_serial_print_log("\t>MAC address : %d:%d:%d:%d:%d:%d", macadr[0],\
-																			macadr[1],\
-																			macadr[2],\
-																			macadr[3],\
-																			macadr[4],\
-																			macadr[5]);
+			macadr[1],\
+			macadr[2],\
+			macadr[3],\
+			macadr[4],\
+			macadr[5]);
 	enc28j60_wcr(MACON1, MACON1_TXPAUS| // Enable flow control
 			MACON1_RXPAUS|MACON1_MARXEN); // Enable MAC Rx
 	enc28j60_wcr(MACON2, 0); // Clear reset
@@ -251,62 +263,81 @@ void enc28j60_init(__uint8 *macadr)
 	console_serial_print_log("\t>Enable Rx packets");
 	enc28j60_bfs(ECON1, ECON1_RXEN);
 
+	// create semaphore for enc28j60 device
+	osSemaphoreDef(enc20j60);
+	encSemaphoreID = osSemaphoreCreate(osSemaphore(enc20j60) , 1 );
+
+	// Release enc28j60 device
+	osSemaphoreRelease(encSemaphoreID);
+
 	__LEAVE__
 }
 
 void enc28j60_packetSend(__uint8 *data, __uint16 len)
 {
-	while(enc28j60_rcr(ECON1) & ECON1_TXRTS)
+	if (osSemaphoreWait(encSemaphoreID, TIME_WAIT_MEDIUM) == osOK)
 	{
-		// TXRTS may not clear - ENC28J60 bug. We must reset
-		// transmit logic in cause of Tx error
-		if(enc28j60_rcr(EIR) & EIR_TXERIF)
+		while(enc28j60_rcr(ECON1) & ECON1_TXRTS)
 		{
-			enc28j60_bfs(ECON1, ECON1_TXRST);
-			enc28j60_bfc(ECON1, ECON1_TXRST);
+			// TXRTS may not clear - ENC28J60 bug. We must reset
+			// transmit logic in cause of Tx error
+			if(enc28j60_rcr(EIR) & EIR_TXERIF)
+			{
+				enc28j60_bfs(ECON1, ECON1_TXRST);
+				enc28j60_bfc(ECON1, ECON1_TXRST);
+			}
 		}
+
+		enc28j60_wcr16(EWRPT, ENC28J60_TXSTART);
+		enc28j60_write_buffer((__uint8*)"\x00", 1);
+		enc28j60_write_buffer(data, len);
+
+		enc28j60_wcr16(ETXST, ENC28J60_TXSTART);
+		enc28j60_wcr16(ETXND, ENC28J60_TXSTART + len);
+
+		enc28j60_bfs(ECON1, ECON1_TXRTS); // Request packet send
+
+		// Release enc28j60 device
+		osSemaphoreRelease(encSemaphoreID);
 	}
-
-	enc28j60_wcr16(EWRPT, ENC28J60_TXSTART);
-	enc28j60_write_buffer((__uint8*)"\x00", 1);
-	enc28j60_write_buffer(data, len);
-
-	enc28j60_wcr16(ETXST, ENC28J60_TXSTART);
-	enc28j60_wcr16(ETXND, ENC28J60_TXSTART + len);
-
-	enc28j60_bfs(ECON1, ECON1_TXRTS); // Request packet send
 }
+
 
 __uint16 enc28j60_packetReceive(__uint8 *buf, __uint16 buflen)
 {
 	__uint16 len = 0, rxlen, status, temp;
 
-	if (enc28j60_rcr(EPKTCNT))
+	if (osSemaphoreWait(encSemaphoreID, TIME_WAIT_MEDIUM) == osOK)
 	{
-		enc28j60_wcr16(ERDPT, enc28j60_rxrdpt);
-
-		enc28j60_read_buffer((void*)&enc28j60_rxrdpt, sizeof(enc28j60_rxrdpt));
-		enc28j60_read_buffer((void*)&rxlen, sizeof(rxlen));
-		enc28j60_read_buffer((void*)&status, sizeof(status));
-
-		if (status & 0x80) //success
+		if (enc28j60_rcr(EPKTCNT))
 		{
-			len = rxlen - 4; //throw out crc
+			enc28j60_wcr16(ERDPT, enc28j60_rxrdpt);
 
-			if(len > buflen)
+			enc28j60_read_buffer((void*)&enc28j60_rxrdpt, sizeof(enc28j60_rxrdpt));
+			enc28j60_read_buffer((void*)&rxlen, sizeof(rxlen));
+			enc28j60_read_buffer((void*)&status, sizeof(status));
+
+			if (status & 0x80) //success
 			{
-				len = buflen;
+				len = rxlen - 4; //throw out crc
+
+				if(len > buflen)
+				{
+					len = buflen;
+				}
+
+				enc28j60_read_buffer(buf, len);
 			}
 
-			enc28j60_read_buffer(buf, len);	
+			// Set Rx read pointer to next packet
+			temp = (enc28j60_rxrdpt - 1) & ENC28J60_BUFEND;
+			enc28j60_wcr16(ERXRDPT, temp);
+
+			// Decrement packet counter
+			enc28j60_bfs(ECON2, ECON2_PKTDEC);
 		}
-
-		// Set Rx read pointer to next packet
-		temp = (enc28j60_rxrdpt - 1) & ENC28J60_BUFEND;
-		enc28j60_wcr16(ERXRDPT, temp);
-
-		// Decrement packet counter
-		enc28j60_bfs(ECON2, ECON2_PKTDEC);
+		// Release enc28j60 device
+		osSemaphoreRelease(encSemaphoreID);
 	}
 
 	return len;

@@ -1,9 +1,12 @@
-/*
- * lcd_fontresource.h
- *
- *  Created on: Dec 16, 2017
- *      Author: yama
- */
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: lcd_fontresource.h
+ * in this file :
+ *============================================================================*/
 
 #ifndef __LCD_FONTRESOURCE_H__
 #define __LCD_FONTRESOURCE_H__

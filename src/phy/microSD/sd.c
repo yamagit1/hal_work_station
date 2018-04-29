@@ -1,3 +1,13 @@
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: sd.c
+ * in this file :
+ *============================================================================*/
+
 #include "sd.h"
 #include "console_serial_trace.h"
 #include "micro_sd_spi.h"
@@ -18,6 +28,8 @@
 
 sd_info_ptr sdinfo;
 char str1[60]={0};
+osSemaphoreId microSDSemaphoreID;
+
 //--------------------------------------------------
 static void Error (void)
 {
@@ -123,18 +135,17 @@ void SD_PowerOn(void)
 	//	HAL_Delay(168000);
 	for(curCount = 0; curCount < 1680000; curCount++);
 	//	Timer1 = 0;
-	//	while(Timer1<2); //��� 20 ����������, ��� ����, ����� ���������� �����������������
 }
 //-----------------------------------------------
 uint8_t SD_Read_Block (uint8_t *buff, uint32_t lba)
 {
 	uint8_t result;
 	uint16_t cnt;
-	result=SD_cmd (CMD17, lba); //CMD17 ������� ��� 50 � 96
-	if (result!=0x00) return 5; //�����, ���� ��������� �� 0x00
+	result=SD_cmd (CMD17, lba);
+	if (result!=0x00) return 5;
 	SPI_Release();
 	cnt=0;
-	do{ //���� ������ �����
+	do{
 		result=SPI_ReceiveByte();
 		cnt++;
 	} while ( (result!=0xFE)&&(cnt<0xFFFF) );
@@ -149,8 +160,8 @@ uint8_t SD_Write_Block (uint8_t *buff, uint32_t lba)
 {
 	uint8_t result;
 	uint16_t cnt;
-	result=SD_cmd(CMD24,lba); //CMD24 ������� ��� 51 � 97-98
-	if (result!=0x00) return 6; //�����, ���� ��������� �� 0x00
+	result=SD_cmd(CMD24,lba);
+	if (result!=0x00) return 6;
 	SPI_Release();
 	SPI_SendByte (0xFE);
 	for (cnt=0;cnt<512;cnt++) SPI_SendByte(buff[cnt]);
@@ -159,7 +170,7 @@ uint8_t SD_Write_Block (uint8_t *buff, uint32_t lba)
 	result=SPI_ReceiveByte();
 	if ((result&0x05)!=0x05) return 6;
 	cnt=0;
-	do { //���� ��������� ��������� BUSY
+	do {
 		result=SPI_ReceiveByte();
 		cnt++;
 	} while ( (result!=0xFF)&&(cnt<0xFFFF) );
@@ -178,6 +189,10 @@ uint8_t sd_ini(void)
 	sdinfo.type = 0;
 	uint8_t ocr[4];
 
+	// init spi
+	console_serial_print_log("\t> Init spi1 for module microSD");
+	microSD_SPI_Init();
+
 	console_serial_print_log("\t> Set BaudRatePrescaler is low");
 	temp = hspi1.Init.BaudRatePrescaler;
 	hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128; //156.25 kbbs
@@ -187,7 +202,7 @@ uint8_t sd_ini(void)
 
 	SS_SD_DESELECT();
 
-	for(index = 0; index < 10; index++) //80 ��������� (�� ����� 74) ������� ��� 91
+	for(index = 0; index < 10; index++)
 	{
 		SPI_Release();
 	}
@@ -257,6 +272,13 @@ uint8_t sd_ini(void)
 		return 1;
 	}
 	console_serial_print_log("Type SD: 0x%02X",sdinfo.type);
+
+	// Creating semaphore for microSD, it use to access to read, wire
+	osSemaphoreDef(microSD);
+	microSDSemaphoreID = osSemaphoreCreate(osSemaphore(microSD) , 1 );
+
+	// Release enc28j60 device
+	osSemaphoreRelease(microSDSemaphoreID);
 
 	__LEAVE__
 

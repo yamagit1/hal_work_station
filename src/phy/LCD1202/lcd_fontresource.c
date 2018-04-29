@@ -1,13 +1,12 @@
-/*==================================================================
- *  Author  : YAMA team
- *  email   : yamateamhaui@gmail.com
- *  address : Ha Noi University
- *  ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)
- *==================================================================*/
-
-/*==================================================================
- * In this file:
- *==================================================================*/
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: lcd_fontresource.c
+ * in this file :
+ *============================================================================*/
 
 #include "lcd_fontresource.h"
 __uint8 gFontFullYama[] = {

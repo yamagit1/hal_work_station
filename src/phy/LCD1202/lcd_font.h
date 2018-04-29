@@ -1,15 +1,14 @@
-/*==================================================================
- *  Author  : YAMA team
- *  email   : yamateamhaui@gmail.com
- *  address : Ha Noi University
- *  ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)
- *==================================================================*/
-
-/*==================================================================
- * In this file:
+/*==============================================================================
+ *  Author  : YAMA
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: lcd_font.h
+ * in this file :
  * 		- declare struct Font
  * 		- declare function initialize font ,..
- *==================================================================*/
+ *============================================================================*/
 
 #ifndef __FONT_H__
 #define __FONT_H__

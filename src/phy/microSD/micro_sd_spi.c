@@ -1,13 +1,17 @@
-/*
- * micro_sd_spi.c
- *
- *  Created on: Apr 25, 2018
- *      Author: yama
- */
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: micro_sd_spi.c
+ * in this file :
+ *============================================================================*/
 
 
 #include "micro_sd_spi.h"
 #include "peripheral_init.h"
+#include "console_serial_trace.h"
 
 SPI_HandleTypeDef hspi1;
 
@@ -15,8 +19,10 @@ __uint8 microSD_Send_And_Receive_Byte(__uint8 data)
 {
 	// while transfer complete
 	uint8_t receivedbyte = 0;
+
 	if(HAL_SPI_TransmitReceive(&hspi1, (uint8_t*) &data,(uint8_t*) &receivedbyte, 1, 0x1000) != HAL_OK)
 	{
+		console_serial_print_error("HAL_SPI_TransmitReceive : transmission  fail");
 	}
 
 	return receivedbyte;
@@ -40,6 +46,7 @@ void microSD_SPI_Init(void)
 	hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
 	hspi1.Init.CRCPolynomial = 10;
 
+	// Register SPI1 for microSD casrd
 	if (HAL_SPI_Init(&hspi1) != HAL_OK)
 	{
 		console_serial_print_error("SPI1 init fail");

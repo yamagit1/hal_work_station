@@ -1,16 +1,16 @@
 /*==============================================================================
- *  Author  : YAMA team
- *  email   : yamateamhaui@gmail.com
- *  address : Ha Noi University
- *  ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)
- *============================================================================*/
-
-/*==============================================================================
- * In this file:
+ *  Author  : YAMA															   *
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file		: header.h
+ * in this file :
  * 		- define device can use
  * 		- typedef basic data
  * 		- include library
  *============================================================================*/
+
 
 #ifndef __HEADER_H__
 #define __HEADER_H__
@@ -72,10 +72,17 @@
  * buffer size
  *============================================================================*/
 #define UART_TIME_OUT 			10
-#define BUFF_SIZE_LOW 			64
+#define BUFF_SIZE_VERY_LOW 		64
+#define BUFF_SIZE_LOW 			128
 #define BUFF_SIZE_MEDIUM		256
 #define BUFF_SIZE_LARGE			512
 #define BUFF_SIZE_VERY_LARGE	1024
+/*==============================================================================
+ * time wait
+ *============================================================================*/
+#define TIME_WAIT_SHORT			10
+#define TIME_WAIT_MEDIUM		100
+#define TIME_WAIT_LONG			1000
 
 /*==============================================================================
  * log level

@@ -1,13 +1,12 @@
-/*==================================================================
- *  Author  : YAMA team
- *  email   : yamateamhaui@gmail.com
- *  address : Ha Noi University
- *  ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)
- *==================================================================*/
-
-/*==================================================================
- * In this file:
- *==================================================================*/
+/*==============================================================================
+ *  Author  : NONE
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: lcd1202.c
+ * in this file :
+ *============================================================================*/
 
 #include "lcd1202.h"
 #include "lcd_font.h"
@@ -15,12 +14,16 @@
 
 __uint8 gLcd1202Ram[LCD_1202_BUFFER_SIZE];
 __uint32 gLcd1202CurrentOffset;
+osSemaphoreId lcd1202SemaphoreID;
 
 #if CONFIG_FLATFORM == FLATFORM_STM32_F407VG
 
 void lcd_1202_delay(volatile __uint32 timeCount)
 {
-	HAL_Delay(timeCount);
+	//HAL_Delay(timeCount);
+	__uint32 currCount = timeCount;
+
+	while(currCount--);
 }
 
 /**
@@ -50,7 +53,6 @@ void lcd_1202_init_pin(__uint32 pinNumber)
 	else if (pinNumber == LCD_1202_PIN_CS)
 	{
 		comConfig = LCD_1202_COM_CS;
-
 	}
 	else if (pinNumber == LCD_1202_PIN_GND)
 	{
@@ -240,6 +242,7 @@ void lcd_1202_send_command(__uint8 command)
 void lcd_1202_initialize(void)
 {
 	__ENTER__
+
 	// setting pin connection
 	lcd_1202_init_pin(LCD_1202_PIN_VCC);
 	lcd_1202_init_pin(LCD_1202_PIN_RST);
@@ -285,6 +288,13 @@ void lcd_1202_initialize(void)
 
 	LF_setFontIsUse(gFontFullYama);
 
+	// create semaphore for lcd1202 device
+	osSemaphoreDef(lcd1202);
+	lcd1202SemaphoreID = osSemaphoreCreate(osSemaphore(lcd1202) , 1 );
+
+	// Release enc28j60 device
+	osSemaphoreRelease(lcd1202SemaphoreID);
+
 	__LEAVE__
 }
 
@@ -296,19 +306,27 @@ void lcd_1202_clear_screen(void)
 {
 	__uint32 i;
 
-	for (i = 0; i < LCD_1202_BUFFER_SIZE; i++)
+	if (osSemaphoreWait(lcd1202SemaphoreID, TIME_WAIT_MEDIUM) == osOK)
 	{
-		gLcd1202Ram[i] = 0x00;
+		// clear lcd cache
+		for (i = 0; i < LCD_1202_BUFFER_SIZE; i++)
+		{
+			gLcd1202Ram[i] = 0x00;
+		}
+
+		// reset cache offset
+		gLcd1202CurrentOffset = 0;
+
+		// reset offset in lcd ram
+		lcd_1202_send_command(LCD_1202_PAGE_ADDRESS_SET_0);
+		lcd_1202_send_command(LCD_1202_COLUMN_ADDRESS_SET_UPPER_DEFAULT);
+		lcd_1202_send_command(LCD_1202_COLUMN_ADDRESS_SET_LOWER_DEFAULT);
+
+		lcd_1202_flush();
+
+		// Release enc28j60 device
+		osSemaphoreRelease(lcd1202SemaphoreID);
 	}
-
-	gLcd1202CurrentOffset = 0;
-
-	//
-	lcd_1202_send_command(LCD_1202_PAGE_ADDRESS_SET_0);
-	lcd_1202_send_command(LCD_1202_COLUMN_ADDRESS_SET_UPPER_DEFAULT);
-	lcd_1202_send_command(LCD_1202_COLUMN_ADDRESS_SET_LOWER_DEFAULT);
-
-	lcd_1202_flush();
 
 }
 
@@ -320,9 +338,15 @@ void lcd_1202_view_image_bitmap(__uint8 *p_img)
 {
 	__int32 index;
 
-	for (index = 0; index < LCD_1202_BUFFER_SIZE; index++)
+	if (osSemaphoreWait(lcd1202SemaphoreID, TIME_WAIT_MEDIUM) == osOK)
 	{
-		lcd_1202_send_data(p_img[index]);
+		for (index = 0; index < LCD_1202_BUFFER_SIZE; index++)
+		{
+			lcd_1202_send_data(p_img[index]);
+		}
+
+		// Release enc28j60 device
+		osSemaphoreRelease(lcd1202SemaphoreID);
 	}
 
 }
@@ -336,13 +360,19 @@ void lcd_1202_flush(void)
 {
 	__int32 index;
 
-	lcd_1202_send_command(LCD_1202_PAGE_ADDRESS_SET_0);
-	lcd_1202_send_command(LCD_1202_COLUMN_ADDRESS_SET_UPPER_DEFAULT);
-	lcd_1202_send_command(LCD_1202_COLUMN_ADDRESS_SET_LOWER_DEFAULT);
-
-	for (index = 0; index < LCD_1202_BUFFER_SIZE; index++)
+	if (osSemaphoreWait(lcd1202SemaphoreID, TIME_WAIT_MEDIUM) == osOK)
 	{
-		lcd_1202_send_data(gLcd1202Ram[index]);
+		lcd_1202_send_command(LCD_1202_PAGE_ADDRESS_SET_0);
+		lcd_1202_send_command(LCD_1202_COLUMN_ADDRESS_SET_UPPER_DEFAULT);
+		lcd_1202_send_command(LCD_1202_COLUMN_ADDRESS_SET_LOWER_DEFAULT);
+
+		for (index = 0; index < LCD_1202_BUFFER_SIZE; index++)
+		{
+			lcd_1202_send_data(gLcd1202Ram[index]);
+		}
+
+		// Release enc28j60 device
+		osSemaphoreRelease(lcd1202SemaphoreID);
 	}
 
 }
@@ -353,37 +383,67 @@ void lcd_1202_flush(void)
 
 void lcd_1202_setting_led_background(__int32 status)
 {
-	if (status)
+	if (osSemaphoreWait(lcd1202SemaphoreID, TIME_WAIT_MEDIUM) == osOK)
 	{
-		lcd_1202_low_power_pin(LCD_1202_PIN_LIG2);
-	}
-	else
-	{
-		lcd_1202_hight_power_pin(LCD_1202_PIN_LIG2);
-	}
+		if (status)
+		{
+			lcd_1202_low_power_pin(LCD_1202_PIN_LIG2);
+		}
+		else
+		{
+			lcd_1202_hight_power_pin(LCD_1202_PIN_LIG2);
+		}
 
+		// Release enc28j60 device
+		osSemaphoreRelease(lcd1202SemaphoreID);
+	}
 }
 
 /**
  *
  */
-
-void lcd_1202_print(const char *str, __uint32 *p_position)
+void lcd_1202_set_position(__uint32 position)
 {
-	//	__uint32 length;
-	//	__uint32 index;
-	//
-	//	length = strlen(str);
-	//
-	//	for (index = 0; index < length; index++)
-	//	{
-	//		if ((index % (LCD_1202_SCREEN_WIDTH / gCurrentFont.charWidth ) ) == 0 && index != 0)
-	//		{
-	//			LCD1202_endLine();
-	//		}
-	//
-	//		LF_printCharToLcdRam(str[index], p_position);
-	//	}
+	if (osSemaphoreWait(lcd1202SemaphoreID, TIME_WAIT_MEDIUM) == osOK)
+	{
+		gLcd1202CurrentOffset = position;
+
+		// Release enc28j60 device
+		osSemaphoreRelease(lcd1202SemaphoreID);
+	}
+}
+
+
+
+void lcd_1202_print_line(const char* p_format, ...)
+{
+	__uint32 length;
+	__uint32 index;
+
+	char buffer[BUFF_SIZE_MEDIUM];
+	va_list vaArgs;
+
+	if (osSemaphoreWait(lcd1202SemaphoreID, TIME_WAIT_MEDIUM) == osOK)
+	{
+		// start get list arg with format
+		va_start (vaArgs, p_format);
+
+		// Print to the local buffer
+		vsnprintf (buffer, sizeof(buffer), p_format, vaArgs);
+
+		// end get list arg
+		va_end (vaArgs);
+
+		// transmission data
+		length = strlen(buffer);
+		for (index = 0; index < length; index++)
+		{
+			LF_printCharToLcdRam(buffer[index], &gLcd1202CurrentOffset);
+		}
+
+		// Release enc28j60 device
+		osSemaphoreRelease(lcd1202SemaphoreID);
+	}
 }
 
 /**
@@ -395,28 +455,35 @@ void lcd_1202_endLine(void)
 	__int32 currentLine;
 	__int32 i;
 
-	currentLine = (__int32)(gLcd1202CurrentOffset / LCD_1202_SCREEN_WIDTH);
-
-	if (currentLine == (LCD_1202_TOTAL_LINE_TEXT))
+	if (osSemaphoreWait(lcd1202SemaphoreID, TIME_WAIT_MEDIUM) == osOK)
 	{
-		for ( i = 0; i < LCD_1202_SCREEN_WIDTH; i++)
+
+		currentLine = (__int32)(gLcd1202CurrentOffset / LCD_1202_SCREEN_WIDTH);
+
+		if (currentLine == LCD_1202_TOTAL_LINE_TEXT)
 		{
-			gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_0 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_1 + i];
-			gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_1 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_2 + i];
-			gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_2 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_3 + i];
-			gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_3 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_4 + i];
-			gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_4 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_5 + i];
-			gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_5 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_6 + i];
-			gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_6 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_7 + i];
-			gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_7 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_8 + i];
-			gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_8 + i] = 0x00;
+			for ( i = 0; i < LCD_1202_SCREEN_WIDTH; i++)
+			{
+				gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_0 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_1 + i];
+				gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_1 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_2 + i];
+				gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_2 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_3 + i];
+				gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_3 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_4 + i];
+				gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_4 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_5 + i];
+				gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_5 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_6 + i];
+				gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_6 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_7 + i];
+				gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_7 + i] = gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_8 + i];
+				gLcd1202Ram[LCD_1202_ADDRESS_LINE_TEXT_8 + i] = 0x00;
+			}
+
+			gLcd1202CurrentOffset = LCD_1202_ADDRESS_LINE_TEXT_8;
+		}
+		else
+		{
+			gLcd1202CurrentOffset = (currentLine + 1) * LCD_1202_SCREEN_WIDTH;
 		}
 
-		gLcd1202CurrentOffset = LCD_1202_ADDRESS_LINE_TEXT_8;
-	}
-	else
-	{
-		gLcd1202CurrentOffset = (currentLine + 1) * LCD_1202_SCREEN_WIDTH;
+		// Release enc28j60 device
+		osSemaphoreRelease(lcd1202SemaphoreID);
 	}
 }
 
