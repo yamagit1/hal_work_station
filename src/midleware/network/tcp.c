@@ -2,6 +2,7 @@
 #include "console_serial_trace.h"
 #include "httpd.h"
 #include "perform_manage.h"
+#include "fptserver.h"
 //--------------------------------------------------
 //-----------------------------------------------
 extern __uint8 net_buf[ENC28J60_MAXFRAME];
@@ -618,34 +619,58 @@ __uint8 tcp_read(__S_Enc28j60_Frame_Pkt *frame, __uint16 len)
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
 	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
 
-	//===============================================================
 	if (be16toword(tcp_pkt->port_dst) == HTTPD_TCP_PORT)
 	{
-		lenEnc28j60Frame = len + sizeof(__S_Ip_Pkt) + sizeof(__S_Enc28j60_Frame_Pkt);
+		//===============================================================
+		// httpd server
+		//===============================================================
 
-		// wait for httpd buff ready to access
-		if (osSemaphoreWait(httpBuffSemaphoreID, TIME_WAIT_SHORT) == osOK )
-		{
-			// copy packet receiver to httpd
-			memcpy(gHttpFrame, frame, lenEnc28j60Frame);
-			console_serial_print_log("\t> copy packet receiver to httpd size : %d ", lenEnc28j60Frame);
-
-			// Release httpd buff
-			osSemaphoreRelease(httpBuffSemaphoreID);
-		}
-		else
-		{
-			console_serial_print_error("\t> tcp_readcopy wait for httpd buff ready to access fail");
-
-		}
-		osSignalSet(gListPID[INDEX_HTTPD_SERVER], SIG_HTTPD_REV);
+		//		lenEnc28j60Frame = len + sizeof(__S_Ip_Pkt) + sizeof(__S_Enc28j60_Frame_Pkt);
+		//
+		//		// wait for httpd buff ready to access
+		//		if (osSemaphoreWait(httpBuffSemaphoreID, TIME_WAIT_SHORT) == osOK )
+		//		{
+		//			// copy packet receiver to httpd
+		//			memcpy(gHttpFrame, frame, lenEnc28j60Frame);
+		//			console_serial_print_log("\t> copy packet receiver to httpd size : %d ", lenEnc28j60Frame);
+		//
+		//			// Release httpd buff
+		//			osSemaphoreRelease(httpBuffSemaphoreID);
+		//		}
+		//		else
+		//		{
+		//			console_serial_print_error("\t> tcp_readcopy wait for httpd buff ready to access fail");
+		//
+		//		}
+		//		osSignalSet(gListPID[INDEX_HTTPD_SERVER], SIG_HTTPD_REV);
 		console_serial_print_log("\t> Packet send to HTTPD : send signal to HTTPD");
 
 		return 0;
+		//===============================================================
+	}
+	else if (be16toword(tcp_pkt->port_dst) == FPTD_TCP_PORT)
+	{
+		//===============================================================
+		//	FPT server
+		//===============================================================
+		console_serial_print_log("\t> Packet send to FPT : %d ----->%d" , be16toword(tcp_pkt->port_src), be16toword(tcp_pkt->port_dst));
+
+		lenEnc28j60Frame = len + sizeof(__S_Ip_Pkt) + sizeof(__S_Enc28j60_Frame_Pkt);
+
+		memcpy(gFptFrame, frame, lenEnc28j60Frame);
+
+		fptd_pool();
+
+		return 0;
+		//===============================================================
 	}
 	else
 	{
-		console_serial_print_log("\t> Packet send to FPT : %d ----->%d" , be16toword(tcp_pkt->port_src), be16toword(tcp_pkt->port_dst));
+		//===============================================================
+		//	NONE server
+		//===============================================================
+		console_serial_print_log("\t> Packet send to NONE : %d ----->%d" , be16toword(tcp_pkt->port_src), be16toword(tcp_pkt->port_dst));
+		//===============================================================
 	}
 	//===============================================================
 

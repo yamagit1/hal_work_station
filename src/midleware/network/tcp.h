@@ -35,7 +35,7 @@ typedef struct tcp_prop {
 	volatile uint16_t cnt_rem_data_part;	// the number of remaining parts of the data to send
 	volatile uint16_t cnt_size_wnd; 		// the number of bytes transferred from the window
 	volatile uint8_t http_doc;				// the version of the document to send
-	char fname[20];							//the name of the file (document)
+	char fname[20];							// the name of the file (document)
 } tcp_prop_ptr;
 //-------------------------------------------------- 
 

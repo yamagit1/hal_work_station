@@ -202,8 +202,8 @@ int main(void)
 	//===================================================================
 
 	net_ini();
-	httpd_init();
-	PM_init();
+//	httpd_init();
+//	PM_init();
 
 //	console_serial_print_log("Create task 3\n\t\t>name : %s,%d,\n\t\t>priority : %d,\n\t\t>stacksz : %d,", "task_2", 1, 1);
 //	osThreadDef(task_3, handle_task_3, osPriorityNormal, 0, 500);
