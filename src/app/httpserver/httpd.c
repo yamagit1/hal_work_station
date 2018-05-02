@@ -1,10 +1,12 @@
-/*
- * httpd.c
- *
- *  Created on: Apr 29, 2018
- *      Author: yama
- */
-
+/*==============================================================================
+ *  Author  : YAMA
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: httpd.
+ * in this file :
+ *============================================================================*/
 
 #include "httpd.h"
 #include "net.h"
@@ -18,17 +20,16 @@ __uint8 gHttpFrame[ENC28J60_MAXFRAME];
 osSemaphoreId httpBuffSemaphoreID;
 
 
-tcp_prop_ptr gHttpdProp;
+__S_Http_Prop gHttpdProp;
 
 FATFS gHttpdFsObj;//Flie system object
 FIL gHttpdFileObj;
 extern char gDrivePath[4]; /* logical drive path */
 
-FRESULT gHttpdResult; //��������� ����������
+FRESULT gHttpdResult;
 
 const char httpd_http_header[] = {"HTTP/1.0 200 OK\r\nServer: nginx\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n"};
 const char httpd_jpg_header[] = {"HTTP/1.0 200 OK\r\nServer: nginx\r\nContent-Type: image/jpeg\r\nConnection: close\r\n\r\n"};
-const char httpd_txt_header[] = {"HTTP/1.0 200 OK\r\nServer: nginx\r\nContent-Type: application/txt\r\nConnection: close\r\n\r\n"};
 
 const char httpd_error_header[] = {"HTTP/1.0 404 File not found\r\nServer: nginx\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n"};
 
@@ -42,8 +43,6 @@ uint32_t gHttpdBytesRead;
 
 
 extern __uint8 ipaddr[4];
-extern __uint8 ipgate[4];
-extern __uint8 ipmask[4];
 
 
 void httpd_pool()

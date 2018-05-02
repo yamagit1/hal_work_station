@@ -49,7 +49,7 @@ void PM_update_home_page_html()//void * argument)
 	__uint8 buff[BUFF_SIZE_LOW];
 	__uint32 currLine = 0;
 	__uint32 numByteWrite;
-	__uint8 listFile[BUFF_SIZE_VERY_LARGE];
+	__uint8 listFile[BUFF_SIZE_VERY_LARGE * 2];
 	char path[5]={"/"};
 	__uint32 offset = 0;
 
@@ -382,8 +382,17 @@ void PM_update_home_page_html()//void * argument)
 			f_write(&gFileObj, buff, strlen(buff), (void*)&numByteWrite);
 
 			// get list file
-			f_write(&gFileObj, listFile, offset, (void*)&numByteWrite);
-			//
+
+			if (offset > 1024)
+			{
+				f_write(&gFileObj, listFile, 1024, (void*)&numByteWrite);
+				f_write(&gFileObj, listFile + 1024, offset - 1024, (void*)&numByteWrite);
+			}
+			else
+			{
+				f_write(&gFileObj, listFile, 1024, (void*)&numByteWrite);
+			}
+
 			f_write(&gFileObj, home_page_temple[40], strlen(home_page_temple[40]), (void*)&numByteWrite);
 
 			console_serial_print_log("\t> My file infor :cltbl:%d clust:%d dir_sect:%d err:%d flag:%d fptr:%d sect:%d", gFileObj.cltbl, gFileObj.clust, gFileObj.dir_sect, gFileObj.err, gFileObj.flag, gFileObj.fptr, gFileObj.sect);
@@ -433,6 +442,8 @@ void PM_get_list_file(__uint8 *buff)
 				}
 			}
 
+			f_closedir(&dirs);
+
 		}
 
 	}
@@ -448,7 +459,6 @@ void PM_task_update_html(void * argument)
 		if (osSemaphoreWait(microSDSemaphoreID, TIME_WAIT_MEDIUM) == osOK)
 		{
 			console_serial_print_infor("-----------------------update homepage.html-------------------------");
-
 			PM_update_home_page_html();
 			console_serial_print_infor("-----------------------update finish-------------------------");
 
@@ -464,7 +474,7 @@ void PM_init()
 {
 	// create task httpd
 		console_serial_print_log("Create task html update");
-		osThreadDef(html_update, PM_task_update_html, osPriorityNormal, 0, 1000);
+		osThreadDef(PM_html_update, PM_task_update_html, osPriorityNormal, 0, 1300);
 
-		gListPID[INDEX_PM] = osThreadCreate(osThread(html_update), NULL);
+		gListPID[INDEX_PM] = osThreadCreate(osThread(PM_html_update), NULL);
 }

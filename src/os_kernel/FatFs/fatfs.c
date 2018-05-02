@@ -72,6 +72,10 @@ void FS_scan_list_file_to_html(__uint8 *p_buff, __uint32 *p_offset, __uint8 *pat
 	snprintf((p_buff + *p_offset), 15, "</table></div>");
 	*p_offset += 14;
 
+	console_serial_print_log("\t> FS_scan_list_file_to_html finish :%d", *p_offset);
+
+
+
 }
 
 

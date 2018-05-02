@@ -107,7 +107,7 @@ DSTATUS USER_status (BYTE pdrv)
  */
 DRESULT USER_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
 {
-	__ENTER__
+	//	__ENTER__
 
 	console_serial_print_log("\t> USER_read sector: %lu; count: %d ",sector, count);
 
@@ -128,7 +128,7 @@ DRESULT USER_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
 
 	if (count == 1) /* Single block read */
 	{
-		console_serial_print_log("\t> USER_readSingle block");
+		//		console_serial_print_log("\t> USER_readSingle block");
 
 		SD_Read_Block(buff,sector); //������� ���� � �����
 
@@ -140,7 +140,7 @@ DRESULT USER_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
 
 	SPI_Release();
 
-	__LEAVE__
+	//	__LEAVE__
 
 	return (count ? RES_ERROR : RES_OK);
 }
@@ -156,7 +156,7 @@ DRESULT USER_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
 #if _USE_WRITE == 1
 DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count )
 {
-	__ENTER__
+	//	__ENTER__
 
 	console_serial_print_log("\t> USER_write sector: %lu ",sector);
 
@@ -191,7 +191,7 @@ DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count )
 
 	SPI_Release();
 
-	__LEAVE__
+	//	__LEAVE__
 
 	return count ? RES_ERROR : RES_OK;
 
@@ -210,7 +210,7 @@ DRESULT USER_ioctl (BYTE pdrv, BYTE cmd, void *buff )
 {
 	DRESULT res;
 
-	console_serial_print_log("USER_ioctl cmd: %d",cmd);
+	console_serial_print_log("\t> USER_ioctl cmd: %d",cmd);
 	if (pdrv)
 	{
 		return RES_PARERR;

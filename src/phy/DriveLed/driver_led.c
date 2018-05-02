@@ -9,8 +9,37 @@
  *============================================================================*/
 
 #include <driver_led.h>
+#include "cmsis_os.h"
+#include "perform_manage.h"
+#include "console_serial_trace.h"
 
 __E_Bollen gLedStatus[4];
+
+void dled_task_handle(void * argument)
+{
+	int i = 0;
+
+	for (;;)
+	{
+		dled_setting_led_status(LED_RED, TURN_ON);
+		osDelay(200);
+		dled_setting_led_status(LED_BLUE, TURN_ON);
+		osDelay(200);
+		dled_setting_led_status(LED_YELLOW, TURN_ON);
+		osDelay(200);
+		dled_setting_led_status(LED_GREEN, TURN_ON);
+		osDelay(200);
+
+		dled_setting_led_status(LED_RED, TURN_OFF);
+		osDelay(200);
+		dled_setting_led_status(LED_BLUE, TURN_OFF);
+		osDelay(200);
+		dled_setting_led_status(LED_YELLOW, TURN_OFF);
+		osDelay(200);
+		dled_setting_led_status(LED_GREEN, TURN_OFF);
+		osDelay(200);
+	}
+}
 
 void dled_initialize()
 {
@@ -40,6 +69,10 @@ void dled_initialize()
 	HAL_GPIO_Init(COM_LED_GREEN, &GPIO_InitStruct);
 
 	//	__LEAVE__
+
+	console_serial_print_log("Create task 1\n\t\t>name : %s,\n\t\t>priority : %d,\n\t\t>stacksz : %d,", "task_1", 1, 1000);
+	osThreadDef(driver_led, dled_task_handle, osPriorityNormal, 0, 50);
+	gListPID[INDEX_DRIVER_LED] = osThreadCreate(osThread(driver_led), NULL);
 }
 
 /**

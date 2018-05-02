@@ -20,24 +20,7 @@ typedef struct tcp_pkt {
 	uint16_t urg_ptr;		//pointer to urgent data
 	uint8_t data[];			//data
 } __S_Tcp_Pkt;
-//--------------------------------------------------
-typedef struct tcp_prop {
-	uint8_t macaddr_dst[6];					//MAC address Destination
-	uint8_t ipaddr_dst[6];					//IP- address Destination
-	volatile uint16_t port_dst;				// port of the recipient
-	volatile uint32_t seq_num;  			// serial number of the byte
-	volatile uint32_t seq_num_tmp; 			// the serial number of the byte is temporary
-	volatile uint32_t ack_num; 				// confirmation number
-	volatile uint32_t data_stat;			// data transfer status
-	volatile uint32_t data_size; 			// data size to send
-	volatile uint16_t last_data_part_size;	// the size of the last part of the data to send
-	volatile uint16_t cnt_data_part;		// total number of pieces of data to send
-	volatile uint16_t cnt_rem_data_part;	// the number of remaining parts of the data to send
-	volatile uint16_t cnt_size_wnd; 		// the number of bytes transferred from the window
-	volatile uint8_t http_doc;				// the version of the document to send
-	char fname[20];							// the name of the file (document)
-} tcp_prop_ptr;
-//-------------------------------------------------- 
+
 
 #define TCP_CWR 0x80
 #define TCP_ECE 0x40
