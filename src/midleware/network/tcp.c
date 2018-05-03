@@ -59,7 +59,7 @@ __uint8 tcp_read(__S_Enc28j60_Frame_Pkt *frame, __uint16 len)
 
 		lenEnc28j60Frame = len + sizeof(__S_Ip_Pkt) + sizeof(__S_Enc28j60_Frame_Pkt);
 
-		if (osSemaphoreWait(fptBuffSemaphoreID, TIME_WAIT_SHORT) == osOK )
+		if (osSemaphoreWait(fptBuffSemaphoreID, TIME_WAIT_MEDIUM) == osOK )
 		{
 			memcpy(gFptFrame, frame, lenEnc28j60Frame);
 

@@ -143,7 +143,7 @@ __uint8 icmp_request(__uint8* ip_addr)
 	__S_Enc28j60_Frame_Pkt *frame=(void*) net_buf;
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
 	icmp_pkt_ptr *icmp_pkt = (void*)ip_pkt->data;
-	//�������� ��������� ������ ICMP
+
 	icmp_pkt->msg_tp = 8;
 	icmp_pkt->msg_cd = 0;
 	icmp_pkt->id = be16toword(1);
@@ -153,7 +153,7 @@ __uint8 icmp_request(__uint8* ip_addr)
 	icmp_pkt->cs = 0;
 	len = strlen((char*)icmp_pkt->data) + sizeof(icmp_pkt_ptr);
 	icmp_pkt->cs=checksum((void*)icmp_pkt,len,0);
-	//�������� ��������� ������ IP
+
 	len+=sizeof(__S_Ip_Pkt);
 	ip_pkt->len=be16toword(len);
 	ip_pkt->id = 0;
@@ -166,7 +166,7 @@ __uint8 icmp_request(__uint8* ip_addr)
 	memcpy(ip_pkt->ipaddr_dst,ip_addr,4);
 	memcpy(ip_pkt->ipaddr_src,ipaddr,4);
 	ip_pkt->cs = checksum((void*)ip_pkt,sizeof(__S_Ip_Pkt),0);
-	//�������� ����� Ethernet
+
 	eth_send(frame,ETH_IP,len);
 	return res;
 }
@@ -282,53 +282,53 @@ void net_cmd(void)
 	static __uint8 ip[4]={0};
 	static __uint16 port=0;
 	__S_Enc28j60_Frame_Pkt *frame=(void*)net_buf;
-	if(usartprop.is_ip==1)//������ �������� ARP-�������
+	if(usartprop.is_ip==1)
 	{
 		ip_extract((char*)usartprop.usart_buf,usartprop.usart_cnt,ip);
 		arp_request(ip);
 		usartprop.is_ip = 0;
 		usartprop.usart_cnt=0;
 	}
-	else if(usartprop.is_ip==2)//������ ������� ��������� UDP-�����
+	else if(usartprop.is_ip==2)
 	{
 		ip_extract((char*)usartprop.usart_buf,usartprop.usart_cnt,ip);
-		usartprop.is_ip=3;//������ �������� UDP-������
+		usartprop.is_ip=3;
 		usartprop.usart_cnt=0;
-		arp_request(ip);//������ mac-�����
+		arp_request(ip);
 	}
-	else if(usartprop.is_ip==3)//������ �������� UDP-������
+	else if(usartprop.is_ip==3)
 	{
 		port=port_extract((char*)usartprop.usart_buf,usartprop.usart_cnt);
 		udp_send(ip,port);
 		usartprop.is_ip=0;
 	}
-	else if(usartprop.is_ip==4)//������ ������� ��������� ICMP-�����
+	else if(usartprop.is_ip==4)
 	{
 		ip_extract((char*)usartprop.usart_buf,usartprop.usart_cnt,ip);
-		usartprop.is_ip=5;//������ �������� ICMP-������
+		usartprop.is_ip=5;
 		usartprop.usart_cnt=0;
-		arp_request(ip);//������ mac-�����
+		arp_request(ip);
 	}
-	else if(usartprop.is_ip==5)//������ �������� ICMP-������
+	else if(usartprop.is_ip==5)
 	{
 		icmp_request(ip);
 		usartprop.is_ip=0;
 	}
-	else if(usartprop.is_ip==6)//������ ������� ��������� NTP-�����
+	else if(usartprop.is_ip==6)
 	{
 		ip_extract((char*)usartprop.usart_buf,usartprop.usart_cnt,ip);
 		memcpy(ntpprop.ip_dst,ip,4);
-		usartprop.is_ip=7;//������ �������� NTP-������
+		usartprop.is_ip=7;
 		usartprop.usart_cnt=0;
-		arp_request(ip);//������ mac-�����
+		arp_request(ip);
 	}
-	else if(usartprop.is_ip==7)//������ �������� NTP-������
+	else if(usartprop.is_ip==7)
 	{
 		port=port_extract((char*)usartprop.usart_buf,usartprop.usart_cnt);
 		ntpprop.port_dst = port;
-		ntpprop.ntp_cnt = 10; //10 �������
-		ntpprop.ntp_timer = 5;//5 ������ �� ��������� �������
-		ntpprop.set=1;//���� ������� ������� �������
+		ntpprop.ntp_cnt = 10;
+		ntpprop.ntp_timer = 5;
+		ntpprop.set=1;
 		memcpy(ntpprop.macaddr_dst,frame->addr_dest,6);
 		ntp_request(ntpprop.ip_dst,ntpprop.port_dst);
 		usartprop.is_ip=0;
@@ -339,29 +339,29 @@ void UART1_RxCpltCallback(void)
 {
 	__uint8 b;
 	b=str[0];
-	//���� ����� �������� �������� ����� ������
+
 	if(usartprop.usart_cnt>25)
 	{
 		usartprop.usart_cnt=0;
 	}
 	else if(b == 'a')
 	{
-		usartprop.is_ip=1;//������ �������� ARP-�������
+		usartprop.is_ip=1;
 		net_cmd();
 	}
 	else if (b=='u')
 	{
-		usartprop.is_ip=2;//������ ������� ��������� UDP-�����
+		usartprop.is_ip=2;
 		net_cmd();
 	}
 	else if (b=='p')
 	{
-		usartprop.is_ip=4;//������ ������� ��������� ICMP-�����
+		usartprop.is_ip=4;
 		net_cmd();
 	}
 	else if (b=='n')
 	{
-		usartprop.is_ip=6;//������ ������� ��������� NTP-�����
+		usartprop.is_ip=6;
 		net_cmd();
 	}
 	else
@@ -374,7 +374,6 @@ void UART1_RxCpltCallback(void)
 //-----------------------------------------------
 void TIM_PeriodElapsedCallback(void)
 {
-	//������� ������� � ���������� �� � clock_cnt
 	clock_cnt++;
 	if (ntpprop.set)
 	{
@@ -388,7 +387,6 @@ void TIM_PeriodElapsedCallback(void)
 		}
 		else if (ntpprop.ntp_cnt<=0)
 		{
-			//������� ��� ����� � ��������
 			ntpprop.set=0;
 			ntpprop.ntp_cnt=0;
 			ntpprop.ntp_timer=0;

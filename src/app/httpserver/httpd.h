@@ -14,12 +14,11 @@
 #include "header.h"
 #include "net.h"
 
-#define HTTPD_TCP_PORT 	8080
+/*==============================================================================
+ *	struct define
+ *============================================================================*/
 
-#define HTTPD_FILE_HTML  0
-#define HTTPD_FILE_JPEG  1
-
-typedef struct tcp_prop {
+typedef struct tcp_http_prop {
 	uint8_t macaddr_dst[6];					//MAC address Destination
 	uint8_t ipaddr_dst[6];					//IP- address Destination
 	volatile uint16_t port_dst;				// port of the recipient
@@ -36,25 +35,18 @@ typedef struct tcp_prop {
 	char fname[20];							// the name of the file (document)
 } __S_Http_Prop;
 
+/*==============================================================================
+ *	global variable
+ *============================================================================*/
 
 extern __uint8 gHttpFrame[ENC28J60_MAXFRAME];
 extern osSemaphoreId httpBuffSemaphoreID;
 extern __S_Http_Prop gHttpdProp;
 
+/*==============================================================================
+ *	function
+ *============================================================================*/
 
-__uint8 httpd_send_http_one(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 port);
-void httpd_header_prepare(__S_Tcp_Pkt *tcp_pkt, __uint16 port, __uint8 fl, __uint16 len, __uint16 len_cs);
-void httpd_ip_header_prepare(__S_Ip_Pkt *ip_pkt, __uint8 *ip_addr, __uint8 prt, __uint16 len);
-
-__uint8 httpd_send_http_first(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 port);
-__uint8 httpd_send_synack(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 port);
-__uint8 httpd_send_finack(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 port);
-__uint8 httpd_send_http_middle(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 port);
-__uint8 httpd_send_http_last(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 port);
-__uint8 httpd_send_http_data_end(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 port);
-
-void httpd_read();
-void httpd_pool();
 void httpd_init();
 
 

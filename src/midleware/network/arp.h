@@ -13,7 +13,7 @@ void arp_table_fill(__S_Enc28j60_Frame_Pkt *frame);
 typedef struct arp_record{
   uint8_t ipaddr[4];
   uint8_t macaddr[6];
-  uint32_t sec; //����� ���� ���������� ������ � ���������� clock_cnt, ����� ���� ������� ������
+  uint32_t sec; //
 } arp_record_ptr;
 //-------------------------------------------------- 
 #endif /* ARP_H_ */

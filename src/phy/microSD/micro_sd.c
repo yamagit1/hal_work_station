@@ -4,72 +4,78 @@
  *  email   : yamateamhaui@gmail.com										   *
  *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
  *-----------------------------------------------------------------------------*
- * file name	: sd.c
+ * file name	: micro_sd.c
  * in this file :
  *============================================================================*/
 
-#include "sd.h"
+#include "micro_sd.h"
 #include "console_serial_trace.h"
 #include "micro_sd_spi.h"
-//--------------------------------------------------
+
 // Definitions for MMC/SDC command
-#define CMD0 (0x40+0) // GO_IDLE_STATE
-#define CMD1 (0x40+1) // SEND_OP_COND (MMC)
-#define ACMD41 (0xC0+41) // SEND_OP_COND (SDC)
-#define CMD8 (0x40+8) // SEND_IF_COND
-#define CMD9 (0x40+9) // SEND_CSD
-#define CMD16 (0x40+16) // SET_BLOCKLEN
-#define CMD17 (0x40+17) // READ_SINGLE_BLOCK
-#define CMD24 (0x40+24) // WRITE_BLOCK
-#define CMD55 (0x40+55) // APP_CMD
-#define CMD58 (0x40+58) // READ_OCR
-//--------------------------------------------------
-//extern volatile uint16_t Timer1;
+
+#define CMD0 (0x40+0) 		// GO_IDLE_STATE
+#define CMD1 (0x40+1) 		// SEND_OP_COND (MMC)
+#define ACMD41 (0xC0+41) 	// SEND_OP_COND (SDC)
+#define CMD8 (0x40+8) 		// SEND_IF_COND
+#define CMD9 (0x40+9) 		// SEND_CSD
+#define CMD16 (0x40+16) 	// SET_BLOCKLEN
+#define CMD17 (0x40+17) 	// READ_SINGLE_BLOCK
+#define CMD24 (0x40+24) 	// WRITE_BLOCK
+#define CMD55 (0x40+55) 	// APP_CMD
+#define CMD58 (0x40+58) 	// READ_OCR
+
 
 sd_info_ptr sdinfo;
 char str1[60]={0};
 osSemaphoreId microSDSemaphoreID;
 
-//--------------------------------------------------
-static void Error (void)
-{
-	LD_ON;
-}
-//-----------------------------------------------
+
 uint8_t SPIx_WriteRead(uint8_t Byte)
 {
 	return microSD_Send_And_Receive_Byte(Byte);
 }
-//-----------------------------------------------
+
 void SPI_SendByte(uint8_t bt)
 {
 	SPIx_WriteRead(bt);
 }
-//-----------------------------------------------
+
+
 uint8_t SPI_ReceiveByte(void)
 {
 	uint8_t bt = SPIx_WriteRead(0xFF);
 	return bt;
 }
-//-----------------------------------------------
+
+
 void SPI_Release(void)
 {
 	SPIx_WriteRead(0xFF);
 }
-//-----------------------------------------------
+
+
 uint8_t SPI_wait_ready(void)
 {
 	uint8_t res;
 	uint16_t cnt;
 	cnt=0;
-	do { //���� ��������� ��������� BUSY
+
+	do
+	{ //���� ��������� ��������� BUSY
 		res=SPI_ReceiveByte();
 		cnt++;
 	} while ( (res!=0xFF)&&(cnt<0xFFFF) );
-	if (cnt>=0xFFFF) return 1;
+
+	if (cnt>=0xFFFF)
+	{
+		return 1;
+	}
+
 	return res;
 }
-//-----------------------------------------------
+
+
 static uint8_t SD_cmd (uint8_t cmd, uint32_t arg)
 {
 	uint8_t n, res, timeoutAttempts, valTest;
@@ -128,7 +134,8 @@ static uint8_t SD_cmd (uint8_t cmd, uint32_t arg)
 
 	return res;
 }
-//-----------------------------------------------
+
+
 void SD_PowerOn(void)
 {
 	int curCount = 0;
@@ -136,48 +143,89 @@ void SD_PowerOn(void)
 	for(curCount = 0; curCount < 1680000; curCount++);
 	//	Timer1 = 0;
 }
-//-----------------------------------------------
+
+
 uint8_t SD_Read_Block (uint8_t *buff, uint32_t lba)
 {
 	uint8_t result;
 	uint16_t cnt;
 	result=SD_cmd (CMD17, lba);
-	if (result!=0x00) return 5;
+
+	if (result!=0x00)
+	{
+		return 5;
+	}
+
 	SPI_Release();
 	cnt=0;
-	do{
+	do
+	{
 		result=SPI_ReceiveByte();
 		cnt++;
 	} while ( (result!=0xFE)&&(cnt<0xFFFF) );
-	if (cnt>=0xFFFF) return 5;
-	for (cnt=0;cnt<512;cnt++) buff[cnt]=SPI_ReceiveByte();
+
+	if (cnt>=0xFFFF)
+	{
+		return 5;
+	}
+
+	for (cnt=0;cnt<512;cnt++)
+	{
+		buff[cnt]=SPI_ReceiveByte();
+	}
+
 	SPI_Release();
 	SPI_Release();
+
 	return 0;
 }
-//-----------------------------------------------
+
+
 uint8_t SD_Write_Block (uint8_t *buff, uint32_t lba)
 {
 	uint8_t result;
 	uint16_t cnt;
-	result=SD_cmd(CMD24,lba);
-	if (result!=0x00) return 6;
+	result = SD_cmd(CMD24, lba);
+
+	if (result!=0x00)
+	{
+		return 6;
+	}
+
 	SPI_Release();
 	SPI_SendByte (0xFE);
-	for (cnt=0;cnt<512;cnt++) SPI_SendByte(buff[cnt]);
+
+	for (cnt = 0; cnt < 512; cnt++)
+	{
+		SPI_SendByte(buff[cnt]);
+	}
+
 	SPI_Release();
 	SPI_Release();
+
 	result=SPI_ReceiveByte();
-	if ((result&0x05)!=0x05) return 6;
-	cnt=0;
+
+	if ((result & 0x05) != 0x05)
+	{
+		return 6;
+	}
+
+	cnt = 0;
+
 	do {
-		result=SPI_ReceiveByte();
+		result = SPI_ReceiveByte();
 		cnt++;
-	} while ( (result!=0xFF)&&(cnt<0xFFFF) );
-	if (cnt>=0xFFFF) return 6;
+	} while ( (result != 0xFF) && (cnt < 0xFFFF) );
+
+	if (cnt>=0xFFFF)
+	{
+		return 6;
+	}
+
 	return 0;
 }
-//-----------------------------------------------
+
+
 uint8_t sd_ini(void)
 {
 	__ENTER__

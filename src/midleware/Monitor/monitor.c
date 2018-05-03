@@ -1,8 +1,15 @@
+/*==============================================================================
+ *  Author  : YAMA
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: monitor.h
+ * in this file :
+ *============================================================================*/
 
 #include "monitor.h"
 #include "lcd1202.h"
-//#include "temperature.h"
-#include "lcd_font.h"
 #include "perform_manage.h"
 #include "driver_led.h"
 #include "cmsis_os.h"
@@ -10,27 +17,14 @@
 #include "httpd.h"
 #include "fptserver.h"
 
-void MNT_task_polling(void * argument)
-{
 
-	for(;;)
-	{
-		MNT_Render();
-		osDelay(1);
-	}
-}
+/*==============================================================================
+ *	global variable
+ *============================================================================*/
+/*==============================================================================
+ *	function define
+ *============================================================================*/
 
-void MNT_initialize(void)
-{
-	lcd_1202_initialize();
-
-	// create task httpd
-	console_serial_print_log("Create task monitor poolling");
-	osThreadDef(monitor_pool, MNT_task_polling, osPriorityNormal, 0, 300);
-
-	gListPID[INDEX_MONITOR] = osThreadCreate(osThread(monitor_pool), NULL);
-
-}
 
 void MNT_printBorder(void)
 {
@@ -108,3 +102,26 @@ void MNT_Render()
 	lcd_1202_flush();
 }
 
+
+void MNT_task_polling(void * argument)
+{
+
+	for(;;)
+	{
+		MNT_Render();
+		osDelay(1);
+	}
+}
+
+
+void MNT_initialize(void)
+{
+	lcd_1202_initialize();
+
+	// create task httpd
+	console_serial_print_log("Create task monitor poolling");
+	osThreadDef(monitor_pool, MNT_task_polling, osPriorityNormal, 0, 300);
+
+	gListPID[INDEX_MONITOR] = osThreadCreate(osThread(monitor_pool), NULL);
+
+}

@@ -1,3 +1,12 @@
+/*==============================================================================
+ *  Author  : YAMA
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: fatfs.h
+ * in this file :
+ *============================================================================*/
 
 #ifndef __fatfs_H
 #define __fatfs_H

@@ -84,20 +84,20 @@ uint8_t arp_request(uint8_t *ip_addr)
 		iptemp += (ip_addr[i] ^ ipaddr[i]) & ipmask[i];
 	}
 	__S_Enc28j60_Frame_Pkt *frame=(void*)net_buf;
-	//�������� �������������� ������ � ��������� ����
+
 	if( iptemp == 0 ) memcpy(ip,ip_addr,4);
 	else memcpy(ip,ipgate,4);
-	//��������, ����� ����� ����� ��� ���� � ������� ARP, � ������� � ������ ������ ������������ ������
+
 	for(j=0;j<5;j++)
   {
-		//���� ������ ��� ����� 12 �����, �� ������ �
+
 		if((clock_cnt-arp_rec[j].sec)>43200)
 		{
 			memset(arp_rec+(sizeof(arp_record_ptr)*j),0,sizeof(arp_record_ptr));
 		}
 		if(!memcmp(arp_rec[j].ipaddr,ip,4))
 		{
-			//������� ARP-�������
+
 			for(i=0;i<5;i++)
 			{
 				console_serial_print_infor("%d.%d.%d.%d - %02X:%02X:%02X:%02X:%02X:%02X - %lu",
@@ -109,7 +109,7 @@ uint8_t arp_request(uint8_t *ip_addr)
 
 			memcpy(frame->addr_dest,arp_rec[j].macaddr,6);
 
-			if((usartprop.is_ip==3)||(usartprop.is_ip==5)||(usartprop.is_ip==7))//������ �������� UDP-, ICMP- ��� NTP ������
+			if((usartprop.is_ip==3)||(usartprop.is_ip==5)||(usartprop.is_ip==7))
 			{
 				net_cmd();
 			}			
@@ -126,7 +126,7 @@ uint8_t arp_request(uint8_t *ip_addr)
 	memcpy(msg->ipaddr_src,ipaddr,4);	
 	memcpy(msg->macaddr_dst,macnull,6);
 	memcpy(msg->ipaddr_dst,ip,4);
-	//�������� ����� Ethernet
+
 	eth_send(frame,ETH_ARP,sizeof(arp_msg_ptr));
 	return 1;
 }

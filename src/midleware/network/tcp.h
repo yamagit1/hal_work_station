@@ -1,13 +1,13 @@
 #ifndef TCP_H_
 #define TCP_H_
-//--------------------------------------------------
+
 #include "header.h"
 #include "enc28j60.h"
 #include "net.h"
 #include "fatfs.h"
-//--------------------------------------------------
+
 #define LOCAL_PORT_TCP 80
-//--------------------------------------------------
+
 typedef struct tcp_pkt {
 	uint16_t port_src;		//the sender's port
 	uint16_t port_dst;		//the destination port
@@ -30,12 +30,12 @@ typedef struct tcp_pkt {
 #define TCP_RST 0x04
 #define TCP_SYN 0x02
 #define TCP_FIN 0x01
-//--------------------------------------------------
+
 
 #define TCP_CONNECTED 1
 #define TCP_DISCONNECTED 2
 #define TCP_DISCONNECTING 3
-//--------------------------------------------------
+
 
 #define DATA_COMPLETED 0
 #define DATA_ONE 1
@@ -43,12 +43,12 @@ typedef struct tcp_pkt {
 #define DATA_MIDDLE 3
 #define DATA_LAST 4
 #define DATA_END 5
-//--------------------------------------------------
+
 
 #define EXISTING_HTML 0
 #define E404_HTML 1
 #define EXISTING_JPG 2
-//--------------------------------------------------
+
 uint8_t tcp_read(__S_Enc28j60_Frame_Pkt *frame, uint16_t len);
-//--------------------------------------------------
+
 #endif /* TCP_H_ */

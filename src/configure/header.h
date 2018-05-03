@@ -98,6 +98,97 @@
 #define LOG_MID						3
 #define LOG_APP						4
 
+/*==============================================================================
+ * server port
+ *============================================================================*/
+#define FPTD_TCP_PORT 	8888
+#define HTTPD_TCP_PORT 	8080
+
+/*==============================================================================
+ * HTTPT SERVER
+ *============================================================================*/
+
+// file access
+#define HTTPD_FILE_HTML  0
+#define HTTPD_FILE_JPEG  1
+
+/*==============================================================================
+ * FPT SERVER
+ *============================================================================*/
+#define FPT_CMD_KEY_VALUE		"FPT_COMMAND"
+#define FPT_CMD_KEY_SIZE		11
+
+#define FPT_DATA_KEY_VALUE		"FPT_DATA"
+#define FPT_DATA_KEY_SIZE		8
+
+#define FPT_USE_LEN				30
+#define FPT_PASS_LEN			30
+#define FPT_CMD_LEN				128
+
+// list command
+
+#define FPT_CMD_LOGIN			"LOGIN"
+#define FPT_CMD_LOGOUT			"LOGOUT"
+#define FPT_CMD_REBOOT			"REBOOT"
+#define FPT_CMD_IPCFG			"IPCFG"
+#define FPT_CMD_UPLOAD			"UPLOAD"
+#define FPT_CMD_DOWLOAD			"DOWLOAD"
+#define FPT_CMD_MKDIR			"MKDIR"
+#define FPT_CMD_RMDIR			"RMDIR"
+#define FPT_CMD_TOUCH			"TOUCH"
+#define FPT_CMD_RMFIL			"RMFIL"
+#define FPT_CMD_STATUS			"STATUS"
+
+// list notify
+
+#define FPT_NOTI_PERMIS_DENIED	"PERMISSION_DENIED"
+#define FPT_NOTI_PERMIS_OK		"PERMISSION_OK"
+#define FPT_NOTI_LOGIN_OK		"LOGIN_OK"
+#define FPT_NOTI_LOGIN_FAIL		"LOGIN_FAIL"
+#define FPT_NOTI_LOGOUT_OK		"LOGOUT_OK"
+#define FPT_NOTI_LOGOUT_FAIL	"LOGOUT_FAIL"
+
+#define FPT_NOTI_REBOOT_OK		"REBOOT_ACCEPT"
+#define FPT_NOTI_REBOOT_REFUSE	"REBOOT_REFUSE"
+
+#define FPT_NOTI_RMFIL_OK		"RMFIL_OK"
+#define FPT_NOTI_RMFIL_FAIL		"RMFIL_FAIL"
+
+#define FPT_NOTI_TOUCH_OK		"TOUCH_OK"
+#define FPT_NOTI_TOUCH_FAIL		"TOUCH_FAIL"
+
+#define FPT_NOTI_RMDIR_OK		"RMDIR_OK"
+#define FPT_NOTI_RMDIR_FAIL		"RMDIR_FAIL"
+
+#define FPT_NOTI_MKDIR_OK		"MKDIR_OK"
+#define FPT_NOTI_MKDIR_FAIL		"MKDIR_FAIL"
+
+#define FPT_NOTI_DOWLOAD_ACCEPT	"DOWLOAD_ACCEPT"
+#define FPT_NOTI_DOWLOAD_REFUSE	"DOWLOAD_REFUSE"
+
+#define FPT_NOTI_UPLOAD_ACCEPT	"UPLOAD_ACCEPT"
+#define FPT_NOTI_UPLOAD_REFUSE	"UPLOAD_REFUSE"
+#define FPT_NOTI_OPLOAD_RECV_OK		"RECV_OK"
+#define FPT_NOTI_OPLOAD_RECV_FAIL	"RECV_FAIL"
+
+// status
+
+#define FPT_UPLOAD_CONNECT			0
+#define FPT_UPLOAD_DISCONNECT		1
+
+/*==============================================================================
+ * reset system
+ *============================================================================*/
+
+#define NVIC_AIRCR_VECTKEY    (0x5FA << 16)   /*!< AIRCR Key for write access   */
+#define NVIC_SYSRESETREQ            2         /*!< System Reset Request         */
+
+/*==============================================================================
+ * log level
+ *============================================================================*/
+
+
+
 #include<config.h>
 
 /*==============================================================================

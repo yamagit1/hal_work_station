@@ -8,23 +8,30 @@
  * in this file :
  *============================================================================*/
 
+#include "micro_sd.h"
 #include "fptserver.h"
 #include "net.h"
 #include "console_serial_trace.h"
-#include "sd.h"
 #include "perform_manage.h"
 
+/*==============================================================================
+ *	global variable
+ *============================================================================*/
+
+// the buffer fpt frame
 __uint8 gFptFrame[ENC28J60_MAXFRAME];
+
+// Struct data for fptd
 __S_Fpt_Prop gFptProp;
 
+// the parameter for tcp packet
 volatile __uint16 fptd_size_wnd = 8192;
 volatile __uint16 fptd_tcp_mss = 458;
 volatile __uint8  fptd_tcp_stat = TCP_DISCONNECTED;
 
-extern __uint8 ipaddr[4];
-
-FATFS gFptdFsObj;//Flie system object
-FIL gFptdFileObj;
+// file system object and some variable
+FATFS 	gFptdFsObj;//Flie system object
+FIL 	gFptdFileObj;
 FRESULT gFptdResult;
 
 uint32_t gFptdBytesRead;
@@ -32,107 +39,48 @@ uint32_t gFptdBytesWrite;
 
 extern char gDrivePath[4]; /* logical drive path */
 
+// ipv4 for packet ip
+extern __uint8 ipaddr[4];
+
+// semaphore access gFptFrame
 osSemaphoreId fptBuffSemaphoreID;
 
 
-void fptd_pool()
+/*==============================================================================
+ *	function define
+ *============================================================================*/
+
+
+void ftpd_header_prepare(__S_Tcp_Pkt *tcp_pkt, __uint16 port, __uint8 fl, __uint16 len, __uint16 len_cs)
 {
-	__ENTER__
-
-	__S_Enc28j60_Frame_Pkt *FptFrame = (void*)(gFptFrame);
-	__S_Ip_Pkt *ip_pkt = (void*)(FptFrame->data);
-	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
-
-	__uint32 lenRcvData = 0;
-	char *ss1;
-	int ch1=' ';
-	int ch2='.';
-
-	__uint8 command[BUFF_SIZE_LOW];
-
-	// wait for fptd buff ready to access
-	if (osSemaphoreWait(fptBuffSemaphoreID, TIME_WAIT_SHORT) == osOK )
-	{
-		// get port
-		gFptProp.port_dst = be16toword(tcp_pkt->port_src);
-
-		// get MAC addr
-		memcpy(gFptProp.macaddr_dst, FptFrame->addr_src, 6);
-
-		// get IPv4
-		memcpy(gFptProp.ipaddr_dst,ip_pkt->ipaddr_src,4);
-
-		// get length data
-		lenRcvData = be16toword(ip_pkt->len) - 20 - (tcp_pkt->len_hdr>>2);
-
-		// check resquest data
-		if (lenRcvData > 0)
-		{
-			console_serial_print_log("\t\t> packet ACK data available : %d", lenRcvData);
-			tcp_pkt->data[lenRcvData] = '\0';
-			console_serial_print_infor("TCP packet content : %s", tcp_pkt->data);
-
-			// packet tcp contain ACK
-			if (tcp_pkt->fl & TCP_ACK)
-			{
-				// packet "GET /", for protocol HTTP
-				if (strncmp((char*)tcp_pkt->data, FPT_CMD_KEY_VALUE, FPT_CMD_KEY_SIZE) == 0)
-				{
-					memset(command, '\0' ,BUFF_SIZE_LOW);
-					memcpy((void*)command, (void*)(tcp_pkt->data + FPT_CMD_KEY_SIZE +1), lenRcvData - FPT_CMD_KEY_SIZE -1);
-
-					//				ss1 = strchr(gFptProp.fname, ch1);
-					console_serial_print_infor("\t> packet contain command : %s --- len : %d", command, strlen(command));
-
-					// exe command
-					fptd_execute_cmd(command, FptFrame, ip_pkt);
-
-				}
-				else if (strncmp((char*)tcp_pkt->data, FPT_DATA_KEY_VALUE, FPT_DATA_KEY_SIZE) == 0)
-				{
-					console_serial_print_infor("\t> packet contain command : %s", "DATA");
-					fptd_recv_upload_file(tcp_pkt->data);
-				}
-			}
-
-		}
+	tcp_pkt->port_dst 	= be16toword(port);
+	tcp_pkt->port_src 	= be16toword(FPTD_TCP_PORT);
+	tcp_pkt->bt_num_seg = gFptProp.seq_num;
+	tcp_pkt->num_ask 	= gFptProp.ack_num;
+	tcp_pkt->fl 		= fl;
+	tcp_pkt->size_wnd 	= be16toword(fptd_size_wnd);
+	tcp_pkt->urg_ptr 	= 0;
+	tcp_pkt->len_hdr 	= len << 2;
+	tcp_pkt->cs 		= 0;
+	tcp_pkt->cs			= checksum((__uint8*)tcp_pkt-8, len_cs+8, 2);
+}
 
 
-		if (tcp_pkt->fl == TCP_SYN)
-		{
-			console_serial_print_log("\t> fptd_pool : Packet request SYN");
-			ftpd_send_synack(FptFrame, ip_pkt->ipaddr_src, gFptProp.port_dst);
-		}
-		else if (tcp_pkt->fl == (TCP_FIN|TCP_ACK))
-		{
-			console_serial_print_log("\t> fptd_pool : Packet request FIN|ACK");
+void ftpd_ip_header_prepare(__S_Ip_Pkt *ip_pkt, __uint8 *ip_addr, __uint8 prt, __uint16 len)
+{
+	ip_pkt->len		= be16toword(len);
+	ip_pkt->id 		= 0;
+	ip_pkt->ts 		= 0;
+	ip_pkt->verlen  = 0x45;
+	ip_pkt->fl_frg_of=0;
+	ip_pkt->ttl		= 128;
+	ip_pkt->cs 		= 0;
+	ip_pkt->prt 	= prt;
 
-			fptd_send_finack(FptFrame, ip_pkt->ipaddr_src, gFptProp.port_dst);
-		}
-		else if (tcp_pkt->fl == (TCP_PSH|TCP_ACK))
-		{
-			console_serial_print_log("\t> fptd_pool :Packet request PSH|ACK");
+	memcpy(ip_pkt->ipaddr_dst, ip_addr, 4);
+	memcpy(ip_pkt->ipaddr_src, ipaddr, 4);
 
-			if(!lenRcvData)
-			{
-				fptd_send_finack(FptFrame, ip_pkt->ipaddr_src, gFptProp.port_dst);
-			}
-		}
-		else if (tcp_pkt->fl == TCP_ACK)
-		{
-			console_serial_print_log("\t> fptd_pool : Packet request ACK");
-
-			// send data
-			fptd_send_file(FptFrame, gFptProp.ipaddr_dst, gFptProp.port_dst);
-
-		}
-
-	}
-
-	// Release httpd buff
-	osSemaphoreRelease(fptBuffSemaphoreID);
-
-	__LEAVE__
+	ip_pkt->cs = checksum((void*)ip_pkt, sizeof(__S_Ip_Pkt), 0);
 }
 
 
@@ -219,38 +167,6 @@ __uint8 fptd_send_finack(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint
 }
 
 
-void ftpd_header_prepare(__S_Tcp_Pkt *tcp_pkt, __uint16 port, __uint8 fl, __uint16 len, __uint16 len_cs)
-{
-	tcp_pkt->port_dst 	= be16toword(port);
-	tcp_pkt->port_src 	= be16toword(FPTD_TCP_PORT);
-	tcp_pkt->bt_num_seg = gFptProp.seq_num;
-	tcp_pkt->num_ask 	= gFptProp.ack_num;
-	tcp_pkt->fl 		= fl;
-	tcp_pkt->size_wnd 	= be16toword(fptd_size_wnd);
-	tcp_pkt->urg_ptr 	= 0;
-	tcp_pkt->len_hdr 	= len << 2;
-	tcp_pkt->cs 		= 0;
-	tcp_pkt->cs			= checksum((__uint8*)tcp_pkt-8, len_cs+8, 2);
-}
-
-
-void ftpd_ip_header_prepare(__S_Ip_Pkt *ip_pkt, __uint8 *ip_addr, __uint8 prt, __uint16 len)
-{
-	ip_pkt->len		= be16toword(len);
-	ip_pkt->id 		= 0;
-	ip_pkt->ts 		= 0;
-	ip_pkt->verlen  = 0x45;
-	ip_pkt->fl_frg_of=0;
-	ip_pkt->ttl		= 128;
-	ip_pkt->cs 		= 0;
-	ip_pkt->prt 	= prt;
-
-	memcpy(ip_pkt->ipaddr_dst, ip_addr, 4);
-	memcpy(ip_pkt->ipaddr_src, ipaddr, 4);
-
-	ip_pkt->cs = checksum((void*)ip_pkt, sizeof(__S_Ip_Pkt), 0);
-}
-
 __uint8 fpt_send_data(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 port, char *data)
 {
 	__uint8 res=0;
@@ -307,237 +223,6 @@ __uint8 fpt_send_data(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 
 }
 
 
-void fptd_execute_cmd(__uint8 *cmd, __S_Enc28j60_Frame_Pkt *FptFrame, __S_Ip_Pkt *ip_pkt)
-{
-	fptd_split_cmd(cmd);
-
-	console_serial_print_log("--------- cmd : %s", gFptProp.command);
-	console_serial_print_log("--------- num arg : %d", gFptProp.cmdNumArg);
-	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[0]);
-	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[1]);
-	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[2]);
-	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[3]);
-	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[4]);
-
-	if (strcmp(gFptProp.command, FPT_CMD_LOGIN) == 0 )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_LOGIN acc : %s | pass : %s", gFptProp.cmdArgs[0], gFptProp.cmdArgs[1]);
-
-		// check account
-		if (strcmp(gFptProp.cmdArgs[0], gFptProp.user_login) == 0 &&\
-				strcmp(gFptProp.cmdArgs[1], gFptProp.pass_login) == 0)
-		{
-			gFptProp.currPermission = eTRUE;
-
-			console_serial_print_log("\t\t> FPT_CMD_LOGIN -----OK");
-
-			// send response
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_LOGIN_OK);
-
-			return;
-		}
-		else
-		{
-			gFptProp.currPermission = eFALSE;
-
-			console_serial_print_log("\t\t> FPT_CMD_LOGIN -----FAIL");
-
-			// send response
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_LOGIN_FAIL);
-
-			return;
-		}
-
-	}
-	else if (strcmp(gFptProp.command, FPT_CMD_LOGOUT) == 0 )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_LOGOUT");
-
-		if (gFptProp.currPermission == eTRUE)
-		{
-			gFptProp.currPermission = eFALSE;
-
-			console_serial_print_log("\t\t> FPT_CMD_LOGOUT -----OK");
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_LOGOUT_OK);
-
-			return;
-		}
-		else
-		{
-			console_serial_print_log("\t\t> FPT_CMD_LOGOUT -----%s", FPT_NOTI_PERMIS_DENIED);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
-
-			return;
-		}
-
-	}
-	else if (strcmp(gFptProp.command, FPT_CMD_REBOOT) == 0 )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_REBOOT");
-
-		if (gFptProp.currPermission == eTRUE)
-		{
-			console_serial_print_log("\t\t> FPT_CMD_REBOOT -----%s", "OK");
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_REBOOT_OK);
-
-			SCB->AIRCR  = (NVIC_AIRCR_VECTKEY | (SCB->AIRCR & (0x700)) | (1<<NVIC_SYSRESETREQ)); /* Keep priority group unchanged */
-			__DSB();                                                                                 /* Ensure completion of memory access */
-			while(1);
-		}
-		else
-		{
-			console_serial_print_log("\t\t> FPT_CMD_REBOOT -----%s", FPT_NOTI_PERMIS_DENIED);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
-
-			return;
-		}
-	}
-	else if (strcmp(gFptProp.command, FPT_CMD_IPCFG) == 0 )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_IPCFG");
-
-	}
-	else if (strcmp(gFptProp.command, FPT_CMD_UPLOAD) == 0  )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_UPLOAD");
-
-		if (gFptProp.currPermission == eTRUE)
-		{
-			// upload data acept
-			fptd_accept_upload();
-
-			//			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_UPLOAD_ACCEPT);
-
-			return;
-		}
-		else
-		{
-			console_serial_print_log("\t\t> FPT_CMD_UPLOAD -----%s", FPT_NOTI_PERMIS_DENIED);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
-
-			return;
-		}
-
-	}
-	else if (strcmp(gFptProp.command, FPT_CMD_DOWLOAD) == 0 )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_DOWLOAD");
-
-		if (gFptProp.currPermission == eTRUE)
-		{
-			console_serial_print_log("\t\t> FPT_CMD_DOWLOAD -----%s", FPT_NOTI_DOWLOAD_ACCEPT);
-
-			fptd_accept_dowload();
-
-			return;
-		}
-		else
-		{
-			console_serial_print_log("\t\t> FPT_CMD_DOWLOAD -----%s", FPT_NOTI_PERMIS_DENIED);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
-
-			return;
-		}
-
-	}
-	else if (strcmp(gFptProp.command, FPT_CMD_MKDIR) == 0 )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_MKDIR");
-
-		if (gFptProp.currPermission == eTRUE)
-		{
-			console_serial_print_log("\t\t> FPT_CMD_MKDIR -----%s", FPT_NOTI_MKDIR_OK);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_MKDIR_OK);
-
-			return;
-		}
-		else
-		{
-			console_serial_print_log("\t\t> FPT_CMD_MKDIR -----%s", FPT_NOTI_PERMIS_DENIED);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
-
-			return;
-		}
-
-	}
-	else if (strcmp(gFptProp.command, FPT_CMD_TOUCH) == 0 )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_TOUCH");
-
-		if (gFptProp.currPermission == eTRUE)
-		{
-			console_serial_print_log("\t\t> FPT_CMD_TOUCH -----%s", FPT_NOTI_TOUCH_OK);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_TOUCH_OK);
-
-			return;
-		}
-		else
-		{
-			console_serial_print_log("\t\t> FPT_CMD_TOUCH -----%s", FPT_NOTI_PERMIS_DENIED);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
-
-			return;
-		}
-
-	}
-	else if (strcmp(gFptProp.command, FPT_CMD_RMFIL) == 0 )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_RMFIL");
-
-		if (gFptProp.currPermission == eTRUE)
-		{
-			console_serial_print_log("\t\t> FPT_CMD_RMFIL -----%s", FPT_NOTI_RMFIL_OK);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_RMFIL_OK);
-
-			return;
-		}
-		else
-		{
-			console_serial_print_log("\t\t> FPT_CMD_STATUS -----%s", FPT_NOTI_PERMIS_DENIED);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
-
-			return;
-		}
-
-
-	}
-	else if (strcmp(gFptProp.command, FPT_CMD_STATUS) == 0 )
-	{
-		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_STATUS");
-
-		if (gFptProp.currPermission == eTRUE)
-		{
-			console_serial_print_log("\t\t> FPT_CMD_STATUS -----%s", FPT_NOTI_PERMIS_OK);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_OK);
-
-			return;
-		}
-		else
-		{
-			console_serial_print_log("\t\t> FPT_CMD_STATUS -----%s", FPT_NOTI_PERMIS_DENIED);
-
-			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
-
-			return;
-		}
-	}
-
-}
-
-
 void fptd_split_cmd(__uint8 *command)
 {
 	int offset =0;
@@ -579,48 +264,6 @@ void fptd_split_cmd(__uint8 *command)
 		while(*(command + offset + len) == ' '){ offset++; }
 		offset += len;
 	}
-
-	//
-
-}
-
-
-void fptd_task_polling(void * argument)
-{
-	osEvent sig_rev;
-
-	for (;;)
-	{
-		// wait for signal rev
-		sig_rev = osSignalWait (0xffffffff, TIME_WAIT_LONG);
-
-		if (sig_rev.status == osEventSignal && sig_rev.value.signals == SIG_FPTD_REV)
-		{
-			console_serial_print_log("fptd_task_polling receiver signal");
-			fptd_pool();
-		}
-	}
-}
-
-
-void fptd_init()
-{
-	strcpy(gFptProp.user_login, "admin");
-	strcpy(gFptProp.pass_login, "admin");
-	gFptProp.currPermission = eFALSE;
-
-	// Creating semaphore for microSD, it use to access to read, wire
-	osSemaphoreDef(fpt_buff);
-	fptBuffSemaphoreID = osSemaphoreCreate(osSemaphore(fpt_buff) , 1 );
-
-	// Release httpd buff
-	osSemaphoreRelease(fptBuffSemaphoreID);
-
-	// create task fptd
-	console_serial_print_log("Create task fptd poolling");
-	osThreadDef(fptd_pool, fptd_task_polling, osPriorityNormal, 0, 500);
-
-	gListPID[INDEX_FPT_SERVER] = osThreadCreate(osThread(fptd_pool), NULL);
 }
 
 
@@ -921,6 +564,7 @@ __uint8 fptd_send_file_last(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __u
 	return res;
 }
 
+
 __uint8 fptd_send_file_end(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __uint16 port)
 {
 	__uint8 res		= 0;
@@ -950,6 +594,7 @@ __uint8 fptd_send_file_end(__S_Enc28j60_Frame_Pkt *frame, __uint8 *ip_addr, __ui
 	return res;
 }
 
+
 void fptd_send_file(__S_Enc28j60_Frame_Pkt *frame,__uint8 *ip_addr, __uint16 port)
 {
 	__S_Ip_Pkt *ip_pkt = (void*)(frame->data);
@@ -970,6 +615,7 @@ void fptd_send_file(__S_Enc28j60_Frame_Pkt *frame,__uint8 *ip_addr, __uint16 por
 		console_serial_print_log("-------------LAST-----------");
 	}
 }
+
 
 __uint8 fptd_accept_dowload()
 {
@@ -1052,6 +698,7 @@ __uint8 fptd_accept_dowload()
 
 	return 0;
 }
+
 
 void fptd_accept_upload()
 {
@@ -1257,3 +904,534 @@ void fptd_recv_upload_file(__uint8 *data)
 	}
 
 }
+
+
+void fptd_execute_cmd(__uint8 *cmd, __S_Enc28j60_Frame_Pkt *FptFrame, __S_Ip_Pkt *ip_pkt)
+{
+	fptd_split_cmd(cmd);
+
+	console_serial_print_log("--------- cmd : %s", gFptProp.command);
+	console_serial_print_log("--------- num arg : %d", gFptProp.cmdNumArg);
+	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[0]);
+	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[1]);
+	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[2]);
+	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[3]);
+	console_serial_print_log("--------- cmd : %s", gFptProp.cmdArgs[4]);
+
+	/*==============================================================================
+	 *				FPT_CMD_LOGIN
+	 *============================================================================*/
+	if (strcmp(gFptProp.command, FPT_CMD_LOGIN) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_LOGIN acc : %s | pass : %s", gFptProp.cmdArgs[0], gFptProp.cmdArgs[1]);
+
+		// check account
+		if (strcmp(gFptProp.cmdArgs[0], gFptProp.user_login) == 0 &&\
+				strcmp(gFptProp.cmdArgs[1], gFptProp.pass_login) == 0)
+		{
+			gFptProp.currPermission = eTRUE;
+
+			console_serial_print_log("\t\t> FPT_CMD_LOGIN -----OK");
+
+			// send response
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_LOGIN_OK);
+
+			return;
+		}
+		else
+		{
+			gFptProp.currPermission = eFALSE;
+
+			console_serial_print_log("\t\t> FPT_CMD_LOGIN -----FAIL");
+
+			// send response
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_LOGIN_FAIL);
+
+			return;
+		}
+
+	}
+	/*==============================================================================
+	 *				FPT_CMD_LOGOUT
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_LOGOUT) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_LOGOUT");
+
+		if (gFptProp.currPermission == eTRUE)
+		{
+			gFptProp.currPermission = eFALSE;
+
+			console_serial_print_log("\t\t> FPT_CMD_LOGOUT -----OK");
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_LOGOUT_OK);
+
+			return;
+		}
+		else
+		{
+			console_serial_print_log("\t\t> FPT_CMD_LOGOUT -----%s", FPT_NOTI_PERMIS_DENIED);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
+
+			return;
+		}
+
+	}
+	/*==============================================================================
+	 *				FPT_CMD_REBOOT
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_REBOOT) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_REBOOT");
+
+		if (gFptProp.currPermission == eTRUE)
+		{
+			console_serial_print_log("\t\t> FPT_CMD_REBOOT -----%s", "OK");
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_REBOOT_OK);
+
+			SCB->AIRCR  = (NVIC_AIRCR_VECTKEY | (SCB->AIRCR & (0x700)) | (1<<NVIC_SYSRESETREQ)); /* Keep priority group unchanged */
+			__DSB();                                                                                 /* Ensure completion of memory access */
+			while(1);
+		}
+		else
+		{
+			console_serial_print_log("\t\t> FPT_CMD_REBOOT -----%s", FPT_NOTI_PERMIS_DENIED);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
+
+			return;
+		}
+	}
+	/*==============================================================================
+	 *				FPT_CMD_IPCFG
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_IPCFG) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_IPCFG");
+
+	}
+	/*==============================================================================
+	 *				FPT_CMD_UPLOAD
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_UPLOAD) == 0  )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_UPLOAD");
+
+		if (gFptProp.currPermission == eTRUE)
+		{
+			// upload data acept
+			fptd_accept_upload();
+
+			//			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_UPLOAD_ACCEPT);
+
+			return;
+		}
+		else
+		{
+			console_serial_print_log("\t\t> FPT_CMD_UPLOAD -----%s", FPT_NOTI_PERMIS_DENIED);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
+
+			return;
+		}
+
+	}
+	/*==============================================================================
+	 *				FPT_CMD_DOWLOAD
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_DOWLOAD) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_DOWLOAD");
+
+		if (gFptProp.currPermission == eTRUE)
+		{
+			console_serial_print_log("\t\t> FPT_CMD_DOWLOAD -----%s", FPT_NOTI_DOWLOAD_ACCEPT);
+
+			fptd_accept_dowload();
+
+			return;
+		}
+		else
+		{
+			console_serial_print_log("\t\t> FPT_CMD_DOWLOAD -----%s", FPT_NOTI_PERMIS_DENIED);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
+
+			return;
+		}
+
+	}
+	/*==============================================================================
+	 *				FPT_CMD_MKDIR
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_MKDIR) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_MKDIR");
+
+		if (gFptProp.currPermission == eTRUE)
+		{
+			console_serial_print_log("\t\t> FPT_CMD_MKDIR -----%s", FPT_NOTI_MKDIR_OK);
+
+			// wait for sd card ready to access
+			if (osSemaphoreWait(microSDSemaphoreID, TIME_WAIT_LONG) == osOK )
+			{
+				// open sd card and prepare file for send
+				gFptdResult = f_mount(&gFptdFsObj, (TCHAR const*)gDrivePath, 0);
+				console_serial_print_log("\t\t> FPT_CMD_MKDIR : f_mount: %d", gFptdResult);
+
+				// create directory in sd card
+				gFptdResult = f_mkdir(gFptProp.cmdArgs[0]);
+				console_serial_print_log("\t\t> FPT_CMD_MKDIR : f_mkdir: %d", gFptdResult);
+
+				// Release microSD device
+				osSemaphoreRelease(microSDSemaphoreID);
+			}
+
+			if (gFptdResult == FR_OK)
+			{
+				console_serial_print_log("\t\t> FPT_CMD_MKDIR : status : %s", FPT_NOTI_MKDIR_OK);
+				fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_MKDIR_OK);
+			}
+			else
+			{
+				console_serial_print_log("\t\t> FPT_CMD_MKDIR : status : %s", FPT_NOTI_MKDIR_FAIL);
+				fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_MKDIR_FAIL);
+			}
+			return;
+		}
+		else
+		{
+			console_serial_print_log("\t\t> FPT_CMD_MKDIR -----%s", FPT_NOTI_PERMIS_DENIED);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
+
+			return;
+		}
+
+	}
+	/*==============================================================================
+	 *				FPT_CMD_RMDIR
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_RMDIR) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_RMDIR");
+
+		if (gFptProp.currPermission == eTRUE)
+		{
+			console_serial_print_log("\t\t> FPT_CMD_RMDIR -----%s", FPT_NOTI_RMDIR_OK);
+
+			// wait for sd card ready to access
+			if (osSemaphoreWait(microSDSemaphoreID, TIME_WAIT_LONG) == osOK )
+			{
+				// open sd card and prepare file for send
+				gFptdResult = f_mount(&gFptdFsObj, (TCHAR const*)gDrivePath, 0);
+				console_serial_print_log("\t\t> FPT_CMD_RMDIR : f_mount: %d", gFptdResult);
+
+				// delete directory in sd card
+				gFptdResult = f_unlink(gFptProp.cmdArgs[0]);
+				console_serial_print_log("\t\t> FPT_CMD_RMDIR : f_mkdir: %d", gFptdResult);
+
+				// Release microSD device
+				osSemaphoreRelease(microSDSemaphoreID);
+			}
+
+			if (gFptdResult == FR_OK)
+			{
+				console_serial_print_log("\t\t> FPT_CMD_RMDIR : status : %s", FPT_NOTI_RMDIR_OK);
+				fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_RMDIR_OK);
+			}
+			else
+			{
+				console_serial_print_log("\t\t> FPT_CMD_RMDIR : status : %s", FPT_NOTI_RMDIR_FAIL);
+				fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_RMDIR_FAIL);
+
+			}
+			return;
+		}
+		else
+		{
+			console_serial_print_log("\t\t> FPT_CMD_MKDIR -----%s", FPT_NOTI_PERMIS_DENIED);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
+
+			return;
+		}
+
+	}
+	/*==============================================================================
+	 *				FPT_CMD_TOUCH
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_TOUCH) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_TOUCH");
+
+		if (gFptProp.currPermission == eTRUE)
+		{
+			FIL file_obj;
+
+			// wait for sd card ready to access
+//			if (osSemaphoreWait(microSDSemaphoreID, TIME_WAIT_LONG) == osOK )
+//			{
+//				// open sd card and prepare file for send
+//				gFptdResult = f_mount(&gFptdFsObj, (TCHAR const*)gDrivePath, 0);
+//				console_serial_print_log("\t> fpt_accept_upload : f_mount: %d", gFptdResult);
+//
+//				// create new file
+//				gFptdResult = f_open(&file_obj, gFptProp.cmdArgs[0], FA_CREATE_NEW);
+//				f_close(&file_obj);
+//
+//				// Release microSD device
+//				osSemaphoreRelease(microSDSemaphoreID);
+//			}
+
+			gFptdResult = FR_DISK_ERR;
+
+			if (gFptdResult == FR_OK)
+			{
+
+				console_serial_print_log("\t\t> FPT_CMD_TOUCH -----%s", FPT_NOTI_TOUCH_OK);
+				fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_TOUCH_OK);
+			}
+			else
+			{
+
+				console_serial_print_log("\t\t> FPT_CMD_TOUCH -----%s", FPT_NOTI_TOUCH_FAIL);
+				fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_TOUCH_FAIL);
+			}
+
+			return;
+		}
+		else
+		{
+			console_serial_print_log("\t\t> FPT_CMD_TOUCH -----%s", FPT_NOTI_PERMIS_DENIED);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
+
+			return;
+		}
+
+	}
+	/*==============================================================================
+	 *				FPT_CMD_RMFIL
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_RMFIL) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_RMFIL");
+
+		if (gFptProp.currPermission == eTRUE)
+		{
+			// wait for sd card ready to access
+			if (osSemaphoreWait(microSDSemaphoreID, TIME_WAIT_LONG) == osOK )
+			{
+				// open sd card and prepare file for send
+				gFptdResult = f_mount(&gFptdFsObj, (TCHAR const*)gDrivePath, 0);
+				console_serial_print_log("\t\t> FPT_CMD_RMFIL : f_mount: %d", gFptdResult);
+
+				// delete file in sd card
+				gFptdResult = f_unlink(gFptProp.cmdArgs[0]);
+				console_serial_print_log("\t\t> FPT_CMD_RMFIL : f_mkdir: %d", gFptdResult);
+
+				// Release microSD device
+				osSemaphoreRelease(microSDSemaphoreID);
+			}
+
+			if (gFptdResult == FR_OK)
+			{
+				console_serial_print_log("\t\t> FPT_CMD_RMFIL : status : %s", FPT_NOTI_RMFIL_OK);
+				fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_RMFIL_OK);
+			}
+			else
+			{
+				console_serial_print_log("\t\t> FPT_CMD_RMFIL : status : %s", FPT_NOTI_RMFIL_FAIL);
+				fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_RMFIL_FAIL);
+
+			}
+			return;
+		}
+		else
+		{
+			console_serial_print_log("\t\t> FPT_CMD_RMFIL -----%s", FPT_NOTI_PERMIS_DENIED);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
+
+			return;
+		}
+	}
+	/*==============================================================================
+	 *				FPT_CMD_LOGOUT
+	 *============================================================================*/
+	else if (strcmp(gFptProp.command, FPT_CMD_STATUS) == 0 )
+	{
+		console_serial_print_log("\t> fptd_execute_cmd : FPT_CMD_STATUS");
+
+		if (gFptProp.currPermission == eTRUE)
+		{
+			console_serial_print_log("\t\t> FPT_CMD_STATUS -----%s", FPT_NOTI_PERMIS_OK);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_OK);
+
+			return;
+		}
+		else
+		{
+			console_serial_print_log("\t\t> FPT_CMD_STATUS -----%s", FPT_NOTI_PERMIS_DENIED);
+
+			fpt_send_data(FptFrame, ip_pkt->ipaddr_src, gFptProp. port_dst, FPT_NOTI_PERMIS_DENIED);
+
+			return;
+		}
+	}
+
+}
+
+
+void fptd_pool()
+{
+	__ENTER__
+
+	__S_Enc28j60_Frame_Pkt *FptFrame = (void*)(gFptFrame);
+	__S_Ip_Pkt *ip_pkt = (void*)(FptFrame->data);
+	__S_Tcp_Pkt *tcp_pkt = (void*)(ip_pkt->data);
+
+	__uint32 lenRcvData = 0;
+
+	char *ss1;
+	int ch1=' ';
+	int ch2='.';
+
+	__uint8 command[BUFF_SIZE_LOW];
+
+	// wait for fptd buff ready to access
+	if (osSemaphoreWait(fptBuffSemaphoreID, TIME_WAIT_MEDIUM) == osOK )
+	{
+		// get port
+		gFptProp.port_dst = be16toword(tcp_pkt->port_src);
+
+		// get MAC addr
+		memcpy(gFptProp.macaddr_dst, FptFrame->addr_src, 6);
+
+		// get IPv4
+		memcpy(gFptProp.ipaddr_dst,ip_pkt->ipaddr_src,4);
+
+		// get length data
+		lenRcvData = be16toword(ip_pkt->len) - 20 - (tcp_pkt->len_hdr>>2);
+
+		// check resquest data
+		if (lenRcvData > 0)
+		{
+			console_serial_print_log("\t\t> packet ACK data available : %d", lenRcvData);
+			tcp_pkt->data[lenRcvData] = '\0';
+			console_serial_print_infor("TCP packet content : %s", tcp_pkt->data);
+
+			// packet tcp contain ACK
+			if (tcp_pkt->fl & TCP_ACK)
+			{
+				// packet "GET /", for protocol HTTP
+				if (strncmp((char*)tcp_pkt->data, FPT_CMD_KEY_VALUE, FPT_CMD_KEY_SIZE) == 0)
+				{
+					memset(command, '\0' ,BUFF_SIZE_LOW);
+					memcpy((void*)command, (void*)(tcp_pkt->data + FPT_CMD_KEY_SIZE +1), lenRcvData - FPT_CMD_KEY_SIZE -1);
+
+					//				ss1 = strchr(gFptProp.fname, ch1);
+					console_serial_print_infor("\t> packet contain command : %s --- len : %d", command, strlen(command));
+
+					// exe command
+					fptd_execute_cmd(command, FptFrame, ip_pkt);
+
+				}
+				else if (strncmp((char*)tcp_pkt->data, FPT_DATA_KEY_VALUE, FPT_DATA_KEY_SIZE) == 0)
+				{
+					console_serial_print_infor("\t> packet contain command : %s", "DATA");
+					fptd_recv_upload_file(tcp_pkt->data);
+				}
+			}
+
+		}
+
+
+		if (tcp_pkt->fl == TCP_SYN)
+		{
+			console_serial_print_log("\t> fptd_pool : Packet request SYN");
+			ftpd_send_synack(FptFrame, ip_pkt->ipaddr_src, gFptProp.port_dst);
+		}
+		else if (tcp_pkt->fl == (TCP_FIN|TCP_ACK))
+		{
+			console_serial_print_log("\t> fptd_pool : Packet request FIN|ACK");
+
+			fptd_send_finack(FptFrame, ip_pkt->ipaddr_src, gFptProp.port_dst);
+		}
+		else if (tcp_pkt->fl == (TCP_PSH|TCP_ACK))
+		{
+			console_serial_print_log("\t> fptd_pool :Packet request PSH|ACK");
+
+			if(!lenRcvData)
+			{
+				fptd_send_finack(FptFrame, ip_pkt->ipaddr_src, gFptProp.port_dst);
+			}
+		}
+		else if (tcp_pkt->fl == TCP_ACK)
+		{
+			console_serial_print_log("\t> fptd_pool : Packet request ACK");
+
+			// send data
+			fptd_send_file(FptFrame, gFptProp.ipaddr_dst, gFptProp.port_dst);
+		}
+
+	}
+
+	// Release httpd buff
+	osSemaphoreRelease(fptBuffSemaphoreID);
+
+	__LEAVE__
+}
+
+
+void fptd_task_polling(void * argument)
+{
+	osEvent sig_rev;
+
+	for (;;)
+	{
+		// wait for signal rev
+		sig_rev = osSignalWait (0xffffffff, TIME_WAIT_LONG);
+
+		if (sig_rev.status == osEventSignal && sig_rev.value.signals == SIG_FPTD_REV)
+		{
+			console_serial_print_log("fptd_task_polling receiver signal");
+			fptd_pool();
+		}
+	}
+}
+
+
+void fptd_init()
+{
+	strcpy(gFptProp.user_login, "admin");
+	strcpy(gFptProp.pass_login, "admin");
+	gFptProp.currPermission = eFALSE;
+
+	// Creating semaphore for microSD, it use to access to read, wire
+	osSemaphoreDef(fpt_buff);
+	fptBuffSemaphoreID = osSemaphoreCreate(osSemaphore(fpt_buff) , 1 );
+
+	// Release httpd buff
+	osSemaphoreRelease(fptBuffSemaphoreID);
+
+	// create task fptd
+	console_serial_print_log("Create task fptd poolling");
+	osThreadDef(fptd_pool, fptd_task_polling, osPriorityNormal, 0, 500);
+
+	gListPID[INDEX_FPT_SERVER] = osThreadCreate(osThread(fptd_pool), NULL);
+}
+
+
+
+
+
+
+
+
+
+

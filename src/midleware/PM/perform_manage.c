@@ -8,12 +8,12 @@
  * in this file :
  *============================================================================*/
 
+#include <micro_sd.h>
 #include <perform_manage.h>
 #include "fatfs.h"
 #include "console_serial_trace.h"
 #include "html_temple.h"
 #include "driver_led.h"
-#include "sd.h"
 
 osThreadId gListPID[MAX_SIZE_LIST_PID];
 __S_TIME gTimeCount;
@@ -44,6 +44,7 @@ void PM_updateTimeCount()
 	}
 }
 
+
 void PM_update_home_page_html()//void * argument)
 {
 	__uint8 buff[BUFF_SIZE_LOW];
@@ -53,6 +54,8 @@ void PM_update_home_page_html()//void * argument)
 	char path[5]={"/"};
 	__uint32 offset = 0;
 
+	__uint32 sdTotalSize = 0;
+	__uint32 sdFree = 0;
 	//get list file
 	FS_scan_list_file_to_html(listFile, &offset, path);
 
@@ -372,13 +375,17 @@ void PM_update_home_page_html()//void * argument)
 			f_write(&gFileObj, home_page_temple[35], strlen(home_page_temple[35]), (void*)&numByteWrite);
 			f_write(&gFileObj, home_page_temple[36], strlen(home_page_temple[36]), (void*)&numByteWrite);
 
-			sprintf(buff, home_page_temple[37], 1111, 11111, 111111);
+			sprintf(buff, home_page_temple[37], 185344, 11264, 196608);
 			f_write(&gFileObj, buff, strlen(buff), (void*)&numByteWrite);
 
-			sprintf(buff, home_page_temple[38], 2222, 22222, 222222);
+			sprintf(buff, home_page_temple[38], 171156, 877420, 1048576);
 			f_write(&gFileObj, buff, strlen(buff), (void*)&numByteWrite);
 
-			sprintf(buff, home_page_temple[39], 3333, 33333, 333333);
+			sdTotalSize = (gFlieSysObj.n_fatent * gFlieSysObj.csize) / 2;
+			sdFree = (gFlieSysObj.free_clst * gFlieSysObj.csize) / 2;
+
+			sprintf(buff, home_page_temple[39], sdTotalSize - sdFree, sdFree, sdTotalSize);
+
 			f_write(&gFileObj, buff, strlen(buff), (void*)&numByteWrite);
 
 			// get list file

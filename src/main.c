@@ -1,17 +1,17 @@
+/*==============================================================================
+ *  Author  : YAMA
+ *  Modify	: YAMA															   *
+ *  email   : yamateamhaui@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: main.c
+ * in this file :
+ *============================================================================*/
 
 #include "main.h"
-#include "cmsis_os.h"
-#include "fatfs.h"
 #include "console_serial_trace.h"
-#include "lcd1202.h"
 #include "driver_led.h"
 #include "peripheral_init.h"
-#include "enc28j60.h"
-
-#include "lcd_logo.h"
-
-#include "enc28j60_spi.h"
-#include "micro_sd_spi.h"
 #include "net.h"
 #include "monitor.h"
 #include "perform_manage.h"
@@ -21,10 +21,6 @@
 
 int main(void)
 {
-	//	struct netif netif;
-	int i = 0;
-	FILINFO fileInfo;
-
 	//------------------Initialize Hardware and mcu -----------------------------
 
 	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -54,7 +50,6 @@ int main(void)
 
 	console_serial_print_log("Start scheduler");
 	osKernelStart();
-	//	PM_update_home_page_html();
 
 	while (1)
 	{
