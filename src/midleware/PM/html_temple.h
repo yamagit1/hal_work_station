@@ -1,9 +1,12 @@
-/*
- * html_temple.h
- *
- *  Created on: Apr 28, 2018
- *      Author: yama
- */
+/*==============================================================================
+ *  Author  : YAMA
+ *  Modify	: YAMA															   *
+ *  email   : yamahi95@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: html_temple.c
+ * in this file :
+ *============================================================================*/
 
 #ifndef __HTML_TEMPLE_H__
 #define __HTML_TEMPLE_H__

@@ -1,7 +1,7 @@
 /*==============================================================================
  *  Author  : NONE
  *  Modify	: YAMA															   *
- *  email   : yamateamhaui@gmail.com										   *
+ *  email   : yamahi95@gmail.com										   *
  *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
  *-----------------------------------------------------------------------------*
  * file name	: user_diskio.c
@@ -130,7 +130,7 @@ DRESULT USER_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
 	{
 		//		console_serial_print_log("\t> USER_readSingle block");
 
-		SD_Read_Block(buff,sector); //������� ���� � �����
+		SD_Read_Block(buff,sector);
 
 		count = 0;
 	}
@@ -182,7 +182,7 @@ DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count )
 
 	if (count == 1) /* Single block read */
 	{
-		SD_Write_Block((BYTE*)buff,sector); //������� ���� � �����
+		SD_Write_Block((BYTE*)buff,sector);
 		count = 0;
 	}
 	else /* Multiple block read */

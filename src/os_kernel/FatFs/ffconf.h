@@ -1,7 +1,7 @@
 /*==============================================================================
  *  Author  : 2018 STMicroelectronics International N.V.
  *  Modify	: YAMA															   *
- *  email   : yamateamhaui@gmail.com										   *
+ *  email   : yamahi95@gmail.com										   *
  *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
  *-----------------------------------------------------------------------------*
  * file name	: ffconf.h

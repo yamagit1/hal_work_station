@@ -1,7 +1,7 @@
 /*==============================================================================
  *  Author  : YAMA
  *  Modify	: YAMA															   *
- *  email   : yamateamhaui@gmail.com										   *
+ *  email   : yamahi95@gmail.com										   *
  *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
  *-----------------------------------------------------------------------------*
  * file name	: monitor.h

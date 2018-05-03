@@ -1,4 +1,12 @@
-
+/*==============================================================================
+ *  Author  : YAMA
+ *  Modify	: YAMA															   *
+ *  email   : yamahi95@gmail.com										   *
+ *  address : Ha Noi University ( Nhon - Bac Tu liem - Ha Noi - Viet Nam)	   *
+ *-----------------------------------------------------------------------------*
+ * file name	: html_temple.c
+ * in this file :
+ *============================================================================*/
 
 #include "html_temple.h"
 
